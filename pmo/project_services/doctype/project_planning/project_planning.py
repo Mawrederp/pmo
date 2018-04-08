@@ -54,4 +54,12 @@ class ProjectPlanning(Document):
                         self.partner_technical_name = row[0]
 
 
+    def on_submit(self):
+        doc = frappe.get_doc({
+            "doctype":"Project Implementation Monitoring and Controlling",
+            "project_name": self.project_name
+
+        })
+        doc.flags.ignore_mandatory = True
+        doc.insert(ignore_permissions=True)
 
