@@ -19,11 +19,6 @@ def get_data():
 				},
 				{
 					"type": "doctype",
-					"name": "Project Initiation",
-					"description": _("Project Initiation."),
-				},
-				{
-					"type": "doctype",
 					"name": "Project Planning",
 					"description": _("Project Planning."),
 				},
