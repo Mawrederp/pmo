@@ -63,3 +63,5 @@ class ProjectPlanning(Document):
         doc.flags.ignore_mandatory = True
         doc.insert(ignore_permissions=True)
 
+        msg = """Project Implementation Monitoring and Controlling has been created: <b><a href="#Form/Project Implementation Monitoring and Controlling/{0}">{0}</a></b>""".format(doc.name)
+        frappe.msgprint(msg)
