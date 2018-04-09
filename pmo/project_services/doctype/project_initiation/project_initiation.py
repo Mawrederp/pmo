@@ -19,10 +19,10 @@ class ProjectInitiation(Document):
 
 		pp = frappe.get_doc({
 			"doctype": "Project Planning",
-			"project": self.project_name
+			"project_name": self.project_name
 		}).save(ignore_permissions = True)
 
 		frappe.db.commit()
 
-		frappe.msgprint(_("Project {project} and Project Planning {pp} have been created".format(project=self.project_name, pp = pp)))
+		frappe.msgprint(_("Project {project} and Project Planning {pp} have been created".format(project=self.project_name, pp = pp.name)))
 
