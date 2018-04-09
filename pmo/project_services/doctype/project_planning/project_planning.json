@@ -41,6 +41,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -71,6 +72,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -102,6 +104,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -110,7 +113,7 @@
    "bold": 0, 
    "collapsible": 0, 
    "columns": 0, 
-   "fieldname": "status_panning", 
+   "fieldname": "status_planning", 
    "fieldtype": "Select", 
    "hidden": 0, 
    "ignore_user_permissions": 0, 
@@ -133,6 +136,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -164,6 +168,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -196,6 +201,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -226,6 +232,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -256,6 +263,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -286,6 +294,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -316,6 +325,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -346,6 +356,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -376,6 +387,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -407,6 +419,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -437,6 +450,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -468,6 +482,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -498,6 +513,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -527,6 +543,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -557,6 +574,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -587,6 +605,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -617,6 +636,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -647,6 +667,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -677,6 +698,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -707,6 +729,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -737,6 +760,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -767,6 +791,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -797,6 +822,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -826,6 +852,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -856,6 +883,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -886,6 +914,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -916,6 +945,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -946,6 +976,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -976,6 +1007,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -1005,6 +1037,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -1035,6 +1068,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -1065,6 +1099,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -1095,6 +1130,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -1125,6 +1161,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -1155,6 +1192,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -1184,6 +1222,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -1214,6 +1253,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -1244,6 +1284,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -1274,6 +1315,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -1304,6 +1346,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -1334,6 +1377,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -1364,6 +1408,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -1394,6 +1439,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }, 
   {
@@ -1424,6 +1470,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
+   "translatable": 0, 
    "unique": 0
   }
  ], 
@@ -1437,7 +1484,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2018-04-08 15:55:10.401075", 
+ "modified": "2018-04-09 10:49:50.263156", 
  "modified_by": "Administrator", 
  "module": "Project Services", 
  "name": "Project Planning", 
@@ -1446,7 +1493,6 @@
  "permissions": [
   {
    "amend": 0, 
-   "apply_user_permissions": 0, 
    "cancel": 0, 
    "create": 1, 
    "delete": 1, 
