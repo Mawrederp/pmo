@@ -3,7 +3,7 @@
  "allow_guest_to_view": 0, 
  "allow_import": 0, 
  "allow_rename": 0, 
- "autoname": "", 
+ "autoname": "field:project_name", 
  "beta": 0, 
  "creation": "2018-04-08 13:32:24.917599", 
  "custom": 0, 
@@ -2621,7 +2621,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2018-04-08 15:57:48.413867", 
+ "modified": "2018-04-09 00:08:14.626003", 
  "modified_by": "Administrator", 
  "module": "Project Services", 
  "name": "Project Initiation", 
@@ -2630,7 +2630,6 @@
  "permissions": [
   {
    "amend": 0, 
-   "apply_user_permissions": 0, 
    "cancel": 0, 
    "create": 1, 
    "delete": 1, 
@@ -2645,7 +2644,7 @@
    "role": "System Manager", 
    "set_user_permissions": 0, 
    "share": 1, 
-   "submit": 0, 
+   "submit": 1, 
    "write": 1
   }
  ], 
