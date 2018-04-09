@@ -7,4 +7,30 @@ import frappe
 from frappe.model.document import Document
 
 class ProjectImplementationMonitoringandControlling(Document):
-	pass
+    def on_submit(self):
+
+        # doc.flags.ignore_mandatory = True
+        # doc.insert(ignore_permissions=True)
+        doc_proj = frappe.get_doc("Project",self.project_name)
+        doc_proj.state = "Implementation Monitoring and Controlling"
+        doc_proj.save(ignore_permissions = True)
+        frappe.db.commit()
+
+        # pp = frappe.get_doc({
+        #     "doctype":"Project Planning",
+        #     "project_name": self.project_name
+        #     }).save(ignore_permissions = True)
+        # frappe.db.commit()
+
+        doc = frappe.get_doc({
+            "doctype":"Project Closure",
+            "project_name": self.project_name
+            }).save(ignore_permissions = True)
+        frappe.db.commit()
+        
+        cc = frappe.get_value("Project Closure", filters = {"project_name": self.project_name}, fieldname = "name")
+        msg = """Project Implementation Monitoring and Controlling {project} AND Project Closure has been created:<b><a href="#Form/Project Closure">{cc}</a></b>""".format(project=self.project_name,cc=cc)
+        frappe.msgprint(msg)
+        
+
+ 
