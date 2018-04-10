@@ -26,5 +26,4 @@ class ProjectInitiation(Document):
 
 		pp = frappe.get_value("Project Planning", filters = {"project_name": self.project_name}, fieldname = "name")
 
-		frappe.msgprint(_("Project {project} and Project Planning {pp} have been created".format(project=self.project_name, pp = pp)))
-
+		frappe.msgprint(_("""Project {project} and Project Planning have been created: <b><a href="#Form/Project Planning/{pp}">{pp}</a></b>""".format(project=self.project_name, pp = pp)))

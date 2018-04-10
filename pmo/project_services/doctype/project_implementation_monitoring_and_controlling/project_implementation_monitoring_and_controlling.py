@@ -29,7 +29,7 @@ class ProjectImplementationMonitoringandControlling(Document):
         frappe.db.commit()
         
         cc = frappe.get_value("Project Closure", filters = {"project_name": self.project_name}, fieldname = "name")
-        msg = """Project Implementation Monitoring and Controlling {project} AND Project Closure has been created:<b><a href="#Form/Project Closure">{cc}</a></b>""".format(project=self.project_name,cc=cc)
+        msg = """Project Closure has been created: <b><a href="#Form/Project Closure">{cc}</a></b>""".format(cc=cc)
         frappe.msgprint(msg)
         
 
