@@ -42,7 +42,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
-   "unique": 0
+   "unique": 1
   }, 
   {
    "allow_bulk_edit": 0, 
@@ -388,7 +388,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2018-04-08 14:32:51.961782", 
+ "modified": "2018-04-10 09:49:03.229475", 
  "modified_by": "Administrator", 
  "module": "Project Services", 
  "name": "Projects Procurement Control", 
