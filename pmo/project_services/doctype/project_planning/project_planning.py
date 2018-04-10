@@ -54,4 +54,20 @@ class ProjectPlanning(Document):
                         self.partner_technical_name = row[0]
 
 
+    def on_submit(self):
+        doc = frappe.get_doc({
+            "doctype":"Project Implementation Monitoring and Controlling",
+            "project_name": self.project_name
 
+        })
+        doc.flags.ignore_mandatory = True
+        doc.insert(ignore_permissions=True)
+
+        doc_proj = frappe.get_doc("Project",self.project_name)
+        doc_proj.state = "Planning"
+        doc_proj.save(ignore_permissions = True)
+
+        frappe.db.commit()
+
+        msg = """Project Implementation Monitoring and Controlling has been created: <b><a href="#Form/Project Implementation Monitoring and Controlling/{0}">{0}</a></b>""".format(doc.name)
+        frappe.msgprint(msg)

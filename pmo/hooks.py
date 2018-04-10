@@ -5,7 +5,7 @@ from . import __version__ as app_version
 app_name = "pmo"
 app_title = "pmo"
 app_publisher = "s"
-app_description = "ff"
+app_description = "PMO"
 app_icon = "s"
 app_color = "grey"
 app_email = "s"
@@ -119,4 +119,4 @@ app_license = "MIT"
 # override_whitelisted_methods = {
 # 	"frappe.desk.doctype.event.event.get_events": "pmo.event.get_events"
 # }
-
+fixtures = ["Custom Field", "Custom Script"]
