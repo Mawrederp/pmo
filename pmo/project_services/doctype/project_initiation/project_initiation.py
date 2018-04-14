@@ -26,5 +26,19 @@ class ProjectInitiation(Document):
 
 		pp = frappe.get_value("Project Planning", filters = {"project_name": self.project_name}, fieldname = "name")
 
-		frappe.msgprint(_("Project {project} and Project Planning {pp} have been created".format(project=self.project_name, pp = pp)))
+		frappe.msgprint(_("""Project {project} and Project Planning have been created: <b><a href="#Form/Project Planning/{pp}">{pp}</a></b>""".format(project=self.project_name, pp = pp)))
 
+
+
+@frappe.whitelist()
+def get_project_detail(project, company=None):
+	project_dict = frappe.db.sql("""select * from `tabProject Initiation` where name=%s""", (project), as_dict=1)
+	if not project_dict:
+		frappe.throw("Project not found")
+
+	project_financial_detail = frappe.db.sql(""" select * from `tabProject Financial Details` where parent=%s """, (project), as_dict=1)
+	project_payment_schedule = frappe.db.sql(""" select * from `tabProject Payment Schedule` where parent=%s """, (project), as_dict=1)
+
+	details = project_dict[0]
+
+	return details,project_financial_detail,project_payment_schedule
