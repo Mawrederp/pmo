@@ -71,3 +71,19 @@ class ProjectPlanning(Document):
 
         msg = """Project Implementation Monitoring and Controlling has been created: <b><a href="#Form/Project Implementation Monitoring and Controlling/{0}">{0}</a></b>""".format(doc.name)
         frappe.msgprint(msg)
+
+
+
+@frappe.whitelist()
+def get_project_detail_planning(project, company=None):
+    project_dict = frappe.db.sql("""select * from `tabProject Planning` where project_name=%s""", (project), as_dict=1)
+    if not project_dict:
+        frappe.throw("Project not found")
+
+    risk_register = frappe.db.sql(""" select * from `tabRisk Register` where parent=(select name from `tabProject Planning` where project_name=%s) """, (project), as_dict=1)
+    roles_and_responsibilities = frappe.db.sql(""" select * from `tabRoles And Responsibilities` where parent=(select name from `tabProject Planning` where project_name=%s) """, (project), as_dict=1)
+
+    details = project_dict[0]
+
+    return details,risk_register,roles_and_responsibilities
+

@@ -19,3 +19,19 @@ class ProjectClosure(Document):
         msg = """Project Closure has been created: <b><a href="#Form/Project Closure/{0}">{0}</a></b>""".format(
             doc.name)
     	frappe.msgprint(msg)
+
+
+
+
+
+
+@frappe.whitelist()
+def get_project_detail_closure(project, company=None):
+    project_dict = frappe.db.sql("""select * from `tabProject Closure` where project_name=%s""", (project), as_dict=1)
+    if not project_dict:
+        frappe.throw("Project not found")
+
+    details = project_dict[0]
+
+    return details
+

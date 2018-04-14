@@ -34,3 +34,19 @@ class ProjectImplementationMonitoringandControlling(Document):
         
 
  
+
+
+
+@frappe.whitelist()
+def get_project_detail_controlling(project, company=None):
+    project_dict = frappe.db.sql("""select * from `tabProject Implementation Monitoring and Controlling` where project_name=%s""", (project), as_dict=1)
+    if not project_dict:
+        frappe.throw("Project not found")
+
+    change_request = frappe.db.sql(""" select * from `tabControl Change Request` where parent=(select name from `tabProject Implementation Monitoring and Controlling` where project_name=%s) """, (project), as_dict=1)
+    project_issues_sumary = frappe.db.sql(""" select * from `tabProject Issues Sumary` where parent=(select name from `tabProject Implementation Monitoring and Controlling` where project_name=%s) """, (project), as_dict=1)
+
+    details = project_dict[0]
+
+    return details,change_request,project_issues_sumary
+
