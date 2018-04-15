@@ -78,7 +78,7 @@ class ProjectPlanning(Document):
 def get_project_detail_planning(project, company=None):
     project_dict = frappe.db.sql("""select * from `tabProject Planning` where project_name=%s""", (project), as_dict=1)
     if not project_dict:
-        frappe.throw("Project not found")
+        frappe.throw("Project Planning phase for project {0} not found".format(project))
 
     risk_register = frappe.db.sql(""" select * from `tabRisk Register` where parent=(select name from `tabProject Planning` where project_name=%s) """, (project), as_dict=1)
     roles_and_responsibilities = frappe.db.sql(""" select * from `tabRoles And Responsibilities` where parent=(select name from `tabProject Planning` where project_name=%s) """, (project), as_dict=1)

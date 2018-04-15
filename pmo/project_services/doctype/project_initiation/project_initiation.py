@@ -34,7 +34,7 @@ class ProjectInitiation(Document):
 def get_project_detail(project, company=None):
 	project_dict = frappe.db.sql("""select * from `tabProject Initiation` where name=%s""", (project), as_dict=1)
 	if not project_dict:
-		frappe.throw("Project not found")
+		frappe.throw("Project {0} not found".format(project))
 
 	project_financial_detail = frappe.db.sql(""" select * from `tabProject Financial Details` where parent=%s """, (project), as_dict=1)
 	project_payment_schedule = frappe.db.sql(""" select * from `tabProject Payment Schedule` where parent=%s """, (project), as_dict=1)

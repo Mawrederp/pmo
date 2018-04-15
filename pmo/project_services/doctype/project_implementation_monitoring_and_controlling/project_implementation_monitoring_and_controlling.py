@@ -41,7 +41,7 @@ class ProjectImplementationMonitoringandControlling(Document):
 def get_project_detail_controlling(project, company=None):
     project_dict = frappe.db.sql("""select * from `tabProject Implementation Monitoring and Controlling` where project_name=%s""", (project), as_dict=1)
     if not project_dict:
-        frappe.throw("Project not found")
+        frappe.throw("Project Implementation Monitoring and Controlling phase for project {0} not found".format(project))
 
     change_request = frappe.db.sql(""" select * from `tabControl Change Request` where parent=(select name from `tabProject Implementation Monitoring and Controlling` where project_name=%s) """, (project), as_dict=1)
     project_issues_sumary = frappe.db.sql(""" select * from `tabProject Issues Sumary` where parent=(select name from `tabProject Implementation Monitoring and Controlling` where project_name=%s) """, (project), as_dict=1)
