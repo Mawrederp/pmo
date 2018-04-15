@@ -6,7 +6,7 @@ frappe.pages['project-info'].on_page_load = function(wrapper) {
 		single_column: true
 	});
 
-	page.main.html(frappe.render_template("project_select", {}));
+	page.main.html(frappe.render_template("project_info", {}));
 	var project = frappe.ui.form.make_control({
 		parent: page.main.find(".project"),
 		df: {
@@ -14,13 +14,7 @@ frappe.pages['project-info'].on_page_load = function(wrapper) {
 			options: "Project",
 			fieldname: "project",
 			change: function(){
-				// console.log(project.get_value())
 				page.main.find(".frappe-list").html("");
-
-				// show_project_info(project.get_value(), me);
-				// show_project_info_planning(project.get_value(), me);
-				// show_project_info_controlling(project.get_value(), me);
-				// show_project_info_closure(project.get_value(), me);
 
 				$(".project-details").css("display","block")
 				
@@ -43,12 +37,6 @@ frappe.pages['project-info'].on_page_load = function(wrapper) {
 		only_input: true,
 	});
 	project.refresh();
-
-
-
-	var parent = $('<div class="project-info"></div>').appendTo(wrapper);
-	parent.html(frappe.render_template("project_info", {}));
-
 
 
 }
@@ -194,7 +182,7 @@ var show_project_info = function(project, me){
 				}
 				details += "</table>";
 			}
-
+			details += "<br>";
 			if (r.message[7].length>0){
 				details += "<table class=project_finance_details><tr><th>Supplier</th></tr>";
 				for(var i=0;i<r.message[7].length;i++){
@@ -205,10 +193,9 @@ var show_project_info = function(project, me){
 
 			if(data.overall_project_budget) details += "<br><b>Overall Project Budget :</b> " + data.overall_project_budget;
 			
-
-
+			details += "<br><br><br><br>"
 			if(details){
-				details = "<div style='padding-left:10px; font-size:13px;' align='center'></br><b class='text-muted'>Project Initiation Details</b>" + details + "</div>";
+				details = "<div style='font-size:13px;' align='center'></br><b class='text-muted'>Project Initiation Details</b>" + details + "</div>";
 			}
 			
 			$('.here').empty();
@@ -276,10 +263,10 @@ var show_project_info_planning = function(project, me){
 
 			details += "<br><hr><h4>COMMUNICATION MANAGEMENT PLAN</h4><br>";
 			if(data.communication_details) details += "<br><b>Details :</b> " + data.communication_details;
-			
 
+			details += "<br><br><br><br>"
 			if(details){
-				details = "<div style='padding-left:10px; font-size:13px;' align='center'></br><b class='text-muted'>Project Planning Details</b>" + details + "</div>";
+				details = "<div style='font-size:13px;' align='center'></br><b class='text-muted'>Project Planning Details</b>" + details + "</div>";
 			}
 			
 			$('.here').empty();
@@ -329,9 +316,9 @@ var show_project_info_controlling = function(project, me){
 				}
 				details += "</table>";
 			}
-			
+			details += "<br><br><br><br>"
 			if(details){
-				details = "<div style='padding-left:10px; font-size:13px;' align='center'></br><b class='text-muted'>Project Implementation Monitoring and Controlling Details</b>" + details + "</div>";
+				details = "<div style='font-size:13px;' align='center'></br><b class='text-muted'>Project Implementation Monitoring and Controlling Details</b>" + details + "</div>";
 			}
 			
 			$('.here').empty();
@@ -371,9 +358,9 @@ var show_project_info_closure = function(project, me){
 			if(data.closure_tawari_sig) details += "<br><b>Signature :</b> " + data.closure_tawari_sig;
 			if(data.closure_tawari_date) details += "<br><b>Date :</b> " + data.closure_tawari_date;
 			
-
+			details += "<br><br><br><br>"
 			if(details){
-				details = "<div style='padding-left:10px; font-size:13px;' align='center'></br><b class='text-muted'>Project Closure Details</b>" + details + "</div>";
+				details = "<div style='font-size:13px;' align='center'></br><b class='text-muted'>Project Closure Details</b>" + details + "</div>";
 			}
 			
 			$('.here').empty();
