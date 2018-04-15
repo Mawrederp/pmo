@@ -17,6 +17,30 @@ class ProjectClosure(Document):
         frappe.db.commit()
 
 
+    def existing_project_initiation(self):
+        project_name = frappe.get_value("Project Initiation", filters = {"project_name": self.project_name}, fieldname = "name")
+        if project_name:
+            return project_name
+        else:
+            frappe.throw("Project Initiation not exist for this project")
+
+
+    def existing_project_planning(self):
+        project_name = frappe.get_value("Project Planning", filters = {"project_name": self.project_name}, fieldname = "name")
+        if project_name:
+            return project_name
+        else:
+            frappe.throw("Project Planning not exist for this project")
+
+
+    def existing_project_controlling(self):
+        project_name = frappe.get_value("Project Implementation Monitoring and Controlling", filters = {"project_name": self.project_name}, fieldname = "name")
+        if project_name:
+            return project_name
+        else:
+            frappe.throw("Project Implementation Monitoring and Controlling not exist for this project")
+
+
 
 @frappe.whitelist()
 def get_project_detail_closure(project, company=None):

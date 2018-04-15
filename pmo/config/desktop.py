@@ -11,4 +11,11 @@ def get_data():
 			"type": "module",
 			"label": _("pmo")
 		}
+		# {
+		# 	"module_name": "project_services",
+		# 	"color": "#33A0DE",
+		# 	"icon": "fa fa-product-hunt",
+		# 	"type": "module",
+		# 	"label": _("Projects Main Screen")
+		# }
 	]
