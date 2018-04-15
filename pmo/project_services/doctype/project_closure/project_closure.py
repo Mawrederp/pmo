@@ -16,13 +16,6 @@ class ProjectClosure(Document):
 
         frappe.db.commit()
 
-        msg = """Project Closure has been created: <b><a href="#Form/Project Closure/{0}">{0}</a></b>""".format(
-            doc.name)
-    	frappe.msgprint(msg)
-
-
-
-
 
 
 @frappe.whitelist()
