@@ -18,59 +18,28 @@ def get_data():
 					"description": _("Project Initiation."),
 				},
 				{
-					"type": "doctype",
-					"name": "Project Planning",
-					"description": _("Project Planning."),
-				},
-				{
-					"type": "doctype",
-					"name": "Project Implementation Monitoring and Controlling",
-					"description": _("Project Implementation Monitoring and Controlling."),
-				},
-				{
-					"type": "doctype",
-					"name": "Project Closure",
-					"description": _("Project Closure."),
+					"type": "page",
+					"name": "project-info",
+					"label": _("Project Details"),
+					"description": _("Project Details")
 				}
 				# {
 				# 	"type": "doctype",
-				# 	"name": "Task",
-				# 	"description": _("Project activity / task."),
+				# 	"name": "Project Planning",
+				# 	"description": _("Project Planning."),
 				# },
 				# {
 				# 	"type": "doctype",
-				# 	"name": "Project Charter",
-				# 	"description": _("Project Charter."),
+				# 	"name": "Project Implementation Monitoring and Controlling",
+				# 	"description": _("Project Implementation Monitoring and Controlling."),
 				# },
 				# {
-				# 	"type": "report",
-				# 	"route": "List/Task/Gantt",
-				# 	"doctype": "Task",
-				# 	"name": "Gantt Chart",
-				# 	"description": _("Gantt chart of all tasks.")
-				# },
+				# 	"type": "doctype",
+				# 	"name": "Project Closure",
+				# 	"description": _("Project Closure."),
+				# }
 			]
 		},
-		# {
-		# 	"label": _("Time Tracking"),
-		# 	"items": [
-		# 		{
-		# 			"type": "doctype",
-		# 			"name": "Timesheet",
-		# 			"description": _("Timesheet for tasks."),
-		# 		},
-		# 		{
-		# 			"type": "doctype",
-		# 			"name": "Activity Type",
-		# 			"description": _("Types of activities for Time Logs"),
-		# 		},
-		# 		{
-		# 			"type": "doctype",
-		# 			"name": "Activity Cost",
-		# 			"description": _("Cost of various activities"),
-		# 		},
-		# 	]
-		# },
 		{
 			"label": _("Projects Control"),
 			"items": [
@@ -88,33 +57,4 @@ def get_data():
 				}
 			]
 		}
-		# {
-		# 	"label": _("Reports"),
-		# 	"icon": "fa fa-list",
-		# 	"items": [
-		# 		{
-		# 			"type": "report",
-		# 			"is_query_report": True,
-		# 			"name": "Daily Timesheet Summary",
-		# 			"doctype": "Timesheet"
-		# 		},
-		# 		{
-		# 			"type": "report",
-		# 			"is_query_report": True,
-		# 			"name": "Project wise Stock Tracking",
-		# 			"doctype": "Project"
-		# 		},
-		# 	]
-		# },
-		# {
-		# 	"label": _("Help"),
-		# 	"icon": "fa fa-facetime-video",
-		# 	"items": [
-		# 		{
-		# 			"type": "help",
-		# 			"label": _("Managing Projects"),
-		# 			"youtube_id": "egxIGwtoKI4"
-		# 		},
-		# 	]
-		# },
 	]
