@@ -74,6 +74,31 @@ class ProjectPlanning(Document):
 
 
 
+    def existing_project_initiation(self):
+        project_name = frappe.get_value("Project Initiation", filters = {"project_name": self.project_name}, fieldname = "name")
+        if project_name:
+            return project_name
+        else:
+            frappe.throw("Project Initiation not exist for this project")
+
+
+    def existing_project_controlling(self):
+        project_name = frappe.get_value("Project Implementation Monitoring and Controlling", filters = {"project_name": self.project_name}, fieldname = "name")
+        if project_name:
+            return project_name
+        else:
+            frappe.throw("Project Implementation Monitoring and Controlling not exist for this project")
+
+
+    def existing_project_closure(self):
+        project_name = frappe.get_value("Project Closure", filters = {"project_name": self.project_name}, fieldname = "name")
+        if project_name:
+            return project_name
+        else:
+            frappe.throw("Project Closure not exist for this project")
+
+
+
 @frappe.whitelist()
 def get_project_detail_planning(project, company=None):
     project_dict = frappe.db.sql("""select * from `tabProject Planning` where project_name=%s""", (project), as_dict=1)
