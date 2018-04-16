@@ -27,7 +27,7 @@ frappe.ui.form.on('Project Closure', {
         });
 
 
-        frm.add_custom_button(__("Project Implementation Monitoring and Controlling"), function () {
+        frm.add_custom_button(__("Project Implementation, Monitoring and Controlling"), function () {
             frappe.call({
                 "method": "existing_project_controlling",
                 doc: cur_frm.doc,
@@ -44,6 +44,10 @@ frappe.ui.form.on('Project Closure', {
         });
 
         $(".layout-main-section .form-inner-toolbar button:nth-child(4)").removeClass("btn-default");
-
+        $('.layout-main-section .form-inner-toolbar :nth-child(1)').before('<b><p style="text-align: center;font-size: 25px;">Project Phases</p></b>');
+        $('.layout-main-section-wrapper .layout-main-section .form-inner-toolbar').after('<style>.layout-main-section-wrapper .layout-main-section .form-inner-toolbar{height: 100px !important;}</style>');
+        $('.layout-main-section-wrapper .layout-main-section .form-inner-toolbar').after('<style>.layout-main-section-wrapper .layout-main-section .form-inner-toolbar button:nth-child(n+1){float: left !important;}</style>');
+        
+        
 	}
 });
