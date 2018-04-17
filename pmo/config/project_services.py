@@ -14,9 +14,14 @@ def get_data():
 				# },
 				{
 					"type": "doctype",
-					"name": "Project Initiation",
-					"description": _("Project Initiation."),
+					"name": "Projects List",
+					"description": _("Projects List."),
 				},
+				# {
+				# 	"type": "doctype",
+				# 	"name": "Project Initiation",
+				# 	"description": _("Project Initiation."),
+				# },
 				{
 					"type": "page",
 					"name": "project-info",
