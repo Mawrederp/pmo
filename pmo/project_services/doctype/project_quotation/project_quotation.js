@@ -59,13 +59,24 @@ frappe.ui.form.on('Project Management and Technical Services', {
 	},
 	employee: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
-		if (!d.designation) {
-			d.employee = undefined;
-			frm.refresh_fields();
+		if (!d.designation & d.employee != "") {
+			frappe.model.set_value(cdt, cdn, "employee", "");
 			frappe.throw('Please Specify Designation');
 
 		}
-		
+		frappe.call({
+			method: "pmo.project_services.doctype.project_quotation.project_quotation.get_basic_salary",
+			args: {
+				employee: d.employee
+			},
+			callback: function (data) {
+				frappe.model.set_value(cdt, cdn, "cost_price", data.message);
+			}
+		});
+
+	},
+	designation: function (frm, cdt, cdn) {
+		frappe.model.set_value(cdt, cdn, "employee", "");
 	}
 
 
