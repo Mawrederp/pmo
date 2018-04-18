@@ -50,4 +50,49 @@ frappe.ui.form.on('Project Implementation Monitoring and Controlling', {
         
         
 	}
+
+});
+
+
+
+frappe.ui.form.on('Control Change Request', 'change_request_add', function(frm, cdt, cdn){
+    var row = locals[cdt][cdn];
+    console.log(row.idx);
+    frappe.model.set_value(cdt, cdn, "change_request_number", 'ERP-PMO-'+row.idx);
+
+});
+
+
+
+frappe.ui.form.on('Control Change Request', {
+    add_action: function (frm, cdt, cdn) {        
+
+        var d = new frappe.ui.Dialog({
+            'fields': [
+                {'label': 'Action','fieldname': 'action', 'fieldtype': 'Data', 'reqd': 1},
+                {'label': '','fieldname': 'col_break94', 'fieldtype': 'Column Break'},
+                {'label': 'Owner','fieldname': 'owner', 'fieldtype': 'Data', 'reqd': 1}
+            ],
+            primary_action: function(){
+
+                d.hide();
+
+                var args = d.get_values();
+                var row = locals[cdt][cdn];
+
+                action = args['action'];
+                owner = args['owner'];
+                
+                $('.action_list tbody').append('<tr><td>'+action+'</td><td>'+owner+'</td></tr>');
+
+            }
+        });
+        
+        d.show();
+
+
+
+    }
+
+
 });
