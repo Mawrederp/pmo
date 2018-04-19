@@ -117,6 +117,13 @@ frappe.ui.form.on('Project Quotation', {
 		}
 
 	},
+	total_profit_hw:function (frm) {
+		if (cur_frm.doc.total_profit_hw && cur_frm.doc.sum_total_cost_price_hw) {
+			var totals = 0;
+			totals = flt(cur_frm.doc.total_profit_hw) / flt(cur_frm.doc.sum_total_cost_price_hw) * 100
+			frm.set_value("total_markup_hw", totals.toFixed(2))
+		}
+    },
 	total_cost_price: function (frm) {
 		if (cur_frm.doc.total_profit && cur_frm.doc.total_cost_price) {
 			var totals = 0;
@@ -124,6 +131,7 @@ frappe.ui.form.on('Project Quotation', {
 			console.log(totals);
 			frm.set_value("total_markup", totals.toFixed(2))
 		}
+		
 
 	},
 	total_selling_price: function (frm) {
@@ -307,6 +315,7 @@ frappe.ui.form.on('Hardware', {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
 		}
 		getSellingPrice(row);
+		getTotalOfField("profit","total_profit_hw", frm.doc.hardware, frm);
 		getProfit(row)
 		getMargin(row);
 
@@ -327,6 +336,7 @@ frappe.ui.form.on('Hardware', {
 		getSellingPrice(row);
 		getProfit(row);
 		getMargin(row);
+		getTotalOfField("profit","total_profit_hw", frm.doc.hardware, frm);
 
 		frm.refresh_fields();
 
@@ -339,6 +349,7 @@ frappe.ui.form.on('Hardware', {
 
 		}
 		getSellingPrice(row);
+		getTotalOfField("profit","total_profit_hw", frm.doc.hardware, frm);
 		getProfit(row);
 		getMargin(row);
 
@@ -350,6 +361,7 @@ frappe.ui.form.on('Hardware', {
 		// getSellingPrice(child);
 		getSellingPrice(row);
 		getTotalOfField("selling_price","total_selling_price_hw", frm.doc.hardware, frm);
+		getTotalOfField("profit","total_profit_hw", frm.doc.hardware, frm);
 		getProfit(row)
 		getMargin(row);
 		frm.refresh_fields();
@@ -359,12 +371,15 @@ frappe.ui.form.on('Hardware', {
 		if (row.quantity && row.sar_cost_price) {
 			frappe.model.set_value(cdt, cdn, "total_cost_price",row.quantity * row.sar_cost_price);
 
+
 	    }
+	    getTotalOfField("profit","total_profit_hw", frm.doc.hardware, frm);
 	},
 	selling_price: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
 		getSellingPrice(row)
 		getTotalOfField("selling_price","total_selling_price_hw", frm.doc.hardware, frm);
+		getTotalOfField("profit","total_profit_hw", frm.doc.hardware, frm);
 	    getMargin(row);
 		frm.refresh_fields();
 
@@ -372,6 +387,7 @@ frappe.ui.form.on('Hardware', {
 	margin: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
 		getMargin(row);
+		getTotalOfField("profit","total_profit_hw", frm.doc.hardware, frm);
 		frm.refresh_fields();
 
 	},
@@ -379,7 +395,7 @@ frappe.ui.form.on('Hardware', {
 		var row = locals[cdt][cdn];
 		getTotalOfField("profit","total_profit_hw", frm.doc.hardware, frm);
 		frm.refresh_fields();
-	},
+	}
 	// total_selling_price : function (frm, cdt, cdn) {
  //        var row = locals[cdt][cdn];
 	// 	getTotalOfField("selling_price","total_selling_price_hw", frm.doc.hardware, frm);
