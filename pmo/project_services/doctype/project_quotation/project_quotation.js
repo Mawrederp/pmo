@@ -1,6 +1,24 @@
 // Copyright (c) 2018, s and contributors
 // For license information, please see license.txt
 
+function get_item_price(frm, cdt, cdn) {
+	var row = locals[cdt][cdn];
+	frappe.call({
+		method: "pmo.project_services.doctype.project_quotation.project_quotation.get_item_price",
+		args: {
+			item: row.items_develop
+		},
+		callback: function (data) {
+			console.log(data.message)
+			if (data.message) {
+				frappe.model.set_value(cdt, cdn, "cost_price_develop", data.message[0].price_list_rate);
+			} else {
+				frappe.model.set_value(cdt, cdn, "cost_price_develop", 0);
+			}
+		}
+	});
+}
+
 function getTotalOfField(myfield, mytotalfield, mychildtable, frm) {
 	var total_price = 0;
 	$.each(mychildtable || [], function (i, d) {
@@ -10,7 +28,14 @@ function getTotalOfField(myfield, mytotalfield, mychildtable, frm) {
 }
 
 function getTotal(child) {
-	child.total_cost_price = ((child.cost_price * (1 + (child.overhead_value / 100)))) * (child.months) * (child.quantity / 100);
+	if (child.sar_cost_price & child.months) {
+		child.total_cost_price = child.sar_cost_price * (child.months) * (child.quantity / 100);
+	} else if (child.sar_cost_price) {
+		child.total_cost_price = (child.sar_cost_price * (child.quantity / 100));
+	} else {
+		child.total_cost_price = ((child.cost_price * (1 + (child.overhead_value / 100)))) * (child.months) * (child.quantity / 100);
+
+	}
 }
 
 function getSellingPrice(child) {
@@ -243,7 +268,7 @@ frappe.ui.form.on('Development Services', {
 	quantity_develop: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
 		if (row.quantity_develop && row.sar_cost_price_develop) {
-			frappe.model.set_value(cdt, cdn, "total_cost_price_develop",row.quantity_develop * row.sar_cost_price_develop);
+			frappe.model.set_value(cdt, cdn, "total_cost_price_develop", row.quantity_develop * row.sar_cost_price_develop);
 
 		}
 		getTotalOfField("total_cost_price_develop", "total_cost_price", frm.doc.development_services, frm);
@@ -252,7 +277,7 @@ frappe.ui.form.on('Development Services', {
 	sar_cost_price_develop: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
 		if (row.quantity_develop && row.sar_cost_price_develop) {
-			frappe.model.set_value(cdt, cdn, "total_cost_price_develop",row.quantity_develop * row.sar_cost_price_develop);
+			frappe.model.set_value(cdt, cdn, "total_cost_price_develop", row.quantity_develop * row.sar_cost_price_develop);
 
 		}
 
@@ -277,7 +302,10 @@ frappe.ui.form.on('Development Services', {
 	},
 	selling_price_develop: function (frm, cdt, cdn) {
 		getTotalOfField("selling_price_develop", "total_selling_price", frm.doc.development_services, frm);
-		
+
+	},
+	items_develop: function (frm, cdt, cdn) {
+		get_item_price(frm, cdt, cdn);
 	}
 
 
@@ -298,7 +326,7 @@ cur_frm.set_query("employee", 'project_management_and_technical_services', funct
 });
 
 frappe.ui.form.on('Hardware', {
-	cost_price:function (frm, cdt, cdn) {
+	cost_price: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
 		if (row.currency == 'SAR' && row.cost_price) {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price);
@@ -312,15 +340,15 @@ frappe.ui.form.on('Hardware', {
 		frm.refresh_fields();
 
 	},
-	currency:function (frm, cdt, cdn) {
+	currency: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
-		if (row.currency_hw == 'SAR' && row.cost_price_hw) {
-			frappe.model.set_value(cdt, cdn, "sar_cost_price_hw", row.cost_price_hw);
+		if (row.currency == 'SAR' && row.cost_price) {
+			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price);
 		} else {
-			frappe.model.set_value(cdt, cdn, "sar_cost_price_hw", row.cost_price_hw * 3.75);
+			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
 		}
 	},
-	total_cost_price:function (frm, cdt, cdn) {
+	total_cost_price: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
 		getTotalOfField("total_cost_price", "total_cost_price_hw", frm.doc.hardware, frm);
 		getSellingPrice(row);
@@ -333,7 +361,7 @@ frappe.ui.form.on('Hardware', {
 	quantity: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
 		if (row.quantity && row.sar_cost_price) {
-			frappe.model.set_value(cdt, cdn, "total_cost_price",row.quantity * row.sar_cost_price);
+			frappe.model.set_value(cdt, cdn, "total_cost_price", row.quantity * row.sar_cost_price);
 
 		}
 		getSellingPrice(row);
@@ -354,8 +382,8 @@ frappe.ui.form.on('Hardware', {
 	sar_cost_price: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
 		if (row.quantity && row.sar_cost_price) {
-			frappe.model.set_value(cdt, cdn, "total_cost_price",row.quantity * row.sar_cost_price);
+			frappe.model.set_value(cdt, cdn, "total_cost_price", row.quantity * row.sar_cost_price);
 
-	    }
+		}
 	}
 });
