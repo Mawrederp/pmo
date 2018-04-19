@@ -3,6 +3,11 @@
 
 
 function get_item_price(frm, cdt, cdn, item, field) {
+	var child = locals[cdt][cdn];
+	if (!child.group_code && child.items != "") {
+		frappe.model.set_value(cdt, cdn, "items", "");
+		frappe.throw('Please Specify A Group for the Item');
+	}
 	if (item) {
 		frappe.call({
 			method: "pmo.project_services.doctype.project_quotation.project_quotation.get_item_price",
@@ -74,6 +79,16 @@ function calculateTechnicalServices(frm, cdt, cdn, string, doc) {
 	getTotalOfField('selling_price', "total_selling_price" + string, doc, frm);
 	getTotalOfField('profit', "total_profit" + string, doc, frm);
 
+	if (cur_frm.doc["total_profit" + string] && cur_frm.doc["total_cost_price" + string]) {
+		var totals = 0;
+		totals = flt(cur_frm.doc["total_profit" + string]) / flt(cur_frm.doc["total_cost_price" + string]) * 100
+		frm.set_value("total_markup" + string, totals.toFixed(2))
+	}
+	if (cur_frm.doc["total_profit" + string] && cur_frm.doc["total_selling_price" + string]) {
+		var totals_margin = 0;
+		totals_margin = flt(cur_frm.doc["total_profit" + string]) / flt(cur_frm.doc["total_selling_price" + string]) * 100
+		frm.set_value("total_margin" + string, totals_margin.toFixed(2))
+	}
 	frm.refresh_fields();
 
 }
@@ -104,7 +119,7 @@ frappe.ui.form.on('Project Management and Technical Services', {
 		var d = locals[cdt][cdn];
 		if (!d.designation & d.employee != "") {
 			frappe.model.set_value(cdt, cdn, "employee", "");
-			frappe.throw('Please Specify Designation');
+			frappe.throw('Please Specify A Designation');
 
 		}
 		frappe.call({
@@ -130,6 +145,15 @@ frappe.ui.form.on('Project Management and Technical Services', {
 
 });
 
+cur_frm.set_query("employee", 'project_management_and_technical_services', function (doc, cdt, cdn) {
+	var d = locals[cdt][cdn];
+	console.log(d);
+	return {
+		"filters": {
+			"designation": d.designation
+		}
+	}
+});
 
 frappe.ui.form.on('Project Quotation', {
 	refresh: function (frm) {
@@ -148,13 +172,6 @@ frappe.ui.form.on('Project Quotation', {
 		}
 
 	},
-	total_profit_hw:function (frm) {
-		if (cur_frm.doc.total_profit_hw && cur_frm.doc.sum_total_cost_price_hw) {
-			var totals = 0;
-			totals = flt(cur_frm.doc.total_profit_hw) / flt(cur_frm.doc.sum_total_cost_price_hw) * 100
-			frm.set_value("total_markup_hw", totals.toFixed(2))
-		}
-    },
 	total_cost_price: function (frm) {
 		if (cur_frm.doc.total_profit && cur_frm.doc.total_cost_price) {
 			var totals = 0;
@@ -162,7 +179,7 @@ frappe.ui.form.on('Project Quotation', {
 			console.log(totals);
 			frm.set_value("total_markup", totals.toFixed(2))
 		}
-		
+
 
 	},
 	total_selling_price: function (frm) {
@@ -172,41 +189,7 @@ frappe.ui.form.on('Project Quotation', {
 			frm.set_value("total_margin", totals_margin.toFixed(2))
 		}
 
-	},
-	total_profit_pmts: function (frm) {
-		if (cur_frm.doc.total_profit_pmts && cur_frm.doc.total_cost_price_pmts) {
-			var totals = 0;
-			totals = flt(cur_frm.doc.total_profit_pmts) / flt(cur_frm.doc.total_cost_price_pmts) * 100
-			frm.set_value("total_markup_pmts", totals.toFixed(2))
-		}
-		if (cur_frm.doc.total_profit_pmts && cur_frm.doc.total_selling_price_pmts) {
-			var totals_margin = 0;
-			totals_margin_pmts = flt(cur_frm.doc.total_profit_pmts) / flt(cur_frm.doc.total_selling_price_pmts) * 100
-			frm.set_value("total_margin_pmts", totals_margin_pmts.toFixed(2))
-		}
-
-	},
-	total_cost_price_pmts: function (frm) {
-		if (cur_frm.doc.total_profit_pmts && cur_frm.doc.total_cost_price_pmts) {
-			var totals = 0;
-			totals = flt(cur_frm.doc.total_profit_pmts) / flt(cur_frm.doc.total_cost_price_pmts) * 100
-			console.log(totals);
-			frm.set_value("total_markup_pmts", totals.toFixed(2))
-		}
-
-	},
-	total_selling_price_pmts: function (frm) {
-		if (cur_frm.doc.total_profit_pmts && cur_frm.doc.total_selling_price_pmts) {
-			var totals_margin = 0;
-			totals_margin = flt(cur_frm.doc.total_profit_pmts) / flt(cur_frm.doc.total_selling_price_pmts) * 100
-			frm.set_value("total_margin_pmts", totals_margin.toFixed(2))
-		}
-
 	}
-
-
-
-
 });
 
 
@@ -283,7 +266,7 @@ frappe.ui.form.on('Development Services', {
 	quantity_develop: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
 		if (row.quantity_develop && row.sar_cost_price_develop) {
-			frappe.model.set_value(cdt, cdn, "total_cost_price_develop",row.quantity_develop * row.sar_cost_price_develop);
+			frappe.model.set_value(cdt, cdn, "total_cost_price_develop", row.quantity_develop * row.sar_cost_price_develop);
 
 		}
 		getTotalOfField("total_cost_price_develop", "total_cost_price", frm.doc.development_services, frm);
@@ -292,7 +275,7 @@ frappe.ui.form.on('Development Services', {
 	sar_cost_price_develop: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
 		if (row.quantity_develop && row.sar_cost_price_develop) {
-			frappe.model.set_value(cdt, cdn, "total_cost_price_develop",row.quantity_develop * row.sar_cost_price_develop);
+			frappe.model.set_value(cdt, cdn, "total_cost_price_develop", row.quantity_develop * row.sar_cost_price_develop);
 
 		}
 
@@ -330,7 +313,169 @@ frappe.ui.form.on('Development Services', {
 
 });
 
-cur_frm.set_query("employee", 'project_management_and_technical_services', function (doc, cdt, cdn) {
+
+frappe.ui.form.on('Hardware', {
+	refresh: function (frm) {
+
+	},
+	cost_price: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_hw", frm.doc.hardware);
+		var row = locals[cdt][cdn];
+		if (row.currency == 'SAR' && row.cost_price) {
+			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price);
+		} else {
+			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
+		}
+	},
+	quantity: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_hw", frm.doc.hardware);
+
+	},
+	total_cost_price: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_hw", frm.doc.hardware);
+
+	},
+	markup: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_hw", frm.doc.hardware);
+
+	},
+	items: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_sw", frm.doc.software);
+		var row = locals[cdt][cdn];
+		get_item_price(frm, cdt, cdn, row.items, "cost_price", frm.doc.hardware);
+
+	},
+	group_code: function (frm, cdt, cdn) {
+		frappe.model.set_value(cdt, cdn, "items", "");
+	},
+	currency: function (frm, cdt, cdn) {
+		var row = locals[cdt][cdn];
+		if (row.currency == 'SAR' && row.cost_price) {
+			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price);
+		} else {
+			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
+		}
+	}
+
+});
+
+
+cur_frm.set_query("items", "hardware", function (doc, cdt, cdn) {
+	var d = locals[cdt][cdn];
+	return {
+		filters: [
+			['Item', 'item_group', '=', d.group_code]
+		]
+	}
+});
+
+
+frappe.ui.form.on('Software', {
+	refresh: function (frm) {
+
+	},
+	cost_price: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_sw", frm.doc.software);
+		var row = locals[cdt][cdn];
+		if (row.currency == 'SAR' && row.cost_price) {
+			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price);
+		} else {
+			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
+		}
+	},
+	quantity: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_sw", frm.doc.software);
+
+	},
+	total_cost_price: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_sw", frm.doc.software);
+
+	},
+	markup: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_sw", frm.doc.software);
+
+	},
+	items: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_sw", frm.doc.software);
+		var row = locals[cdt][cdn];
+		get_item_price(frm, cdt, cdn, row.items, "cost_price", frm.doc.software);
+
+	},
+	group_code: function (frm, cdt, cdn) {
+		frappe.model.set_value(cdt, cdn, "items", "");
+	},
+	currency: function (frm, cdt, cdn) {
+		var row = locals[cdt][cdn];
+		if (row.currency == 'SAR' && row.cost_price) {
+			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price);
+		} else {
+			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
+		}
+	}
+
+});
+
+
+cur_frm.set_query("items", "software", function (doc, cdt, cdn) {
+	var d = locals[cdt][cdn];
+	return {
+		filters: [
+			['Item', 'item_group', '=', d.group_code]
+		]
+	}
+});
+
+
+frappe.ui.form.on('Man Power', {
+	refresh: function (frm) {
+
+	},
+	cost_price: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_manpower", frm.doc.man_power);
+	},
+	months: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_manpower", frm.doc.man_power);
+
+	},
+	quantity: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_manpower", frm.doc.man_power);
+
+	},
+	total_cost_price: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_manpower", frm.doc.man_power);
+
+	},
+	markup: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_manpower", frm.doc.man_power);
+
+	},
+	employee: function (frm, cdt, cdn) {
+		var d = locals[cdt][cdn];
+		if (!d.designation & d.employee != "") {
+			frappe.model.set_value(cdt, cdn, "employee", "");
+			frappe.throw('Please Specify A Designation');
+
+		}
+		frappe.call({
+			method: "pmo.project_services.doctype.project_quotation.project_quotation.get_basic_salary",
+			args: {
+				employee: d.employee
+			},
+			callback: function (data) {
+				frappe.model.set_value(cdt, cdn, "cost_price", data.message);
+			}
+		});
+
+	},
+	designation: function (frm, cdt, cdn) {
+		frappe.model.set_value(cdt, cdn, "employee", "");
+	}
+
+
+
+});
+
+cur_frm.set_query("employee", 'man_power', function (doc, cdt, cdn) {
 	var d = locals[cdt][cdn];
 	console.log(d);
 	return {
@@ -340,112 +485,114 @@ cur_frm.set_query("employee", 'project_management_and_technical_services', funct
 	}
 });
 
-frappe.ui.form.on('Hardware', {
-	cost_price:function (frm, cdt, cdn) {
+
+frappe.ui.form.on('Support License Renew', {
+	refresh: function (frm) {
+
+	},
+	cost_price: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_support", frm.doc.support_license_renew);
 		var row = locals[cdt][cdn];
 		if (row.currency == 'SAR' && row.cost_price) {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price);
 		} else {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
 		}
-		getSellingPrice(row);
-		getTotalOfField("profit","total_profit_hw", frm.doc.hardware, frm);
-		getProfit(row)
-		getMargin(row);
-
-		frm.refresh_fields();
-
 	},
-	currency:function (frm, cdt, cdn) {
-		var row = locals[cdt][cdn];
-		if (row.currency_hw == 'SAR' && row.cost_price_hw) {
-			frappe.model.set_value(cdt, cdn, "sar_cost_price_hw", row.cost_price_hw);
-		} else {
-			frappe.model.set_value(cdt, cdn, "sar_cost_price_hw", row.cost_price_hw * 3.75);
-		}
-	},
-	total_cost_price:function (frm, cdt, cdn) {
-		var row = locals[cdt][cdn];
-		getTotalOfField("total_cost_price", "sum_total_cost_price_hw", frm.doc.hardware, frm);
-		getSellingPrice(row);
-		getProfit(row);
-		getMargin(row);
-		getTotalOfField("profit","total_profit_hw", frm.doc.hardware, frm);
-
-		frm.refresh_fields();
-
-	},
-
 	quantity: function (frm, cdt, cdn) {
-		var row = locals[cdt][cdn];
-		if (row.quantity && row.sar_cost_price) {
-			frappe.model.set_value(cdt, cdn, "total_cost_price",row.quantity * row.sar_cost_price);
+		calculateTechnicalServices(frm, cdt, cdn, "_support", frm.doc.support_license_renew);
 
-		}
-		getSellingPrice(row);
-		getTotalOfField("profit","total_profit_hw", frm.doc.hardware, frm);
-		getProfit(row);
-		getMargin(row);
-
-		frm.refresh_fields();
+	},
+	total_cost_price: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_support", frm.doc.support_license_renew);
 
 	},
 	markup: function (frm, cdt, cdn) {
-		var row = locals[cdt][cdn];
-		// getSellingPrice(child);
-		getSellingPrice(row);
-		getTotalOfField("selling_price","total_selling_price_hw", frm.doc.hardware, frm);
-		getTotalOfField("profit","total_profit_hw", frm.doc.hardware, frm);
-		getProfit(row)
-		getMargin(row);
-		frm.refresh_fields();
-	},
-	sar_cost_price: function (frm, cdt, cdn) {
-		var row = locals[cdt][cdn];
-		if (row.quantity && row.sar_cost_price) {
-			frappe.model.set_value(cdt, cdn, "total_cost_price",row.quantity * row.sar_cost_price);
-
-
-	    }
-	    getTotalOfField("profit","total_profit_hw", frm.doc.hardware, frm);
-	},
-	selling_price: function (frm, cdt, cdn) {
-		var row = locals[cdt][cdn];
-		getSellingPrice(row)
-		getTotalOfField("selling_price","total_selling_price_hw", frm.doc.hardware, frm);
-		getTotalOfField("profit","total_profit_hw", frm.doc.hardware, frm);
-	    getMargin(row);
-		frm.refresh_fields();
+		calculateTechnicalServices(frm, cdt, cdn, "_support", frm.doc.support_license_renew);
 
 	},
-	margin: function (frm, cdt, cdn) {
+	items: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
-		getMargin(row);
-		getTotalOfField("profit","total_profit_hw", frm.doc.hardware, frm);
-		frm.refresh_fields();
+		get_item_price(frm, cdt, cdn, row.items, "cost_price", frm.doc.support_license_renew);
 
 	},
-	profit:function(frm, cdt, cdn) {
+	group_code: function (frm, cdt, cdn) {
+		frappe.model.set_value(cdt, cdn, "items", "");
+	},
+	currency: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
-		getTotalOfField("profit","total_profit_hw", frm.doc.hardware, frm);
-		frm.refresh_fields();
+		if (row.currency == 'SAR' && row.cost_price) {
+			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price);
+		} else {
+			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
+		}
 	}
-	// total_selling_price : function (frm, cdt, cdn) {
- //        var row = locals[cdt][cdn];
-	// 	getTotalOfField("selling_price","total_selling_price_hw", frm.doc.hardware, frm);
-	// 	frm.refresh_fields();
-	// }
 
 });
-cur_frm.set_query("items_hw", "hardware", function (doc, cdt, cdn) {
+
+cur_frm.set_query("items", "support_license_renew", function (doc, cdt, cdn) {
 	var d = locals[cdt][cdn];
 	return {
 		filters: [
-			['Item', 'item_group', '=', d.group_code_hw]
+			['Item', 'item_group', '=', d.group_code]
 		]
 	}
 });
 
+
+
+frappe.ui.form.on('Training', {
+	refresh: function (frm) {
+
+	},
+	cost_price: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_training", frm.doc.training);
+		var row = locals[cdt][cdn];
+		if (row.currency == 'SAR' && row.cost_price) {
+			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price);
+		} else {
+			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
+		}
+	},
+	quantity: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_training", frm.doc.training);
+
+	},
+	total_cost_price: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_training", frm.doc.training);
+
+	},
+	markup: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_training", frm.doc.training);
+
+	},
+	items: function (frm, cdt, cdn) {
+		var row = locals[cdt][cdn];
+		get_item_price(frm, cdt, cdn, row.items, "cost_price", frm.doc.training);
+
+	},
+	group_code: function (frm, cdt, cdn) {
+		frappe.model.set_value(cdt, cdn, "items", "");
+	},
+	currency: function (frm, cdt, cdn) {
+		var row = locals[cdt][cdn];
+		if (row.currency == 'SAR' && row.cost_price) {
+			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price);
+		} else {
+			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
+		}
+	}
+
+});
+
+cur_frm.set_query("items", "training", function (doc, cdt, cdn) {
+	var d = locals[cdt][cdn];
+	return {
+		filters: [
+			['Item', 'item_group', '=', d.group_code]
+		]
+	}
+});
 
 frappe.ui.form.on('Expenses', {
 	refresh: function (frm) {
@@ -484,64 +631,6 @@ frappe.ui.form.on('Expenses', {
 });
 
 cur_frm.set_query("items", "expenses", function (doc, cdt, cdn) {
-	var d = locals[cdt][cdn];
-	return {
-		filters: [
-			['Item', 'item_group', '=', d.group_code]
-		]
-	}
-});
-frappe.ui.form.on('Training', {
-	refresh: function (frm) {
-
-	},
-	cost_price: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_training", frm.doc.training);
-		var row = locals[cdt][cdn];
-		if (row.currency == 'SAR' && row.cost_price) {
-			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price);
-		} else {
-			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
-		}
-	},
-	months: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_training", frm.doc.training);
-
-	},
-	quantity: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_training", frm.doc.training);
-
-	},
-	total_cost_price: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_training", frm.doc.training);
-
-	},
-	markup: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_training", frm.doc.training);
-
-	},
-	items: function (frm, cdt, cdn) {
-		var row = locals[cdt][cdn];
-		get_item_price(frm, cdt, cdn, row.items, "cost_price", frm.doc.training);
-
-	},
-	group_code: function (frm, cdt, cdn) {
-		frappe.model.set_value(cdt, cdn, "items", "");
-	},
-	currency: function (frm, cdt, cdn) {
-		var row = locals[cdt][cdn];
-		if (row.currency == 'SAR' && row.cost_price) {
-			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price);
-		} else {
-			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
-		}
-	}
-
-
-
-});
-
-cur_frm.set_query("items", "training", function (doc, cdt, cdn) {
 	var d = locals[cdt][cdn];
 	return {
 		filters: [

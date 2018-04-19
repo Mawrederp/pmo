@@ -673,7 +673,6 @@
    "bold": 0, 
    "collapsible": 0, 
    "columns": 0, 
-   "fieldname": "sum_total_cost_price_hw", 
    "fieldname": "section_break_5", 
    "fieldtype": "Section Break", 
    "hidden": 0, 
@@ -882,7 +881,7 @@
    "set_only_once": 0, 
    "translatable": 0, 
    "unique": 0
-  },  
+  }, 
   {
    "allow_bulk_edit": 0, 
    "allow_on_submit": 0, 
@@ -920,7 +919,7 @@
    "bold": 0, 
    "collapsible": 0, 
    "columns": 0, 
-   "fieldname": "sw", 
+   "fieldname": "software", 
    "fieldtype": "Table", 
    "hidden": 0, 
    "ignore_user_permissions": 0, 
@@ -932,7 +931,7 @@
    "label": "S/W", 
    "length": 0, 
    "no_copy": 0, 
-   "options": "S W", 
+   "options": "Software", 
    "permlevel": 0, 
    "precision": "", 
    "print_hide": 0, 
@@ -2284,7 +2283,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2018-04-19 12:00:33.281802", 
+ "modified": "2018-04-19 18:09:16.729604", 
  "modified_by": "Administrator", 
  "module": "Project Services", 
  "name": "Project Quotation", 
@@ -2293,7 +2292,6 @@
  "permissions": [
   {
    "amend": 0, 
-   "apply_user_permissions": 0, 
    "cancel": 0, 
    "create": 1, 
    "delete": 1, 
