@@ -346,7 +346,8 @@ frappe.ui.form.on('Hardware', {
 	markup: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
 		// getSellingPrice(child);
-		getProfit(row);
+		getSellingPrice(row);
+		getProfit(row)
 		getMargin(row);
 		frm.refresh_fields();
 	},
