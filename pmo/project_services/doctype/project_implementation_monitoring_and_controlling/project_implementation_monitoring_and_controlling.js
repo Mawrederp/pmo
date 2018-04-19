@@ -54,11 +54,14 @@ frappe.ui.form.on('Project Implementation Monitoring and Controlling', {
 });
 
 
-
 frappe.ui.form.on('Control Change Request', 'change_request_add', function(frm, cdt, cdn){
     var row = locals[cdt][cdn];
-    console.log(row.idx);
-    frappe.model.set_value(cdt, cdn, "change_request_number", 'ERP-PMO-'+row.idx);
+    if(cur_frm.doc.project_changes == "Regular Change"){
+        var naming = "ERP-PMO- Regular-"+row.idx
+    }else{
+        var naming = "ERP-PMO- Customer App-"+row.idx
+    }
+    frappe.model.set_value(cdt, cdn, "change_request_number", naming);
 
 });
 
@@ -69,9 +72,8 @@ frappe.ui.form.on('Control Change Request', {
 
         var d = new frappe.ui.Dialog({
             'fields': [
-                {'label': 'Action','fieldname': 'action', 'fieldtype': 'Data', 'reqd': 1},
-                {'label': '','fieldname': 'col_break94', 'fieldtype': 'Column Break'},
-                {'label': 'Owner','fieldname': 'owner', 'fieldtype': 'Data', 'reqd': 1}
+                {'label': 'Owner','fieldname': 'owner', 'fieldtype': 'Link', 'options': 'Employee', 'reqd': 1},
+                {'label': 'Action','fieldname': 'action', 'fieldtype': 'Text', 'reqd': 1}
             ],
             primary_action: function(){
 
