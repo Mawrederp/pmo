@@ -305,8 +305,10 @@ frappe.ui.form.on('Hardware', {
 		} else {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
 		}
-		getSellingPrice(child);
-		getProfit(child)
+		getSellingPrice(row);
+		getProfit(row)
+		getMargin(row);
+
 		frm.refresh_fields();
 
 	},
@@ -319,9 +321,11 @@ frappe.ui.form.on('Hardware', {
 		}
 	},
 	total_cost_price:function (frm, cdt, cdn) {
-		getTotalOfField("total_cost_price", "sum_total_cost_price_hw", frm.doc.hardware, frm);
-		getSellingPrice(child);
-		getProfit(child)
+		var row = locals[cdt][cdn];
+		getTotalOfField("total_cost_price", "total_cost_price_hw", frm.doc.hardware, frm);
+		getSellingPrice(row);
+		getProfit(row);
+
 		frm.refresh_fields();
 
 	},
@@ -332,14 +336,18 @@ frappe.ui.form.on('Hardware', {
 			frappe.model.set_value(cdt, cdn, "total_cost_price",row.quantity * row.sar_cost_price);
 
 		}
-		getSellingPrice(child);
-		getProfit(child)
+		getSellingPrice(row);
+		getProfit(row);
+		getMargin(row);
+
 		frm.refresh_fields();
 
 	},
 	markup: function (frm, cdt, cdn) {
+		var row = locals[cdt][cdn];
 		// getSellingPrice(child);
-		getProfit(child);
+		getProfit(row);
+		getMargin(row);
 		frm.refresh_fields();
 	},
 	sar_cost_price: function (frm, cdt, cdn) {
