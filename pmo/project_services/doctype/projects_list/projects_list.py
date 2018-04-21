@@ -8,24 +8,24 @@ from frappe import _
 from frappe.model.document import Document
 
 class ProjectsList(Document):
-    def on_submit(self):
-        frappe.get_doc({
-            "doctype": "Project",
-            "project_name": self.project_name
-        }).save(ignore_permissions = True)
+    # def on_submit(self):
+    #     frappe.get_doc({
+    #         "doctype": "Project",
+    #         "project_name": self.project_name
+    #     }).save(ignore_permissions = True)
 
-        frappe.db.commit()
+    #     frappe.db.commit()
 
-        frappe.get_doc({
-            "doctype": "Project Initiation",
-            "project_name": self.project_name
-        }).save(ignore_permissions = True)
+    #     frappe.get_doc({
+    #         "doctype": "Project Initiation",
+    #         "project_name": self.project_name
+    #     }).save(ignore_permissions = True)
 
-        frappe.db.commit()
+    #     frappe.db.commit()
 
-        pp = frappe.get_value("Project Initiation", filters = {"project_name": self.project_name}, fieldname = "name")
+    #     pp = frappe.get_value("Project Initiation", filters = {"project_name": self.project_name}, fieldname = "name")
 
-        frappe.msgprint(_("""Project {project} and Project Initiation have been created: <b><a href="#Form/Project Initiation/{pp}">{pp}</a></b>""".format(project=self.project_name, pp = pp)))
+    #     frappe.msgprint(_("""Project {project} and Project Initiation have been created: <b><a href="#Form/Project Initiation/{pp}">{pp}</a></b>""".format(project=self.project_name, pp = pp)))
 
 
 
