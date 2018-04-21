@@ -452,7 +452,7 @@ frappe.ui.form.on('Expenses', {
 
 	},
 	cost_price: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_expenses", frm.doc.expenses);
+		calculateTechnicalServices(frm, cdt, cdn, "", frm.doc.expenses);
 	},
 	months: function (frm, cdt, cdn) {
 		calculateTechnicalServices(frm, cdt, cdn, "_expenses", frm.doc.expenses);
@@ -463,7 +463,7 @@ frappe.ui.form.on('Expenses', {
 
 	},
 	total_cost_price: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_expenses", frm.doc.expenses);
+		calculateTechnicalServices(frm, cdt, cdn, "total_cost_price_expenses", frm.doc.expenses);
 
 	},
 	markup: function (frm, cdt, cdn) {
