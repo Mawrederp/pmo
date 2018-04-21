@@ -1,5 +1,6 @@
 frappe.pages['projects-gantt'].on_page_load = function(wrapper) {
 	var me = this;
+
 	var page = frappe.ui.make_app_page({
 		parent: wrapper,
 		title: 'Projects Gantt',
@@ -13,14 +14,14 @@ frappe.pages['projects-gantt'].on_page_load = function(wrapper) {
 			fieldtype: "Link",
 			options: "Project",
 			fieldname: "project",
-			change: function(){
-
-				gantt.render();
-			    gantt.refreshData();
-
+			onchange: function(){
+				// gantt.clearAll();
+				// page.main.html(frappe.render_template("projects_gantt", {}));
+				// $('.project-details').empty();
 				data = [];
         		links = [];
-
+        		// gantt.parse({"data": data});
+        		// gantt.render();
 				selected_project = this.value;
 
 				frappe.model.with_doc("Project", selected_project, function(r) {
@@ -33,6 +34,7 @@ frappe.pages['projects-gantt'].on_page_load = function(wrapper) {
                 	// var expected_start_date = convert_to_ddmmyyyy(proj.expected_start_date);
                 	var expected_start_date = moment(proj.expected_start_date).format("DD-MM-YYYY");
                 	var duration = moment(proj.expected_end_date).diff(proj.expected_start_date, "days");
+
                 	project_info = {id: proj.name, text: proj.name, start_date: expected_start_date, duration: duration,
 						progress: 0.4, open: false};
 					// console.log();
@@ -41,28 +43,39 @@ frappe.pages['projects-gantt'].on_page_load = function(wrapper) {
 					data.push(project_info);
 					// links.push(project_link)
 					// gantt.clearAll();
-
-					gantt.init("gantt_here");
-					gantt.parse({"data": data});
+					var project_gantt = Gantt.getGanttInstance();
 					
-					console.log(data);
+					// project_gantt.config.autofit = false;
+					project_gantt.config.open_tree_initially = true;
+					gantt.config.columns=[
+						{name:"text",       label:"Task name",  tree:true, width:'*' },
+						{name:"start_date", label:"Start time", align: "center" },
+						{name:"duration",   label:"Duration",   align: "center" },
+						{name:"add",        label:"" }
+					];
+
+					project_gantt.init("gantt_here");
+					project_gantt.parse({"data": data});
+					// gantt.refreshData();
+					// console.log(data);
 					
 					frappe.call({
 			            method: 'frappe.client.get_list',
 			            args: {
 			                'doctype': 'Task',
 			                'filters': { 'project': selected_project },
+			                'order_by': "exp_end_date",
 			                'fields': '*'
 			            },
 			            freeze: true,
 			            freeze_message: "Loading Gantt..",
 			            // async: false,
 			            callback: function(r) {
-			            	console.log(r.message);
+			            	
 			            	// !r.exc
 			                if (r.message) {							
-
-								tasks = r.message.reverse();
+			                	console.log(r.message)
+								tasks = r.message;
 								for (var i in tasks){
 									var exp_start_date = moment(tasks[i].exp_start_date).format("DD-MM-YYYY");
 									var task_duration = moment(tasks[i].exp_end_date).diff(tasks[i].exp_start_date, "days");
@@ -70,45 +83,45 @@ frappe.pages['projects-gantt'].on_page_load = function(wrapper) {
 									tasks[i]["duration"] = task_duration;
 									tasks[i]["start_date"] = exp_start_date;
 									tasks[i]["text"] = tasks[i].subject;
-									// tasks[i]["order"] = tasks[i].idx+2;
-									data.push(tasks[i])
-									// gantt.addTask(tasks[i]);
-									// data.push({
-									// 	id: parseInt(i)+2,
-									// 	text: tasks[i].subject,
-									// 	start_date: exp_start_date,
-									// 	duration: task_duration,
-									// 	progress: tasks[i].progress,
-									// 	parent: tasks[i].parent_id,
-									// 	order: parseInt(i)+2,
-									// 	name: tasks[i].name
 
-									// });
-									// if(tasks[i].source && tasks[i].target){
-									// 	links.push({
-									// 		id: tasks[i].id,
-									// 		source: tasks[i].source,
-									// 		target: tasks[i].target,
-									// 		type: "0"
-									// 	})
+									if(!tasks[i].parent_task){
+										tasks[i]["parent"] = proj.name;
+										// var pt = tasks[i].parent_task;
+										// tasks[i]["parent"] = pt;
+									}
+									else{
+										tasks[i]["parent"] = tasks[i]["parent_task"];
+									}
+									console.log(tasks[i]["parent"])
+									// else{
+									// 	tasks[i]["parent"] = proj.name;
 									// }
+									console.log(tasks[i]);
+
+									// console.log(tasks[i]);
+									// tasks[i]["order"] = tasks[i].idx+2;
+									// data.push(tasks[i])
+									project_gantt.addTask(tasks[i]);
+									
 
 								}
-								project_links = proj.links;
-								for (var i in project_links){
-									// console.log(proj.links);
-									project_links[i]["id"] = project_links[i].name;
-									// gantt.addLink(project_links[i]);
-									links.push(project_links[i]);
-								}
+								// project_gantt.render();
+								// project_links = proj.links;
+								// for (var i in project_links){
+								// 	// console.log(proj.links);
+								// 	project_links[i]["id"] = project_links[i].name;
+								// 	project_gantt.addLink(project_links[i]);
+								// 	// links.push(project_links[i]);
+								// }
 								// console.log(gantt.getTask("TASK00002"));
 								// gantt.init("gantt_here");
-								// gantt.refreshData();
-								gantt.parse({"data": data, "links": links});
+								// project_gantt.refreshData();
+
+								project_gantt.parse({"data": tasks});
 			               	
 			                }
-			                gantt.render();
-			                gantt.refreshData();
+			                // gantt.render();
+			                // gantt.refreshData();
 			            }
         			});
 				});
@@ -144,11 +157,11 @@ frappe.pages['projects-gantt'].on_page_load = function(wrapper) {
 	});
 	project.refresh();
 
-	me.page.set_primary_action(__("Transfer"), function() {
-		alert("dfdf");
-	// me.page.list.filter_list.clear_filters();
-	// me.page.list.run();
-	});
+	// me.page.set_primary_action(__("Transfer"), function() {
+	// 	alert("dfdf");
+	// // me.page.list.filter_list.clear_filters();
+	// // me.page.list.run();
+	// });
 
 }
 
