@@ -37,7 +37,6 @@ function get_item_price(frm, cdt, cdn, item, field) {
 				item: item
 			},
 			callback: function (data) {
-				console.log(data.message)
 				if (data.message) {
 					frappe.model.set_value(cdt, cdn, field, data.message[0].price_list_rate);
 					if (data.message[0].currency == "USD") {
@@ -166,7 +165,6 @@ frappe.ui.form.on('Project Management and Technical Services', {
 
 cur_frm.set_query("employee", 'project_management_and_technical_services', function (doc, cdt, cdn) {
 	var d = locals[cdt][cdn];
-	console.log(d);
 	return {
 		"filters": {
 			"designation": d.designation
@@ -178,15 +176,6 @@ frappe.ui.form.on('Project Quotation', {
 	refresh: function (frm) {
 
 	},
-	validate: function (frm) {
-		console.log(cur_frm.doc.total_selling_price_pmts);
-		console.log(cur_frm.doc.total_cost_price_pmts);
-
-		console.log(cur_frm.doc.total_profit_pmts);
-		console.log(cur_frm.doc.total_markup_pmts);
-
-		console.log(cur_frm.doc.total_margin_pmts);
-	}
 });
 
 
@@ -414,7 +403,6 @@ frappe.ui.form.on('Man Power', {
 
 cur_frm.set_query("employee", 'man_power', function (doc, cdt, cdn) {
 	var d = locals[cdt][cdn];
-	console.log(d);
 	return {
 		"filters": {
 			"designation": d.designation
