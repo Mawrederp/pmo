@@ -68,7 +68,7 @@ function getTotal(child, string) {
 	} else if (string == "_expenses") {
 		child.total_cost_price = child.cost_price * (child.quantity);
 
-	} else if (string == "_pmts") {
+	} else if (string == "_pmts" || string == "_manpower") {
 		child.total_cost_price = ((child.cost_price * (1 + (child.overhead_value / 100)))) * (child.months) * (child.quantity);
 	} else {
 		child.total_cost_price = child.sar_cost_price * (child.quantity);
@@ -357,7 +357,7 @@ frappe.ui.form.on('Man Power', {
 	},
 	cost_price: function (frm, cdt, cdn) {
 		calculateTechnicalServices(frm, cdt, cdn, "_manpower", frm.doc.man_power);
-
+		console.log("*********-*-*-*-*-*-*")
 	},
 	months: function (frm, cdt, cdn) {
 		calculateTechnicalServices(frm, cdt, cdn, "_manpower", frm.doc.man_power);
