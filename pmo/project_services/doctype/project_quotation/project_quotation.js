@@ -208,7 +208,7 @@ cur_frm.set_query("items", "development_services", function (doc, cdt, cdn) {
 	var d = locals[cdt][cdn];
 	return {
 		filters: [
-			['Item', 'item_group', '=', d.group_code]
+			['Item', 'item_group', '=', d.group_code_develop]
 		]
 	}
 });
