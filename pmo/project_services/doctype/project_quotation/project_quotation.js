@@ -6,16 +6,21 @@ function getFinalTotals(frm, string, doc) {
 	getTotalOfField('selling_price', "total_selling_price" + string, doc, frm);
 	getTotalOfField('profit', "total_profit" + string, doc, frm);
 
-	if (cur_frm.doc["total_profit" + string] && cur_frm.doc["total_cost_price" + string]) {
+	if (cur_frm.doc["total_profit" + string] > 0 && cur_frm.doc["total_cost_price" + string] > 0) {
 		var totals = 0;
 		totals = flt(cur_frm.doc["total_profit" + string]) / flt(cur_frm.doc["total_cost_price" + string]) * 100;
 		frm.set_value("total_markup" + string, totals.toFixed(2));
+	}else{
+		frm.set_value("total_markup" + string, 0);
 	}
-	if (cur_frm.doc["total_profit" + string] && cur_frm.doc["total_selling_price" + string]) {
+	if (cur_frm.doc["total_profit" + string] > 0 && cur_frm.doc["total_selling_price" + string] > 0) {
 		var totals_margin = 0;
 		totals_margin = flt(cur_frm.doc["total_profit" + string]) / flt(cur_frm.doc["total_selling_price" + string]) * 100;
 		frm.set_value("total_margin" + string, totals_margin.toFixed(2));
+	}else{
+		frm.set_value("total_margin" + string, 0);
 	}
+
 
 }
 
@@ -85,6 +90,9 @@ function getProfit(child) {
 
 function getMargin(child) {
 	child.margin = (child.profit / child.selling_price) * 100;
+	if (isNaN(child.margin)) {
+		child.margin = 0;
+	}
 
 }
 
@@ -170,36 +178,14 @@ frappe.ui.form.on('Project Quotation', {
 	refresh: function (frm) {
 
 	},
-	total_profit: function (frm) {
-		if (cur_frm.doc.total_profit && cur_frm.doc.total_cost_price) {
-			var totals = 0;
-			totals = flt(cur_frm.doc.total_profit) / flt(cur_frm.doc.total_cost_price) * 100
-			frm.set_value("total_markup", totals.toFixed(2))
-		}
-		if (cur_frm.doc.total_profit && cur_frm.doc.total_selling_price) {
-			var totals_margin = 0;
-			totals_margin = flt(cur_frm.doc.total_profit) / flt(cur_frm.doc.total_selling_price) * 100
-			frm.set_value("total_margin", totals_margin.toFixed(2))
-		}
+	validate: function (frm) {
+		console.log(cur_frm.doc.total_selling_price_pmts);
+		console.log(cur_frm.doc.total_cost_price_pmts);
 
-	},
-	total_cost_price: function (frm) {
-		if (cur_frm.doc.total_profit && cur_frm.doc.total_cost_price) {
-			var totals = 0;
-			totals = flt(cur_frm.doc.total_profit) / flt(cur_frm.doc.total_cost_price) * 100
-			console.log(totals);
-			frm.set_value("total_markup", totals.toFixed(2))
-		}
+		console.log(cur_frm.doc.total_profit_pmts);
+		console.log(cur_frm.doc.total_markup_pmts);
 
-
-	},
-	total_selling_price: function (frm) {
-		if (cur_frm.doc.total_profit && cur_frm.doc.total_selling_price) {
-			var totals_margin = 0;
-			totals_margin = flt(cur_frm.doc.total_profit) / flt(cur_frm.doc.total_selling_price) * 100
-			frm.set_value("total_margin", totals_margin.toFixed(2))
-		}
-
+		console.log(cur_frm.doc.total_margin_pmts);
 	}
 });
 
