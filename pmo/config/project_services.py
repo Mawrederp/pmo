@@ -7,37 +7,28 @@ def get_data():
 			"label": _("Projects"),
 			"icon": "fa fa-star",
 			"items": [
-				# {
-				# 	"type": "doctype",
-				# 	"name": "Project",
-				# 	"description": _("Project master."),
-				# },
 				{
 					"type": "doctype",
-					"name": "Project Initiation",
-					"description": _("Project Initiation."),
+					"name": "Create Project",
+					"description": _("Create Project."),
 				},
 				{
-					"type": "page",
-					"name": "project-info",
+					"type": "doctype",
+					"name": "Projects List",
+					"description": _("Projects List."),
+				},
+				{
+					"type": "doctype",
+					"name": "PMO Resources",
+					"label": _("PMO Resources"),
+					"description": _("PMO Resources")
+				},
+				{
+					"type": "doctype",
+					"name": "Projects List",
 					"label": _("Project Details"),
-					"description": _("Project Details")
+					"description": _("Projects List."),
 				}
-				# {
-				# 	"type": "doctype",
-				# 	"name": "Project Planning",
-				# 	"description": _("Project Planning."),
-				# },
-				# {
-				# 	"type": "doctype",
-				# 	"name": "Project Implementation Monitoring and Controlling",
-				# 	"description": _("Project Implementation Monitoring and Controlling."),
-				# },
-				# {
-				# 	"type": "doctype",
-				# 	"name": "Project Closure",
-				# 	"description": _("Project Closure."),
-				# }
 			]
 		},
 		{
