@@ -1,0 +1,23 @@
+{
+ "content": null, 
+ "creation": "2018-04-16 10:26:12.574343", 
+ "docstatus": 0, 
+ "doctype": "Page", 
+ "idx": 0, 
+ "modified": "2018-04-16 10:31:58.563065", 
+ "modified_by": "Administrator", 
+ "module": "Project Services", 
+ "name": "projects-gantt", 
+ "owner": "Administrator", 
+ "page_name": "Projects Gantt", 
+ "roles": [
+  {
+   "role": "Administrator"
+  }
+ ], 
+ "script": null, 
+ "standard": "Yes", 
+ "style": null, 
+ "system_page": 0, 
+ "title": "Projects Gantt"
+}

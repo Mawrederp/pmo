@@ -15,7 +15,7 @@ app_license = "MIT"
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/pmo/css/pmo.css"
+app_include_css = "/assets/pmo/css/dhtmlxgantt.css?v=20180322"
 # app_include_js = "/assets/pmo/js/pmo.js"
 
 # include js, css files in header of web template
@@ -23,7 +23,7 @@ app_license = "MIT"
 # web_include_js = "/assets/pmo/js/pmo.js"
 
 # include js in page
-# page_js = {"page" : "public/js/file.js"}
+page_js = {"projects-gantt" : "public/js/dhtmlxgantt.js"}
 
 # include js in doctype views
 # doctype_js = {"doctype" : "public/js/doctype.js"}
