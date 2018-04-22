@@ -25,6 +25,12 @@ def get_data():
 				},
 				{
 					"type": "doctype",
+					"name": "Project Management Assignment",
+					"label": _("Project Management Assignment"),
+					"description": _("Project Management Assignment")
+				},
+				{
+					"type": "doctype",
 					"name": "Projects List",
 					"label": _("Project Details"),
 					"description": _("Projects List."),
