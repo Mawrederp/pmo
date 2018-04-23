@@ -5,6 +5,27 @@ frappe.ui.form.on('Project Management Assignment', {
 	refresh: function(frm) {
 
 	},
+	onload: function(frm) {
+
+		cur_frm.set_query("project_coordinator", function() {
+            return {
+                query: "pmo.project_services.doctype.project_management_assignment.project_management_assignment.get_projects_users"
+            };
+        });
+
+        cur_frm.set_query("project_manager", function() {
+            return {
+                query: "pmo.project_services.doctype.project_management_assignment.project_management_assignment.get_projects_users"
+            };
+        });
+
+        cur_frm.set_query("senior_project_manager", function() {
+            return {
+                query: "pmo.project_services.doctype.project_management_assignment.project_management_assignment.get_projects_users"
+            };
+        });
+
+	},
 	project_name: function(frm) {
 		frm.set_value("project_coordinator", );
 		frm.set_value("project_manager", );
@@ -22,6 +43,13 @@ frappe.ui.form.on('Project Management Assignment', {
 	            }
 	        });
         }
+	},
+	project_manager_role: function(frm) {
+		frm.set_value("project_manager", );
+		frm.set_value("senior_project_manager", );
+	},
+	project_coordinator_role: function(frm) {
+		frm.set_value("project_coordinator", );
 	}
 });
 
