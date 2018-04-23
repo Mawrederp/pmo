@@ -383,6 +383,9 @@ frappe.ui.form.on('Man Power', {
 		calculateTechnicalServices(frm, cdt, cdn, "_manpower", frm.doc.man_power);
 
 	},
+	overhead_value :function (frm, cdt, cdn) {
+ 		calculateTechnicalServices(frm, cdt, cdn, "_manpower", frm.doc.man_power);
+	},
 	employee: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
 		if (!d.designation & d.employee != "") {

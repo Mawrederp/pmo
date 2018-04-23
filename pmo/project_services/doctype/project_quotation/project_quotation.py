@@ -13,16 +13,19 @@ class ProjectQuotation(Document):
 
 @frappe.whitelist()
 def get_basic_salary(employee):
-    my_sql_str = ''
-    emp_sal_str = frappe.db.sql(
-        "Select parent,from_date,base from `tabSalary Structure Employee` where employee = '{0}' order by from_date desc ".format(employee), as_dict=True)
-    if emp_sal_str:
-        for i in range(len(emp_sal_str)):
-            my_sql_str = frappe.db.sql("Select name from `tabSalary Structure` where is_active='Yes' and name = '{0}'".format(
-                emp_sal_str[i].parent), as_dict=True)
-            if my_sql_str:
-                return emp_sal_str[i].base
+    # my_sql_str = ''
+    # emp_sal_str = frappe.db.sql(
+    #     "Select parent,from_date,base from `tabSalary Structure Employee` where employee = '{0}' order by from_date desc ".format(employee), as_dict=True)
+    # if emp_sal_str:
+    #     for i in range(len(emp_sal_str)):
+    #         my_sql_str = frappe.db.sql("Select name from `tabSalary Structure` where is_active='Yes' and name = '{0}'".format(
+    #             emp_sal_str[i].parent), as_dict=True)
+    #         if my_sql_str:
+    #             return emp_sal_str[i].base
 
+    emp_sal = frappe.db.sql("Select rounded_total from `tabSalary Slip` where employee='{0}' order by start_date desc limit 1".format(employee))
+    if emp_sal:
+        return emp_sal[0][0]
 
 @frappe.whitelist()
 def get_item_price(item):
