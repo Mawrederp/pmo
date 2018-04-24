@@ -14,7 +14,6 @@ frappe.ui.form.on('Project Quotation', {
 					method: "create_general_pricing",
 					doc: cur_frm.doc,
 					callback: function (data) {
-						frappe.msgprint(data.message);
 						console.log("Success");
 					}
 				});
@@ -155,6 +154,9 @@ frappe.ui.form.on('Project Management and Technical Services', {
 	markup: function (frm, cdt, cdn) {
 		calculateTechnicalServices(frm, cdt, cdn, "_pmts", frm.doc.project_management_and_technical_services);
 
+	},
+	overhead_value: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_pmts", frm.doc.project_management_and_technical_services);
 	},
 	employee: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
@@ -399,6 +401,9 @@ frappe.ui.form.on('Man Power', {
 	markup: function (frm, cdt, cdn) {
 		calculateTechnicalServices(frm, cdt, cdn, "_manpower", frm.doc.man_power);
 
+	},
+	overhead_value: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_manpower", frm.doc.project_management_and_technical_services);
 	},
 	employee: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
