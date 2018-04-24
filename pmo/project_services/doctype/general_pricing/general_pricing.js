@@ -2,7 +2,8 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('General Pricing', {
-	refresh: function (frm) {
+	on_load: function (frm) {
+		$("#tableID th:last-child, #tableID td:last-child").remove();
 
 	},
 	project: function (frm, cdt, cdn) {

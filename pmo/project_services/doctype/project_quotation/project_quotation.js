@@ -1,6 +1,28 @@
 // Copyright (c) 2018, s and contributors
 // For license information, please see license.txt
 
+var first_time = false
+
+frappe.ui.form.on('Project Quotation', {
+	onload: function (frm) {
+
+	},
+	validate: function (frm) {
+		if (!frm.doc.__islocal) {
+			total_cost_price =
+				frappe.call({
+					method: "create_general_pricing",
+					doc: cur_frm.doc,
+					callback: function (data) {
+						frappe.msgprint(data.message);
+						console.log("Success");
+					}
+				});
+		}
+
+	},
+});
+
 function getFinalTotals(frm, string, doc) {
 	getTotalOfField('total_cost_price', "total_cost_price" + string, doc, frm);
 	getTotalOfField('selling_price', "total_selling_price" + string, doc, frm);
@@ -67,8 +89,9 @@ function getTotal(child, string) {
 		child.total_cost_price = child.sar_cost_price * (child.months) * (child.quantity);
 	} else if (string == "_expenses") {
 		child.total_cost_price = child.cost_price * (child.quantity);
-
-	} else if (string == "_pmts" || string == "_manpower") {
+	} else if (string == "_pmts") {
+		child.total_cost_price = ((child.cost_price * (1 + (child.overhead_value / 100)))) * (child.months) * (child.quantity / 100);
+	} else if (string == "_manpower") {
 		child.total_cost_price = ((child.cost_price * (1 + (child.overhead_value / 100)))) * (child.months) * (child.quantity);
 	} else {
 		child.total_cost_price = child.sar_cost_price * (child.quantity);
@@ -167,12 +190,6 @@ cur_frm.set_query("employee", 'project_management_and_technical_services', funct
 			"designation": d.designation
 		}
 	}
-});
-
-frappe.ui.form.on('Project Quotation', {
-	refresh: function (frm) {
-
-	},
 });
 
 
