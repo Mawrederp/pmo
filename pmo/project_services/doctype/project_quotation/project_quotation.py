@@ -8,7 +8,75 @@ from frappe.model.document import Document
 
 
 class ProjectQuotation(Document):
-    pass
+    def after_insert(self):
+        ProjectQuotation.create_general_pricing(self)
+
+    def create_general_pricing(self):
+
+        doc = ""
+        exists = False
+        items = ["Project Management and Technical Services", "Development Services",
+                 "H/W", "S/W", "Man Power", "Support License Renew", "Training", "Expenses"]
+        type_array = ["_pmts", "_develop", "_hw", "_sw",
+                      "_manpower", "_support", "_training", "_expenses"]
+        field_array = ["total_cost_price", "total_selling_price",
+                       "total_profit", "total_markup", "total_margin"]
+
+        items_editable = ["Risk & contingency", "Financing",
+                          "Commission Of (Sales & P Delivery)", "VAT"]
+        backup_editable = []
+
+        if frappe.db.exists("General Pricing", {"project_q": self.name}):
+            exists = True
+            gp = frappe.db.sql(
+                """Select name from `tabGeneral Pricing` where project_q = '{0}'""".format(self.name))
+            doc = frappe.get_doc("General Pricing", gp[0][0])
+
+            for i in range(len(items_editable)):
+                row = doc.get("project_quotation", {"items": items_editable[i]})
+                if row:
+                    backup_editable.append(row[0])
+
+        else:
+            doc = frappe.new_doc("General Pricing")
+
+        doc.project_quotation = []
+        for i in range(len(items)):
+            doc.append("project_quotation", {"items": items[i],
+                                             field_array[0]: getattr(self, field_array[0]+type_array[i]),
+                                             field_array[1]: getattr(self, field_array[1]+type_array[i]),
+                                             field_array[2]: getattr(self, field_array[2]+type_array[i]),
+                                             field_array[3]: getattr(self, field_array[3]+type_array[i]),
+                                             field_array[4]: getattr(self, field_array[4]+type_array[i]),
+                                             })
+        if backup_editable:
+            for i in range(len(items_editable)):
+                doc.append("project_quotation", backup_editable[i])
+        else:
+            for i in range(len(items_editable)):
+                doc.append("project_quotation", {"items": items_editable[i],
+                                                field_array[0]: "0",
+                                                field_array[1]: "0",
+                                                field_array[2]: "0",
+                                                field_array[3]: "0",
+                                                field_array[4]: "0",
+                                                })
+        
+        print row[0]
+        print "***************************************************------------------******************"
+        #row[0].total_selling_price.df.read_only = 1
+        print "----------------------------------------------//////////////////////////////////"
+        doc.flags.ignore_permissions = True
+
+        if exists:
+            doc.save(ignore_permissions=True)
+            frappe.msgprint(
+                "<a href='desk#Form/General Pricing/{0}' >{0}</a>".format(doc.name) + " is updated")
+        else:
+            doc.project_q = self.name
+            doc.insert(ignore_permissions=True)
+            frappe.msgprint(
+                "<a href='desk#Form/General Pricing/{0}' >{0}</a>".format(doc.name) + " is inserted")
 
 
 @frappe.whitelist()
@@ -24,7 +92,8 @@ def get_basic_salary(employee):
     #         if my_sql_str:
     #             return emp_sal_str[i].rounded_total
 
-    emp_sal = frappe.db.sql("Select rounded_total from `tabSalary Slip` where employee='{0}' order by start_date desc limit 1".format(employee))
+    emp_sal = frappe.db.sql(
+        "Select rounded_total from `tabSalary Slip` where employee='{0}' order by start_date desc limit 1".format(employee))
     if emp_sal:
         return emp_sal[0][0]
 
