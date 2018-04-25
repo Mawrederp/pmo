@@ -133,3 +133,5 @@ def get_item_price(item):
         "Select price_list_rate,currency from `tabItem Price` where item_code = '{0}'".format(item), as_dict=True)
     if myitemprice:
         return myitemprice
+
+

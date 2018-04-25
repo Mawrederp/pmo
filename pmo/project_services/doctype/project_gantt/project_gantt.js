@@ -1,86 +1,121 @@
-frappe.pages['projects-gantt'].on_page_load = function(wrapper) {
-	var me = this;
-	var project_doc = {};
-	console.log("page load");
+// Copyright (c) 2018, s and contributors
+// For license information, please see license.txt
 
-	var page = frappe.ui.make_app_page({
-		parent: wrapper,
-		title: 'Projects Gantt',
-		single_column: true
-	});
+frappe.ui.form.on('Project Gantt', {
+	refresh: function(frm) {
+		frm.disable_save();
+	},
+	project: function(frm){
+		var project_gantt = {};
+		// var load_c = 0;
 
-	page.main.html(frappe.render_template("projects_gantt", {}));
-	var project = frappe.ui.form.make_control({
-		parent: page.main.find("p.project-wrap"),
-		df: {
-			fieldtype: "Link",
-			options: "Project",
-			fieldname: "project",
-			change: function(){
-				console.log("change");
+		var data = [];
+		var links = [];
+		var selected_project = frm.doc.project;
+		if(selected_project){
+			frappe.model.with_doc("Project", selected_project, function(r) {
+				var project_doc = frappe.model.get_doc("Project", selected_project);
 
-			}
-		},
-		// only_input: true,
-	});
-	project.refresh();
+				project_gantt = Gantt.getGanttInstance();
 
-	me.page.set_primary_action(__("Save"), function() {
+            	var expected_start_date = moment(project_doc.expected_start_date).format("DD-MM-YYYY");
+            	var duration = moment(project_doc.expected_end_date).diff(project_doc.expected_start_date, "days");
 
-		gantt_tasks = [];
+				project_doc["id"] = project_doc.name;
+				// project_doc["duration"] = duration;
+				project_doc["start_date"] = expected_start_date;
+				project_doc["text"] = project_doc.name;
+				// project_doc["progress"] = 0.4;
+				project_doc["type"]=project_gantt.config.types.project;
 
-		project_gantt.eachTask(function(task){
-			gantt_tasks.push(task);
-	});
+				data.push(project_doc);
+				
+				calculate_progress(project_gantt);
+				
 
-		// console.log(gantt_tasks);
+				project_gantt.config.open_tree_initially = true;
+				gantt.config.columns=[
+					{name:"text",       label:"Task name",  tree:true, width:'*' },
+					{name:"start_date", label:"Start time", align: "center" },
+					{name:"duration",   label:"Duration",   align: "center" },
+					{name:"add",        label:"" }
+				];
 
+				project_gantt.config.show_progress = true;
+				project_gantt.init("gantt_here");
+				project_gantt.parse({"data": data});
 
-		frappe.call({
-            method: 'pmo.project_services.page.projects_gantt.projects_gantt.save_tasks',
-            args: {
-                'tasks': gantt_tasks
-            },
-            freeze: true,
-            freeze_message: "Saving Data..",
-            // async: false,
-            callback: function(r) {
-            	// console.log(r.message);
-            	console.log(gantt_tasks);
-            }
-        });
+				frappe.call({
+		            method: 'frappe.client.get_list',
+		            args: {
+		                'doctype': 'Task',
+		                'filters': { 'project': selected_project },
+		                'order_by': "exp_end_date",
+		                'fields': '*'
+		            },
+		            freeze: true,
+		            freeze_message: "Loading Gantt..",
+		            callback: function(r) {
+		            	
+		                if (r.message) {							
+							tasks = r.message;
+							for (var i in tasks){
+								var exp_start_date = moment(tasks[i].exp_start_date).format("DD-MM-YYYY");
+								var task_duration = moment(tasks[i].exp_end_date).diff(tasks[i].exp_start_date, "days");
+
+								tasks[i]["id"] = tasks[i].name;
+								tasks[i]["duration"] = task_duration;
+								tasks[i]["start_date"] = exp_start_date;
+								tasks[i]["text"] = tasks[i].subject;
+
+								if(!tasks[i].parent_task){
+									tasks[i]["parent"] = project_doc.name;
+								}
+								else{
+									tasks[i]["parent"] = tasks[i]["parent_task"];
+								}
+								
+								project_gantt.addTask(tasks[i]);
+								
+								// console.log(project_gantt.getTask(tasks[i].id));
+							}
+							// project_gantt.render();
+							// project_links = proj.links;
+							// for (var i in project_links){
+							// 	// console.log(proj.links);
+							// 	project_links[i]["id"] = project_links[i].name;
+							// 	project_gantt.addLink(project_links[i]);
+							// 	// links.push(project_links[i]);
+							// }
+							// console.log(gantt.getTask("TASK00002"));
+							// gantt.init("gantt_here");
+							
+
+							project_gantt.parse({"data": tasks});
+							// project_gantt.refreshData();
+		               	
+		                }
+		                // gantt.render();
+		                // gantt.refreshData();
+		            }
+    			});
+    			event_handlers(project_gantt);
+
+			});
+		}
+	}
+});
+
+function event_handlers(project_gantt, load_c){
+	project_gantt.attachEvent("onAfterTaskUpdate", function(id,item){
 		
+
+		console.log(item);
 	});
-
+	project_gantt.attachEvent("onAfterLinkAdd", function(id,item){
+    	console.log(item);
+	});
 }
-
-// function get_tasks(project){
-
-
-// }
-// function convert_to_ddmmyyyy(date){
-// 	if (date){
-// 		var nf_date = new Date(date);
-		
-// 		var s_days = nf_date.getDate().toString();
-// 		var s_months = (nf_date.getMonth()+1).toString();
-
-// 		var days = s_days.length <= 1 ? "0"+ s_days : s_days;
-// 		var months = s_months.length <= 1 ? "0"+ s_months : s_months; 
-// 		var years = nf_date.getFullYear().toString();
-// 		return days+"-"+months+"-"+years;
-// 	}
-// }
-
-function event_handlers(project_gantt){
-	// project_gantt.attachEvent("onAfterTaskUpdate", function(id,item){
-    	
-	// });
-	// project_gantt.attachEvent("onAfterLinkAdd", function(id,item){
- //    	console.log(item);
-	// });
-}
-
 
 function calculate_progress(project_gantt){
 	/*calculate progress dynamically */

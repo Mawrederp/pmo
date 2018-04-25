@@ -10,8 +10,35 @@ frappe.ui.form.on('General Pricing Table', {
 			frm.refresh_fields();
 		}
 
+	},
+	// project_q: function (frm, cdt, cdn) {
+		
+ //            // child.status = "Accepted"
+	// 	// console.log(frm.doc.project);
+	// 	// getchildtable(frm.doc.project,"Development Services");
+	// 	// var newrow = frappe.model.add_child(cur_frm.doc, "project_quotation_table", "project_quotation_table");
+	// 	// newrow.cost_items = "Hello";
+
+	// 	// frm.refresh_fields();
+
+	// }
+	project: function (frm, cdt, cdn) {
+		var d = locals[cdt][cdn];
+		console.log(frm.doc.project);
+		getchildtable(frm.doc.project,"Development Services");
+		var newrow = frappe.model.add_child(cur_frm.doc, "project_quotation_table", "project_quotation_table");
+		var mm = frappe.model.set_value("General Pricing Table","project_quotation_table", "cost_items", "mmmm");
+		console.log(mm);
+		// newrow.total_cost_price =d.total_cost_price;
+		// newrow.selling_price = 12;
+		// newrow.markup = 12;
+		// newrow.profit_amount = 12;
+		// newrow.margin = 12;
+
+		frm.refresh_fields();
 
 	}
+	
 });
 
 function change_read_only_to(x, frm, doc) {
@@ -21,7 +48,7 @@ function change_read_only_to(x, frm, doc) {
 		console.log(frm.fields_dict.project_quotation.grid.grid_rows[i].columns.items.field)
 		console.log("///////--------")
 		console.log(doc.items)
-		if (frm.fields_dict.project_quotation.grid.grid_rows[i].columns.items.field != undefined) {
+		if (frm.fields_dict.project_quotation.grid.grid_rows[i].columns.items.field) {
 			if (frm.fields_dict.project_quotation.grid.grid_rows[i].columns.items.field.value == doc.items) {
 				frm.fields_dict.project_quotation.grid.grid_rows[i].columns.items.df.read_only = x;
 				frm.fields_dict.project_quotation.grid.grid_rows[i].columns.total_cost_price.df.read_only = x;
