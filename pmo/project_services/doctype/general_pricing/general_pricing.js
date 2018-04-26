@@ -9,14 +9,6 @@ frappe.ui.form.on('General Pricing', {
 		getTotalOfField('total_profit', "profit_amount" , frm.doc.project_quotation, frm);
 		// getTotalOfField('total_markup', "total_markup" , frm.doc.project_quotation, frm);
 
-frappe.ui.form.on('General Pricing Table', {
-	total_cost_price: function (frm, cdt, cdn) {
-		var row = locals[cdt][cdn]
-		var list = ["Financing", "Commission Of (Sales & P Delivery)"];
-		if (list.indexOf(row.items) > -1) {
-			row.total_selling_price = Math.round(row.total_cost_price);
-			frm.refresh_fields();
-		}
 
 		if (cur_frm.doc.profit_amount && cur_frm.doc.total_cost_price){
 			var totals_markup = 0;
@@ -55,7 +47,22 @@ frappe.ui.form.on('General Pricing Table', {
 			totals =  (flt(cur_frm.doc.profit_amount_risk) / flt(cur_frm.doc.total_cost_price) )* 100;
 			frm.set_value("total_markup_risk" ,totals.toFixed(2));
 		}
-		
+
+
+	}
+
+});
+
+
+frappe.ui.form.on('General Pricing Table', {
+	total_cost_price: function (frm, cdt, cdn) {
+		var row = locals[cdt][cdn]
+		var list = ["Financing", "Commission Of (Sales & P Delivery)"];
+		if (list.indexOf(row.items) > -1) {
+			row.total_selling_price = Math.round(row.total_cost_price);
+			frm.refresh_fields();
+		}
+
 		
 
 		// total_margin= total + cur_frm.doc.profit_amount
@@ -125,13 +132,13 @@ function change_read_only_to(x, frm, doc) {
 
 // }
 
-function getTotalOfField(myfield, mytotalfield, mychildtable, frm) {
-	var total_price = 0;
-	$.each(mychildtable || [], function (i, d) {
-		total_price += flt(d[myfield]) || 0;
-	});
-	frm.set_value(mytotalfield, total_price.toFixed(2));
-}
+// function getTotalOfField(myfield, mytotalfield, mychildtable, frm) {
+// 	var total_price = 0;
+// 	$.each(mychildtable || [], function (i, d) {
+// 		total_price += flt(d[myfield]) || 0;
+// 	});
+// 	frm.set_value(mytotalfield, total_price.toFixed(2));
+// }
 
 	for (var i = 0; i < frm.fields_dict.project_quotation.grid.grid_rows.length; i++) {
 		console.log(frm.fields_dict.project_quotation.grid.grid_rows[i].columns.items.field)
@@ -210,3 +217,14 @@ frappe.ui.form.on('General Pricing', {
 	}
 });
 
+
+
+
+
+function getTotalOfField(myfield, mytotalfield, mychildtable, frm) {
+	var total_price = 0;
+	$.each(mychildtable || [], function (i, d) {
+		total_price += flt(d[myfield]) || 0;
+	});
+	frm.set_value(mytotalfield, total_price.toFixed(2));
+}
