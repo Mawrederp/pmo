@@ -62,7 +62,7 @@ class ProjectQuotation(Document):
                                                 field_array[4]: "0",
                                                 })
         
-        print row[0]
+        # print row[0]
         print "***************************************************------------------******************"
         #row[0].total_selling_price.df.read_only = 1
         print "----------------------------------------------//////////////////////////////////"
