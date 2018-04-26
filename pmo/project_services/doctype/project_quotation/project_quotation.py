@@ -75,10 +75,6 @@ class ProjectQuotation(Document):
                                                 field_array[4]: "0",
                                                 })
         
-        # print row[0]
-        print "***************************************************------------------******************"
-        #row[0].total_selling_price.df.read_only = 1
-        print "----------------------------------------------//////////////////////////////////"
             doc.append("project_quotation", {"items": "Risk & contingency",
                                              field_array[0]: totals_risk[0]*0.01,
                                              field_array[1]: int(round(totals_risk[0]*0.01)),

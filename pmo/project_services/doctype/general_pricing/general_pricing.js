@@ -1,7 +1,6 @@
 // Copyright (c) 2018, s and contributors
 // For license information, please see license.txt
 
-<<<<<<< HEAD
 frappe.ui.form.on('General Pricing', {
 	onload: function (frm) {
 		$("#tableID th:last-child, #tableID td:last-child").remove();
@@ -9,7 +8,7 @@ frappe.ui.form.on('General Pricing', {
 		getTotalOfField('total_selling_price', "selling_price" , frm.doc.project_quotation, frm);
 		getTotalOfField('total_profit', "profit_amount" , frm.doc.project_quotation, frm);
 		// getTotalOfField('total_markup', "total_markup" , frm.doc.project_quotation, frm);
-=======
+
 frappe.ui.form.on('General Pricing Table', {
 	total_cost_price: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn]
@@ -18,7 +17,6 @@ frappe.ui.form.on('General Pricing Table', {
 			row.total_selling_price = Math.round(row.total_cost_price);
 			frm.refresh_fields();
 		}
->>>>>>> 4d5446380d2d70b17cf48fcd4f8260b9b300d605
 
 		if (cur_frm.doc.profit_amount && cur_frm.doc.total_cost_price){
 			var totals_markup = 0;
@@ -98,7 +96,6 @@ frappe.ui.form.on('General Pricing Table', {
 function change_read_only_to(x, frm, doc) {
 	console.log(frm.fields_dict.project_quotation.grid.grid_rows[doc.idx - 1].columns.items)
 
-<<<<<<< HEAD
 // frappe.ui.form.on("General Pricing Table", {
 // 	// total_cost_price : function (frm, cdt, cdn) {
 // 	// 	getTotalOfField('total_cost_price', "total_cost_price" , frm.doc.project_quotation, frm);
@@ -135,7 +132,7 @@ function getTotalOfField(myfield, mytotalfield, mychildtable, frm) {
 	});
 	frm.set_value(mytotalfield, total_price.toFixed(2));
 }
-=======
+
 	for (var i = 0; i < frm.fields_dict.project_quotation.grid.grid_rows.length; i++) {
 		console.log(frm.fields_dict.project_quotation.grid.grid_rows[i].columns.items.field)
 		console.log("///////--------")
@@ -212,4 +209,4 @@ frappe.ui.form.on('General Pricing', {
 
 	}
 });
->>>>>>> 4d5446380d2d70b17cf48fcd4f8260b9b300d605
+
