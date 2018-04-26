@@ -18,6 +18,11 @@
    "bold": 0, 
    "collapsible": 0, 
    "columns": 2, 
+<<<<<<< HEAD
+=======
+   "fieldname": "cost_items", 
+   "fieldtype": "Read Only", 
+>>>>>>> 4d5446380d2d70b17cf48fcd4f8260b9b300d605
    "fieldname": "items", 
    "fieldtype": "Data", 
    "hidden": 0, 
@@ -51,6 +56,7 @@
    "bold": 0, 
    "collapsible": 0, 
    "columns": 2, 
+   "default": "0", 
    "fieldname": "total_cost_price", 
    "fieldtype": "Currency", 
    "hidden": 0, 
@@ -81,7 +87,14 @@
    "allow_on_submit": 0, 
    "bold": 0, 
    "collapsible": 0, 
+<<<<<<< HEAD
+=======
+   "columns": 1, 
+   "fieldname": "selling_price", 
+   "fieldtype": "Read Only", 
+>>>>>>> 4d5446380d2d70b17cf48fcd4f8260b9b300d605
    "columns": 2, 
+   "default": "0", 
    "fieldname": "total_selling_price", 
    "fieldtype": "Currency", 
    "hidden": 0, 
@@ -112,6 +125,7 @@
    "allow_on_submit": 0, 
    "bold": 0, 
    "collapsible": 0, 
+<<<<<<< HEAD
    "columns": 0, 
    "fieldname": "column_break_4", 
    "fieldtype": "Column Break", 
@@ -142,7 +156,13 @@
    "allow_on_submit": 0, 
    "bold": 0, 
    "collapsible": 0, 
+=======
+   "columns": 1, 
+   "fieldname": "profit_amount", 
+   "fieldtype": "Read Only", 
+>>>>>>> 4d5446380d2d70b17cf48fcd4f8260b9b300d605
    "columns": 2, 
+   "default": "0", 
    "fieldname": "total_profit", 
    "fieldtype": "Currency", 
    "hidden": 0, 
@@ -173,7 +193,14 @@
    "allow_on_submit": 0, 
    "bold": 0, 
    "collapsible": 0, 
+<<<<<<< HEAD
+=======
+   "columns": 2, 
+   "fieldname": "markup", 
+   "fieldtype": "Read Only", 
+>>>>>>> 4d5446380d2d70b17cf48fcd4f8260b9b300d605
    "columns": 1, 
+   "default": "0", 
    "fieldname": "total_markup", 
    "fieldtype": "Percent", 
    "hidden": 0, 
@@ -204,7 +231,14 @@
    "allow_on_submit": 0, 
    "bold": 0, 
    "collapsible": 0, 
+<<<<<<< HEAD
+=======
+   "columns": 2, 
+   "fieldname": "margin", 
+   "fieldtype": "Read Only", 
+>>>>>>> 4d5446380d2d70b17cf48fcd4f8260b9b300d605
    "columns": 1, 
+   "default": "0", 
    "fieldname": "total_margin", 
    "fieldtype": "Percent", 
    "hidden": 0, 
@@ -241,7 +275,11 @@
  "issingle": 0, 
  "istable": 1, 
  "max_attachments": 0, 
+<<<<<<< HEAD
  "modified": "2018-04-26 10:45:39.554570", 
+=======
+ "modified": "2018-04-25 15:41:55.031350", 
+>>>>>>> 4d5446380d2d70b17cf48fcd4f8260b9b300d605
  "modified_by": "Administrator", 
  "module": "Project Services", 
  "name": "General Pricing Table", 

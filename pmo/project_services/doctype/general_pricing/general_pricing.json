@@ -584,7 +584,11 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
+<<<<<<< HEAD
  "modified": "2018-04-25 15:28:18.350595", 
+=======
+ "modified": "2018-04-25 19:22:44.744586", 
+>>>>>>> 4d5446380d2d70b17cf48fcd4f8260b9b300d605
  "modified_by": "Administrator", 
  "module": "Project Services", 
  "name": "General Pricing", 

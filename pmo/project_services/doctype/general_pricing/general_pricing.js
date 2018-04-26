@@ -1,6 +1,7 @@
 // Copyright (c) 2018, s and contributors
 // For license information, please see license.txt
 
+<<<<<<< HEAD
 frappe.ui.form.on('General Pricing', {
 	onload: function (frm) {
 		$("#tableID th:last-child, #tableID td:last-child").remove();
@@ -8,6 +9,16 @@ frappe.ui.form.on('General Pricing', {
 		getTotalOfField('total_selling_price', "selling_price" , frm.doc.project_quotation, frm);
 		getTotalOfField('total_profit', "profit_amount" , frm.doc.project_quotation, frm);
 		// getTotalOfField('total_markup', "total_markup" , frm.doc.project_quotation, frm);
+=======
+frappe.ui.form.on('General Pricing Table', {
+	total_cost_price: function (frm, cdt, cdn) {
+		var row = locals[cdt][cdn]
+		var list = ["Financing", "Commission Of (Sales & P Delivery)"];
+		if (list.indexOf(row.items) > -1) {
+			row.total_selling_price = Math.round(row.total_cost_price);
+			frm.refresh_fields();
+		}
+>>>>>>> 4d5446380d2d70b17cf48fcd4f8260b9b300d605
 
 		if (cur_frm.doc.profit_amount && cur_frm.doc.total_cost_price){
 			var totals_markup = 0;
@@ -84,7 +95,10 @@ frappe.ui.form.on('General Pricing', {
 	
 });
 
+function change_read_only_to(x, frm, doc) {
+	console.log(frm.fields_dict.project_quotation.grid.grid_rows[doc.idx - 1].columns.items)
 
+<<<<<<< HEAD
 // frappe.ui.form.on("General Pricing Table", {
 // 	// total_cost_price : function (frm, cdt, cdn) {
 // 	// 	getTotalOfField('total_cost_price', "total_cost_price" , frm.doc.project_quotation, frm);
@@ -121,3 +135,81 @@ function getTotalOfField(myfield, mytotalfield, mychildtable, frm) {
 	});
 	frm.set_value(mytotalfield, total_price.toFixed(2));
 }
+=======
+	for (var i = 0; i < frm.fields_dict.project_quotation.grid.grid_rows.length; i++) {
+		console.log(frm.fields_dict.project_quotation.grid.grid_rows[i].columns.items.field)
+		console.log("///////--------")
+		console.log(doc.items)
+		if (frm.fields_dict.project_quotation.grid.grid_rows[i].columns.items.field) {
+			if (frm.fields_dict.project_quotation.grid.grid_rows[i].columns.items.field.value == doc.items) {
+				frm.fields_dict.project_quotation.grid.grid_rows[i].columns.items.df.read_only = x;
+				frm.fields_dict.project_quotation.grid.grid_rows[i].columns.total_cost_price.df.read_only = x;
+				frm.fields_dict.project_quotation.grid.grid_rows[i].columns.total_selling_price.df.read_only = x;
+				frm.fields_dict.project_quotation.grid.grid_rows[i].columns.total_profit.df.read_only = x;
+				frm.fields_dict.project_quotation.grid.grid_rows[i].columns.total_markup.df.read_only = x;
+				frm.fields_dict.project_quotation.grid.grid_rows[i].columns.total_margin.df.read_only = x;
+				break;
+			}
+		}
+
+	}
+
+
+}
+
+function make_read_only(frm, cdt, cdn) {
+	var row = locals[cdt][cdn];
+	var current_doc = $('.data-row.editable-row').parent().attr("data-name");
+	var doc = locals["General Pricing Table"][current_doc];
+	var list = ["Risk & contingency", "Financing", "Commission Of (Sales & P Delivery)", "VAT"];
+	console.log(doc.items)
+	if (list.indexOf(doc.items) > -1) {
+		console.log("---------------")
+		change_read_only_to(0, frm, doc);
+	} else {
+		console.log("*********")
+		change_read_only_to(1, frm, doc);
+	}
+
+	frm.refresh_fields()
+	$(".small.form-clickable-section.grid-footer").hide();
+	$("a.close.btn-open-row").hide()
+
+}
+
+frappe.ui.form.on('General Pricing', {
+	refresh:function(){
+		$(".small.form-clickable-section.grid-footer").hide();
+		$("a.close.btn-open-row").hide()
+
+
+	},
+	onload_post_render: function (frm, cdt, cdn) {
+		frm.fields_dict.project_quotation.grid.wrapper.on('mouseenter', 'div[data-fieldname="items"][title="items"]', function (e) {
+			make_read_only(frm, cdt, cdn)
+
+		});
+		frm.fields_dict.project_quotation.grid.wrapper.on('mouseenter', 'div[data-fieldname="items"][title="items"]', function (e) {
+			make_read_only(frm, cdt, cdn)
+		});
+		frm.fields_dict.project_quotation.grid.wrapper.on('mouseenter', 'div[data-fieldname="total_cost_price"][title="total_cost_price"]', function (e) {
+			make_read_only(frm, cdt, cdn)
+		});
+		frm.fields_dict.project_quotation.grid.wrapper.on('mouseenter', 'div[data-fieldname="total_selling_price"][title="total_selling_price"]', function (e) {
+			make_read_only(frm, cdt, cdn)
+		});
+		frm.fields_dict.project_quotation.grid.wrapper.on('mouseenter', 'div[data-fieldname="total_profit"][title="total_profit"]', function (e) {
+			make_read_only(frm, cdt, cdn)
+		});
+		frm.fields_dict.project_quotation.grid.wrapper.on('mouseenter', 'div[data-fieldname="total_margin"][title="total_margin"]', function (e) {
+			make_read_only(frm, cdt, cdn)
+		});
+		frm.fields_dict.project_quotation.grid.wrapper.on('mouseenter', 'div[data-fieldname="total_markup"][title="total_markup"]', function (e) {
+			make_read_only(frm, cdt, cdn)
+		});
+
+
+
+	}
+});
+>>>>>>> 4d5446380d2d70b17cf48fcd4f8260b9b300d605

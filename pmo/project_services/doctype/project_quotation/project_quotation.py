@@ -22,9 +22,12 @@ class ProjectQuotation(Document):
         field_array = ["total_cost_price", "total_selling_price",
                        "total_profit", "total_markup", "total_margin"]
 
-        items_editable = ["Risk & contingency", "Financing",
+        items_editable = ["Financing",
                           "Commission Of (Sales & P Delivery)", "VAT"]
         backup_editable = []
+
+        totals_risk = [0, 0, 0, 0, 0]
+        totals_sums = [0, 0, 0, 0, 0]
 
         if frappe.db.exists("General Pricing", {"project_q": self.name}):
             exists = True
@@ -33,7 +36,8 @@ class ProjectQuotation(Document):
             doc = frappe.get_doc("General Pricing", gp[0][0])
 
             for i in range(len(items_editable)):
-                row = doc.get("project_quotation", {"items": items_editable[i]})
+                row = doc.get("project_quotation", {
+                              "items": items_editable[i]})
                 if row:
                     backup_editable.append(row[0])
 
@@ -42,6 +46,8 @@ class ProjectQuotation(Document):
 
         doc.project_quotation = []
         for i in range(len(items)):
+            totals_risk[0] += float(getattr(self,
+                                            field_array[0]+type_array[i]))
             doc.append("project_quotation", {"items": items[i],
                                              field_array[0]: getattr(self, field_array[0]+type_array[i]),
                                              field_array[1]: getattr(self, field_array[1]+type_array[i]),
@@ -50,6 +56,13 @@ class ProjectQuotation(Document):
                                              field_array[4]: getattr(self, field_array[4]+type_array[i]),
                                              })
         if backup_editable:
+            doc.append("project_quotation", {"items": "Risk & contingency",
+                                             field_array[0]: totals_risk[0]*0.01,
+                                             field_array[1]: int(round(totals_risk[0]*0.01)),
+                                             field_array[2]: totals_risk[2],
+                                             field_array[3]: totals_risk[3],
+                                             field_array[4]: totals_risk[4],
+                                             })
             for i in range(len(items_editable)):
                 doc.append("project_quotation", backup_editable[i])
         else:
@@ -66,6 +79,35 @@ class ProjectQuotation(Document):
         print "***************************************************------------------******************"
         #row[0].total_selling_price.df.read_only = 1
         print "----------------------------------------------//////////////////////////////////"
+            doc.append("project_quotation", {"items": "Risk & contingency",
+                                             field_array[0]: totals_risk[0]*0.01,
+                                             field_array[1]: int(round(totals_risk[0]*0.01)),
+                                             field_array[2]: totals_risk[2],
+                                             field_array[3]: totals_risk[3],
+                                             field_array[4]: totals_risk[4],
+                                             })
+            doc.append("project_quotation", {"items": items_editable[0],
+                                             field_array[0]: "0",
+                                             field_array[1]: "0",
+                                             field_array[2]: "0",
+                                             field_array[3]: "0",
+                                             field_array[4]: "0",
+                                             })
+            doc.append("project_quotation", {"items": items_editable[1],
+                                             field_array[0]: "0",
+                                             field_array[1]: "0",
+                                             field_array[2]: "0",
+                                             field_array[3]: "0",
+                                             field_array[4]: "0",
+                                             })
+            doc.append("project_quotation", {"items": items_editable[2],
+                                             field_array[0]: "0",
+                                             field_array[1]: "0",
+                                             field_array[2]: "0",
+                                             field_array[3]: "0",
+                                             field_array[4]: "0",
+                                             })
+
         doc.flags.ignore_permissions = True
 
         if exists:
