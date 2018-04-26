@@ -56,23 +56,13 @@ frappe.ui.form.on('General Pricing', {
 frappe.ui.form.on('General Pricing Table', {
 	total_cost_price: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn]
-		var list = ["Financing", "Commission Of (Sales & P Delivery)"];
+		var list = ["Financing", "Commission Of (Sales & P Delivery)","Risk & contingency","VAT"];
 		if (list.indexOf(row.items) > -1) {
 			row.total_selling_price = Math.round(row.total_cost_price);
 			frm.refresh_fields();
 		}
 
 		getTotalOfField('total_cost_price', "total_cost_price" , frm.doc.project_quotation, frm);
-
-
-		for (var i = 0; i < cur_frm.doc.project_quotation.length; i++) {
-			// console.log(cur_frm.doc.project_quotation[i].total_cost_price)
-			if (cur_frm.doc.project_quotation[i].items == 'Financing' || cur_frm.doc.project_quotation[i].items =='Risk & contingency' || cur_frm.doc.project_quotation[i].items =='Commission Of (Sales & P Delivery)' || cur_frm.doc.project_quotation[i].items =='VAT'){
-				frappe.model.set_value(cdt, cdn,"total_selling_price" , cur_frm.doc.project_quotation[i].total_cost_price.toFixed(0));
-
-			}
-		}
-
 
 		var total =0 
 		for (var i = 0; i < cur_frm.doc.project_quotation.length; i++) {
