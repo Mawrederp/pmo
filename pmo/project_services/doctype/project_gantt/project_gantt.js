@@ -225,11 +225,47 @@ function add_additional_data(project_gantt, task, project_name){
 
 function event_handlers(project_gantt){
 	// var types = project_gantt.config.links;
-	project_gantt.attachEvent("onAfterTaskUpdate", function(id,item){
+	// project_gantt.attachEvent("onAfterTaskUpdate", function(id,item){
 		
 
-		console.log(item.progress);
+	// 	// console.log(item.progress);
+	// });
+
+	project_gantt.attachEvent("onAfterTaskDelete", function(id,item){
+    	if("name" in item){
+    		frappe.call({
+	            method: 'frappe.client.delete',
+	            args: {
+	                'doctype': 'Task',
+	                'name': item['name']
+	            },
+	            freeze: true,
+	            freeze_message: "Deleting Task..",
+	            // async: false,
+	            callback: function(r) {
+	            	// console.log(r.message);
+	            }
+		    });
+    	}
 	});
+
+	project_gantt.attachEvent("onAfterLinkDelete", function(id,item){
+    	if("name" in item){
+    		frappe.call({
+	            method: 'pmo.project_services.doctype.project_gantt.project_gantt.delete_link',
+	            args: {
+	                'link_name': item['name']
+	            },
+	            freeze: true,
+	            freeze_message: "Deleting Link..",
+	            // async: false,
+	            callback: function(r) {
+	            	console.log(r.message);
+	            }
+		    });
+    	}
+	});
+
 	project_gantt.attachEvent("onAfterLinkAdd", function(id,item){
     	console.log(item);
 	});

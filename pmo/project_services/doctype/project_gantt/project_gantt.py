@@ -107,3 +107,9 @@ def save_links(links, project_name):
 def get_links(project_name):
 
 	return frappe.get_list("Task Depends On", filters = {"project": project_name}, fields= '*', ignore_permissions=True)
+
+@frappe.whitelist(allow_guest=True)
+def delete_link(link_name):
+
+	if frappe.db.exists("Task Depends On", link_name):
+		return frappe.delete_doc("Task Depends On", link_name)
