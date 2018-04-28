@@ -95,8 +95,15 @@ def save_links(links, project_name):
 				"type": link["type"],
 				"id": link["id"],
 				"parenttype": "Task",
-				"parentfield":depends_on,
+				"parentfield":"depends_on",
 				"project": project_name,
-				"subject": frappe.get_value("Task", filters={"id": link["source"]}, fieldname="subject")
+				"subject": frappe.get_value("Task", filters={"id": link["source"]}, fieldname="subject"),
+				"idx": frappe.db.sql("select count(*) from `tabTask Depends On` where parent = '{0}'".format(link["target"]))[0][0]+1
 				})
 			link_doc.save(ignore_permissions=True)
+			frappe.db.commit()
+
+@frappe.whitelist(allow_guest=True)
+def get_links(project_name):
+
+	return frappe.get_list("Task Depends On", filters = {"project": project_name}, fields= '*', ignore_permissions=True)

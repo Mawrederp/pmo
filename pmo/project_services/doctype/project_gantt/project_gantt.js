@@ -6,7 +6,7 @@ frappe.ui.form.on('Project Gantt', {
 	onload: function(frm){
 		frm.add_custom_button(__("Save Data"), function() {
 			if (frm.project_gantt){
-				gantt_tasks = [];
+				var gantt_tasks = [];
 					
 				frm.project_gantt.eachTask(function(task){
 					gantt_tasks.push(task);
@@ -37,7 +37,7 @@ frappe.ui.form.on('Project Gantt', {
 						            // async: false,
 						            callback: function(r) {
 						            	if(!r.exc){
-						            		console.log(r.message);
+						            		// console.log(r.message);
 						            		// frappe.msgprint(__("Data & Links are Saved"));
 						            	}
 						            	
@@ -65,7 +65,7 @@ frappe.ui.form.on('Project Gantt', {
 		// var load_c = 0;
 
 		var data = [];
-		var links = [];
+		// var links = [];
 		var selected_project = frm.doc.project;
 		if(selected_project){
 			frappe.model.with_doc("Project", selected_project, function(r) {
@@ -113,36 +113,53 @@ frappe.ui.form.on('Project Gantt', {
 		            callback: function(r) {
 		            	
 		                if (r.message) {							
-							tasks = r.message;
+							var tasks = r.message;
+							var links = [];
 							for (var i in tasks){
 								// rs = frappe.model.get_value('Task', {'name': tasks[i].name}, 'exp_end_date');
 								// console.log("////////////",rs);
 								add_additional_data(project_gantt, tasks[i], selected_project);
-								console.log(tasks[i]);
-								// frappe.call({
-						  //           method: 'frappe.client.get_list',
-						  //           args: {
-						  //               'doctype': "Task Depends On",
-						  //               'filters': { "project": selected_project,
-						  //               	"parent": tasks[i].name},
-						  //               // 'order_by': "exp_end_date",
-						  //               'fields': '*'
-						  //           },
-						  //           freeze: true,
-						  //           freeze_message: "Loading Gantt..",
-						  //           // async: false,
-						  //           callback: function(r) {
-						  //           	if(!r.exc){
-						  //           		console.log(r.message);
-						  //           		// frappe.msgprint(__("Data & Links are Saved"));
-						  //           	}
-						            	
-						  //           	// console.log(r.message);
-						  //           	// console.log(gantt_tasks);
-						  //           }
-						  //   	});
+								// console.log(tasks[i]);
 								// console.log(project_gantt.getTask(tasks[i].id));
 							}
+
+							frappe.call({
+					            method: 'pmo.project_services.doctype.project_gantt.project_gantt.get_links',
+					            args: {
+					                'project_name': selected_project,
+					            },
+					            freeze: true,
+					            freeze_message: "Loading Gantt..",
+					            // async: false,
+					            callback: function(r) {
+					            	if(r.message){
+					            		depends_on = r.message;
+					            		
+					            		for (var i in depends_on){
+
+					            			project_gantt.addLink({
+					            				"id": depends_on[i].id,
+					            				"source": depends_on[i].task,
+					            				"target": depends_on[i].parent,
+					            				"type": depends_on[i].type,
+					            				"name": depends_on[i].name
+					            			});
+					            			// links.push({
+					            			// 	"id": depends_on[i].id,
+					            			// 	"source": depends_on[i].task,
+					            			// 	"target": depends_on[i].parent,
+					            			// 	"type": depends_on[i].type
+					            			// });
+					            		}
+					            		// console.log(links);
+
+					            		// frappe.msgprint(__("Data & Links are Saved"));
+					            	}
+					            	
+					            	// console.log(r.message);
+					            	// console.log(gantt_tasks);
+					            }
+						    });
 
 							// project_gantt.render();
 							// project_links = proj.links;
@@ -157,7 +174,7 @@ frappe.ui.form.on('Project Gantt', {
 							
 
 							project_gantt.parse({"data": tasks});
-							// project_gantt.refreshData();
+							project_gantt.refreshData();
 							frm["project_gantt"] = project_gantt; 
 		               	
 		                }
