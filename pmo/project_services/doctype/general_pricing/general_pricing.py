@@ -8,3 +8,9 @@ from frappe.model.document import Document
 
 class GeneralPricing(Document):
 	pass
+	# def validate(self):
+	# 	doc = frappe.get_doc("Project Quotation")
+	# 	row = doc.append("project_quotation_table", {})
+	# 	row.total_cost_price = 222
+	# 	row.selling_price = 2
+	# 	doc.save()
