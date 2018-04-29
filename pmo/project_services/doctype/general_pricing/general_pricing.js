@@ -57,8 +57,9 @@ frappe.ui.form.on('General Pricing Table', {
 	total_cost_price: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn]
 		var list = ["Financing", "Commission Of (Sales & P Delivery)", "Risk & contingency", "VAT"];
+		console.log(row)
 		if (list.indexOf(row.items) > -1) {
-			row.total_selling_price = Math.round(row.total_cost_price);
+			row.total_selling_price = roundUp(row.total_cost_price,0);
 			frm.refresh_fields();
 		}
 
