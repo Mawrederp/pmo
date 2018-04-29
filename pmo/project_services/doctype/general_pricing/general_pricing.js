@@ -10,13 +10,13 @@ frappe.ui.form.on('General Pricing', {
 		// getTotalOfField('total_markup', "total_markup" , frm.doc.project_quotation, frm);
 
 
-		if (cur_frm.doc.profit_amount && cur_frm.doc.total_cost_price) {
-			var totals_markup = 0;
-			totals_markup = (flt(cur_frm.doc.profit_amount) / flt(cur_frm.doc.total_cost_price)) * 100;
-			frm.set_value("total_markup", totals_markup.toFixed(2));
+		// if (cur_frm.doc.profit_amount && cur_frm.doc.total_cost_price) {
+		// 	var totals_markup = 0;
+		// 	totals_markup = (flt(cur_frm.doc.profit_amount) / flt(cur_frm.doc.total_cost_price)) * 100;
+		// 	frm.set_value("total_markup", totals_markup.toFixed(2));
 
 
-		}
+		// }
 		var total = 0
 		for (var i = 0; i < cur_frm.doc.project_quotation.length; i++) {
 			// console.log(cur_frm.doc.project_quotation[i].total_cost_price)
@@ -70,6 +70,7 @@ frappe.ui.form.on('General Pricing Table', {
 			// console.log(cur_frm.doc.project_quotation[i].total_cost_price)
 			if (cur_frm.doc.project_quotation[i].items == 'Financing' || cur_frm.doc.project_quotation[i].items == 'Risk & contingency') {
 				total += cur_frm.doc.project_quotation[i].total_cost_price;
+				console.log(total);
 			}
 		}
 		var amount = flt(total) + flt(cur_frm.doc.profit_amount);
