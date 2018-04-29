@@ -37,7 +37,7 @@ frappe.ui.form.on('General Pricing', {
 		if (cur_frm.doc.profit_amount_risk && cur_frm.doc.selling_price) {
 			var totals_margin = 0;
 			totals_margin = (flt(cur_frm.doc.profit_amount_risk) / flt(cur_frm.doc.selling_price)) * 100;
-			frm.set_value("total_margin_risk", totals_margin.toFixed(2));
+			frm.set_value("total_margin_risk", roundUp(totals_margin, 1).toFixed(2));
 
 
 		}
@@ -45,7 +45,7 @@ frappe.ui.form.on('General Pricing', {
 		if (cur_frm.doc.profit_amount_risk && cur_frm.doc.total_cost_price) {
 			var totals = 0;
 			totals = (flt(cur_frm.doc.profit_amount_risk) / flt(cur_frm.doc.total_cost_price)) * 100;
-			frm.set_value("total_markup_risk", totals.toFixed(2));
+			frm.set_value("total_markup_risk", roundUp(totals, 1).toFixed(2));
 		}
 
 
@@ -248,6 +248,10 @@ function getField(myfield, itemname, mychildtable, frm) {
 	}
 }
 
+function roundUp(num, precision) {
+	precision = Math.pow(10, precision)
+	return (Math.ceil(num * precision) / precision)
+}
 
 function getTotalOfField(myfield, mytotalfield, mychildtable, frm) {
 	var total_price = 0;
@@ -264,8 +268,8 @@ function getTotalOfField(myfield, mytotalfield, mychildtable, frm) {
 
 	var profit_amount_risk = frm.doc.profit_amount + risk_selling_price_table + finance_selling_price_table;
 	frm.set_value("profit_amount_risk", profit_amount_risk);
-	frm.set_value("total_markup_risk", ((profit_amount_risk / frm.doc.total_cost_price) * 100).toFixed(2));
-	frm.set_value("total_margin_risk", ((profit_amount_risk / frm.doc.selling_price) * 100).toFixed(2));
+	frm.set_value("total_markup_risk", roundUp((profit_amount_risk / frm.doc.total_cost_price) * 100, 1).toFixed(2));
+	frm.set_value("total_margin_risk", roundUp((profit_amount_risk / frm.doc.selling_price) * 100, 1).toFixed(2));
 
 
 	$(".small.form-clickable-section.grid-footer").hide();
