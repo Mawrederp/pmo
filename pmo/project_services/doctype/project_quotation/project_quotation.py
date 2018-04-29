@@ -55,7 +55,10 @@ class ProjectQuotation(Document):
                                              field_array[3]: getattr(self, field_array[3]+type_array[i]),
                                              field_array[4]: getattr(self, field_array[4]+type_array[i]),
                                              })
+
         if backup_editable:
+            print(backup_editable)
+            print("************////////////////****************")
             doc.append("project_quotation", {"items": "Risk & contingency",
                                              field_array[0]: totals_risk[0]*0.01,
                                              field_array[1]: int(round(totals_risk[0]*0.01)),
@@ -66,15 +69,6 @@ class ProjectQuotation(Document):
             for i in range(len(items_editable)):
                 doc.append("project_quotation", backup_editable[i])
         else:
-            for i in range(len(items_editable)):
-                doc.append("project_quotation", {"items": items_editable[i],
-                                                field_array[0]: "0",
-                                                field_array[1]: "0",
-                                                field_array[2]: "0",
-                                                field_array[3]: "0",
-                                                field_array[4]: "0",
-                                                })
-        
             doc.append("project_quotation", {"items": "Risk & contingency",
                                              field_array[0]: totals_risk[0]*0.01,
                                              field_array[1]: int(round(totals_risk[0]*0.01)),
@@ -82,27 +76,14 @@ class ProjectQuotation(Document):
                                              field_array[3]: totals_risk[3],
                                              field_array[4]: totals_risk[4],
                                              })
-            doc.append("project_quotation", {"items": items_editable[0],
-                                             field_array[0]: "0",
-                                             field_array[1]: "0",
-                                             field_array[2]: "0",
-                                             field_array[3]: "0",
-                                             field_array[4]: "0",
-                                             })
-            doc.append("project_quotation", {"items": items_editable[1],
-                                             field_array[0]: "0",
-                                             field_array[1]: "0",
-                                             field_array[2]: "0",
-                                             field_array[3]: "0",
-                                             field_array[4]: "0",
-                                             })
-            doc.append("project_quotation", {"items": items_editable[2],
-                                             field_array[0]: "0",
-                                             field_array[1]: "0",
-                                             field_array[2]: "0",
-                                             field_array[3]: "0",
-                                             field_array[4]: "0",
-                                             })
+            for i in range(len(items_editable)):
+                doc.append("project_quotation", {"items": items_editable[i],
+                                                 field_array[0]: "0",
+                                                 field_array[1]: "0",
+                                                 field_array[2]: "0",
+                                                 field_array[3]: "0",
+                                                 field_array[4]: "0",
+                                                 })
 
         doc.flags.ignore_permissions = True
 
@@ -142,5 +123,3 @@ def get_item_price(item):
         "Select price_list_rate,currency from `tabItem Price` where item_code = '{0}'".format(item), as_dict=True)
     if myitemprice:
         return myitemprice
-
-
