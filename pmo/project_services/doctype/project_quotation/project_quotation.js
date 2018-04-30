@@ -1,6 +1,27 @@
 // Copyright (c) 2018, s and contributors
 // For license information, please see license.txt
 
+var first_time = false
+
+
+function getRiskSellingTotals(frm, string, doc) {
+	var list = ["_pmts", "_develop", "_hw", "_sw", "_manpower", "_support", "_training", "_expenses"];
+	var risk_sell_total = 0;
+	list.forEach(element => {
+		var x = 0
+		console.log()
+
+		if (flt(cur_frm.doc["total_cost_price" + element])) {
+			risk_sell_total += flt(cur_frm.doc["total_cost_price" + element]);
+
+		}
+
+
+	});
+	cur_frm.set_value("total_cost_price_risk_contingency", risk_sell_total);
+	cur_frm.set_value("total_selling_price_risk_contingency", Math.round(risk_sell_total));
+}
+
 function getFinalTotals(frm, string, doc) {
 	getTotalOfField('total_cost_price', "total_cost_price" + string, doc, frm);
 	getTotalOfField('selling_price', "total_selling_price" + string, doc, frm);
@@ -67,8 +88,9 @@ function getTotal(child, string) {
 		child.total_cost_price = child.sar_cost_price * (child.months) * (child.quantity);
 	} else if (string == "_expenses") {
 		child.total_cost_price = child.cost_price * (child.quantity);
-
-	} else if (string == "_pmts" || string == "_manpower") {
+	} else if (string == "_pmts") {
+		child.total_cost_price = ((child.cost_price * (1 + (child.overhead_value / 100)))) * (child.months) * (child.quantity / 100);
+	} else if (string == "_manpower") {
 		child.total_cost_price = ((child.cost_price * (1 + (child.overhead_value / 100)))) * (child.months) * (child.quantity);
 	} else {
 		child.total_cost_price = child.sar_cost_price * (child.quantity);
@@ -107,7 +129,10 @@ function calculateTechnicalServices(frm, cdt, cdn, string, doc) {
 	getProfit(child);
 	getMargin(child);
 	getFinalTotals(frm, string, doc);
+	getRiskSellingTotals(frm, string, doc)
 	frm.refresh_fields();
+	getRiskSellingTotals(frm, string, doc);
+
 
 }
 frappe.ui.form.on('Project Management and Technical Services', {
@@ -132,6 +157,9 @@ frappe.ui.form.on('Project Management and Technical Services', {
 	markup: function (frm, cdt, cdn) {
 		calculateTechnicalServices(frm, cdt, cdn, "_pmts", frm.doc.project_management_and_technical_services);
 
+	},
+	overhead_value: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_pmts", frm.doc.project_management_and_technical_services);
 	},
 	employee: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
@@ -167,12 +195,6 @@ cur_frm.set_query("employee", 'project_management_and_technical_services', funct
 			"designation": d.designation
 		}
 	}
-});
-
-frappe.ui.form.on('Project Quotation', {
-	refresh: function (frm) {
-
-	},
 });
 
 
@@ -382,6 +404,9 @@ frappe.ui.form.on('Man Power', {
 	markup: function (frm, cdt, cdn) {
 		calculateTechnicalServices(frm, cdt, cdn, "_manpower", frm.doc.man_power);
 
+	},
+	overhead_value: function (frm, cdt, cdn) {
+		calculateTechnicalServices(frm, cdt, cdn, "_manpower", frm.doc.project_management_and_technical_services);
 	},
 	employee: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];

@@ -23,10 +23,10 @@ app_include_css = "/assets/pmo/css/dhtmlxgantt.css?v=20180322"
 # web_include_js = "/assets/pmo/js/pmo.js"
 
 # include js in page
-page_js = {"projects-gantt" : "public/js/dhtmlxgantt.js"}
+# page_js = {"projects-gantt" : "public/js/dhtmlxgantt.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {"Project Gantt" : "public/js/dhtmlxgantt.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
