@@ -4,6 +4,24 @@
 var first_time = false
 
 
+function getRiskSellingTotals(frm, string, doc) {
+	var list = ["_pmts", "_develop", "_hw", "_sw", "_manpower", "_support", "_training", "_expenses"];
+	var risk_sell_total = 0;
+	list.forEach(element => {
+		var x = 0
+		console.log()
+
+		if (flt(cur_frm.doc["total_cost_price" + element])) {
+			risk_sell_total += flt(cur_frm.doc["total_cost_price" + element]);
+
+		}
+
+
+	});
+	cur_frm.set_value("total_cost_price_risk_contingency", risk_sell_total);
+	cur_frm.set_value("total_selling_price_risk_contingency", Math.round(risk_sell_total));
+}
+
 function getFinalTotals(frm, string, doc) {
 	getTotalOfField('total_cost_price', "total_cost_price" + string, doc, frm);
 	getTotalOfField('selling_price', "total_selling_price" + string, doc, frm);
@@ -111,7 +129,10 @@ function calculateTechnicalServices(frm, cdt, cdn, string, doc) {
 	getProfit(child);
 	getMargin(child);
 	getFinalTotals(frm, string, doc);
+	getRiskSellingTotals(frm, string, doc)
 	frm.refresh_fields();
+	getRiskSellingTotals(frm, string, doc);
+
 
 }
 frappe.ui.form.on('Project Management and Technical Services', {
