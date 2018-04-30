@@ -51,6 +51,9 @@ frappe.ui.form.on('Project Initiation', {
         
 
 	},
+	workflow_state: function(frm){
+        cur_frm.refresh_fields(["workflow_state"]);
+    },
 	project_sponsor : function (frm){
         if (cur_frm.doc.project_sponsor ){
         	frm.set_value("project_sponsor_ch", cur_frm.doc.project_sponsor );
@@ -161,6 +164,8 @@ frappe.ui.form.on('Project Initiation', {
 
 	},
 	validate: function(frm){
+		cur_frm.refresh_fields(["workflow_state"]);
+		
 		grand_total = 0;
 	    $.each(frm.doc.project_financial_detail || [], function(i, d) {
 	        grand_total += flt(d.cost_price);

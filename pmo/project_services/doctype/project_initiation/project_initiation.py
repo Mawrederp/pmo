@@ -8,7 +8,26 @@ from frappe import _
 from frappe.model.document import Document
 
 class ProjectInitiation(Document):
-    
+    def validate(self):
+        self.validate_emp()
+        if self.workflow_state:
+            if "Rejected" in self.workflow_state:
+                self.docstatus = 1
+                self.docstatus = 2
+
+
+    def validate_emp(self):
+        if self.get('__islocal'):
+            if self.project_coordinator and self.project_manager:
+                self.workflow_state = "Pending(PC+PM)"
+            elif self.project_coordinator and self.senior_project_manager:
+                self.workflow_state = "Pending(PC+SPM)"
+            elif self.project_manager:
+                self.workflow_state = "Pending(PM)"
+            elif self.senior_project_manager:
+                self.workflow_state = "Pending(SPM)"
+
+
     def on_submit(self):
         frappe.get_doc({
             "doctype": "Project Planning",
