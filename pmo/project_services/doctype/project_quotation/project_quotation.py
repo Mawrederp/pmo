@@ -36,7 +36,7 @@ def create_general_pricing(self):
         doc = frappe.new_doc("General Pricing")
 
     doc.project_quotation = []
-    print doc.project_quotation
+
     for i in range(len(items)):
         for j in range(3):
             if (getattr(self, field_array[j]+type_array[i])):
