@@ -109,6 +109,9 @@ def get_basic_salary(employee):
     if emp_sal:
         return emp_sal[0][0]
 
+    emp_sal = frappe.db.sql("Select rounded_total from `tabSalary Slip` where employee='{0}' order by start_date desc limit 1".format(employee))
+    if emp_sal:
+        return emp_sal[0][0]
 
 @frappe.whitelist()
 def get_item_price(item):

@@ -7,7 +7,6 @@ frappe.ui.form.on('Project Gantt', {
 		frm.add_custom_button(__("Save Data"), function() {
 			if (frm.project_gantt){
 				var gantt_tasks = [];
-					
 				frm.project_gantt.eachTask(function(task){
 					gantt_tasks.push(task);
 				});
@@ -73,12 +72,14 @@ frappe.ui.form.on('Project Gantt', {
 
 				project_gantt = Gantt.getGanttInstance();
 
-            	var expected_start_date = moment(project_doc.expected_start_date).format("DD-MM-YYYY");
-            	var duration = moment(project_doc.expected_end_date).diff(project_doc.expected_start_date, "days");
+            	var start_date = moment(project_doc.start_date).format("DD-MM-YYYY");
+            	var end_date = moment(project_doc.end_date).format("DD-MM-YYYY");
+            	var duration = moment(project_doc.end_date).diff(project_doc.start_date, "days");
 
 				project_doc["id"] = project_doc.name;
-				// project_doc["duration"] = duration;
-				project_doc["start_date"] = expected_start_date;
+				project_doc["duration"] = duration;
+				project_doc["start_date"] = start_date;
+				project_doc["end_date"] = end_date;
 				project_doc["text"] = project_doc.project_name;
 				// project_doc["progress"] = 0.4;
 				project_doc["type"]=project_gantt.config.types.project;
@@ -105,7 +106,7 @@ frappe.ui.form.on('Project Gantt', {
 		            args: {
 		                'doctype': 'Task',
 		                'filters': { 'project': selected_project },
-		                'order_by': "exp_end_date",
+		                'order_by': "creation",
 		                'fields': '*'
 		            },
 		            freeze: true,
@@ -161,27 +162,16 @@ frappe.ui.form.on('Project Gantt', {
 					            }
 						    });
 
-							// project_gantt.render();
-							// project_links = proj.links;
-							// for (var i in project_links){
-							// 	// console.log(proj.links);
-							// 	project_links[i]["id"] = project_links[i].name;
-							// 	project_gantt.addLink(project_links[i]);
-							// 	// links.push(project_links[i]);
-							// }
-							// console.log(gantt.getTask("TASK00002"));
-							// gantt.init("gantt_here");
-							
-
 							project_gantt.parse({"data": tasks});
 							project_gantt.refreshData();
-							frm["project_gantt"] = project_gantt; 
+							 
 		               	
 		                }
 		                // gantt.render();
 		                // gantt.refreshData();
 		            }
     			});
+    			frm["project_gantt"] = project_gantt;
     			event_handlers(project_gantt);
 
 			});
