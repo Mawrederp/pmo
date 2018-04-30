@@ -8,6 +8,10 @@ from frappe.model.document import Document
 
 
 class ProjectQuotation(Document):
+    def before_save(self):
+        if(not self.get("__islocal")):
+            ProjectQuotation.create_general_pricing(self)
+
     def after_insert(self):
         ProjectQuotation.create_general_pricing(self)
 
@@ -32,7 +36,7 @@ class ProjectQuotation(Document):
             doc = frappe.new_doc("General Pricing")
 
         doc.project_quotation = []
-        
+        print doc.project_quotation
         for i in range(len(items)):
             for j in range(3):
                 if (getattr(self, field_array[j]+type_array[i])):
@@ -61,15 +65,29 @@ class ProjectQuotation(Document):
         doc.total_cost_price = final_totals_list[0]
         doc.selling_price = final_totals_list[1]
         doc.profit_amount = final_totals_list[2]
-        doc.total_markup = (final_totals_list[2] / final_totals_list[0])*100
-        doc.total_margin = round(
-            (final_totals_list[2] / final_totals_list[1])*100, 1)
+        if (final_totals_list[0] and final_totals_list[0] != 0):
+            doc.total_markup = (
+                final_totals_list[2] / final_totals_list[0])*100
+        else:
+            doc.total_markup = 0
+        if (final_totals_list[1] and final_totals_list[1] != 0):
+            doc.total_margin = round(
+                (final_totals_list[2] / final_totals_list[1])*100, 1)
+        else:
+            doc.total_margin = 0
         profit_amount_risk = final_totals_list[2] + \
             selling_price_risk + selling_price_financing
         doc.profit_amount_risk = profit_amount_risk
-        doc.total_markup_risk = (profit_amount_risk / final_totals_list[0])*100
-        doc.total_margin_risk = round(
-            (profit_amount_risk / final_totals_list[1])*100, 1)
+        if (final_totals_list[0] and final_totals_list[0] != 0):
+            doc.total_markup_risk = (
+                profit_amount_risk / final_totals_list[0])*100
+        else:
+            total_markup_risk = 0
+        if (final_totals_list[1] and final_totals_list[1] != 0):
+            doc.total_margin_risk = round(
+                (profit_amount_risk / final_totals_list[1])*100, 1)
+        else:
+            doc.total_margin_risk = 0
 
         doc.flags.ignore_permissions = True
 
@@ -82,8 +100,6 @@ class ProjectQuotation(Document):
             doc.insert(ignore_permissions=True)
             frappe.msgprint(
                 "<a href='desk#Form/General Pricing/{0}' >{0}</a>".format(doc.name) + " is inserted")
-        self.save()
-        print("ooooooooooooooooooooooooooooooooo")
 
 
 @frappe.whitelist()

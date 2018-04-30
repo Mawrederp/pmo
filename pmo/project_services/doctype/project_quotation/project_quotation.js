@@ -4,22 +4,7 @@
 var first_time = false
 
 frappe.ui.form.on('Project Quotation', {
-	onload: function (frm) {
 
-	},
-	validate: function (frm) {
-		if (!frm.doc.__islocal) {
-			total_cost_price =
-				frappe.call({
-					method: "create_general_pricing",
-					doc: cur_frm.doc,
-					callback: function (data) {
-						console.log("Success");
-					}
-				});
-		}
-
-	},
 });
 
 function getRiskSellingTotals(frm, string, doc) {
