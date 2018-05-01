@@ -134,8 +134,9 @@ function calculateTechnicalServices(frm, cdt, cdn, string, doc) {
 	getProfit(child);
 	getMargin(child);
 	getFinalTotals(frm, string, doc);
-	getRiskSellingTotals(frm, string, doc)
 	frm.refresh_fields();
+	getRiskSellingTotals(frm, string, doc)
+
 
 
 }
