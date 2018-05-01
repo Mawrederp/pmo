@@ -52,11 +52,12 @@ function getFinalTotals(frm, string, doc) {
 
 function get_item_price(frm, cdt, cdn, item, field) {
 	var child = locals[cdt][cdn];
+	frappe.model.set_value(cdt, cdn, field, 0);
+
 	if (!child.group_code && child.items != "" && child.items != undefined) {
 		frappe.model.set_value(cdt, cdn, "items", "");
 		frappe.throw('Please Specify A Group for the Item');
-	}
-	if (item) {
+	} else if (item && item != "" && child.group_code) {
 		frappe.call({
 			method: "pmo.project_services.doctype.project_quotation.project_quotation.get_item_price",
 			args: {
@@ -71,8 +72,6 @@ function get_item_price(frm, cdt, cdn, item, field) {
 						frappe.model.set_value(cdt, cdn, "currency", "SAR");
 					}
 
-				} else {
-					frappe.model.set_value(cdt, cdn, field, 0);
 				}
 			}
 		});
@@ -168,6 +167,7 @@ frappe.ui.form.on('Project Management and Technical Services', {
 	},
 	employee: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
+		frappe.model.set_value(cdt, cdn, "cost_price", 0);
 		if (d.designation && d.employee != "" && d.employee != undefined) {
 			frappe.call({
 				method: "pmo.project_services.doctype.project_quotation.project_quotation.get_basic_salary",
@@ -255,11 +255,7 @@ frappe.ui.form.on('Development Services', {
 	},
 	group_code: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
-		if (d.group_code && d.group_code != "" && d.group_code != undefined) {
-			frappe.model.set_value(cdt, cdn, "items", "");
-
-		}
-		calculateTechnicalServices(frm, cdt, cdn, "_develop", frm.doc.development_services);
+		frappe.model.set_value(cdt, cdn, "items", "");
 	},
 	currency: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
