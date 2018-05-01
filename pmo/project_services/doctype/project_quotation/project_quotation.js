@@ -219,13 +219,14 @@ frappe.ui.form.on('Development Services', {
 		getFinalTotals(frm, "_develop", frm.doc.development_services);
 	},
 	cost_price: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_develop", frm.doc.development_services);
 		var row = locals[cdt][cdn];
 		if (row.currency == 'SAR' && row.cost_price) {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price);
 		} else {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
 		}
+		calculateTechnicalServices(frm, cdt, cdn, "_develop", frm.doc.development_services);
+
 	},
 	quantity: function (frm, cdt, cdn) {
 		calculateTechnicalServices(frm, cdt, cdn, "_develop", frm.doc.development_services);
@@ -240,9 +241,10 @@ frappe.ui.form.on('Development Services', {
 
 	},
 	items: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_develop", frm.doc.development_services);
 		var row = locals[cdt][cdn];
 		get_item_price(frm, cdt, cdn, row.items, "cost_price", frm.doc.development_services);
+		calculateTechnicalServices(frm, cdt, cdn, "_develop", frm.doc.development_services);
+		
 
 	},
 	group_code: function (frm, cdt, cdn) {
@@ -270,13 +272,14 @@ frappe.ui.form.on('Hardware', {
 		getFinalTotals(frm, "_hw", frm.doc.hardware);
 	},
 	cost_price: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_hw", frm.doc.hardware);
 		var row = locals[cdt][cdn];
 		if (row.currency == 'SAR' && row.cost_price) {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price);
 		} else {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
 		}
+		calculateTechnicalServices(frm, cdt, cdn, "_hw", frm.doc.hardware);
+		
 	},
 	quantity: function (frm, cdt, cdn) {
 		calculateTechnicalServices(frm, cdt, cdn, "_hw", frm.doc.hardware);
@@ -291,9 +294,10 @@ frappe.ui.form.on('Hardware', {
 
 	},
 	items: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_hw", frm.doc.hardware);
 		var row = locals[cdt][cdn];
 		get_item_price(frm, cdt, cdn, row.items, "cost_price", frm.doc.hardware);
+		calculateTechnicalServices(frm, cdt, cdn, "_hw", frm.doc.hardware);
+		
 
 	},
 	group_code: function (frm, cdt, cdn) {
@@ -331,13 +335,14 @@ frappe.ui.form.on('Software', {
 		getFinalTotals(frm, "_sw", frm.doc.software);
 	},
 	cost_price: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_sw", frm.doc.software);
 		var row = locals[cdt][cdn];
 		if (row.currency == 'SAR' && row.cost_price) {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price);
 		} else {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
 		}
+		calculateTechnicalServices(frm, cdt, cdn, "_sw", frm.doc.software);
+		
 	},
 	quantity: function (frm, cdt, cdn) {
 		calculateTechnicalServices(frm, cdt, cdn, "_sw", frm.doc.software);
@@ -352,9 +357,10 @@ frappe.ui.form.on('Software', {
 
 	},
 	items: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_sw", frm.doc.software);
 		var row = locals[cdt][cdn];
 		get_item_price(frm, cdt, cdn, row.items, "cost_price", frm.doc.software);
+		calculateTechnicalServices(frm, cdt, cdn, "_sw", frm.doc.software);
+		
 
 	},
 	group_code: function (frm, cdt, cdn) {
@@ -462,13 +468,14 @@ frappe.ui.form.on('Support License Renew', {
 
 	},
 	cost_price: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_support", frm.doc.support_license_renew);
 		var row = locals[cdt][cdn];
 		if (row.currency == 'SAR' && row.cost_price) {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price);
 		} else {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
 		}
+		calculateTechnicalServices(frm, cdt, cdn, "_support", frm.doc.support_license_renew);
+		
 	},
 	quantity: function (frm, cdt, cdn) {
 		calculateTechnicalServices(frm, cdt, cdn, "_support", frm.doc.support_license_renew);
@@ -522,13 +529,14 @@ frappe.ui.form.on('Training', {
 		getFinalTotals(frm, "_training", frm.doc.training);
 	},
 	cost_price: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_training", frm.doc.training);
 		var row = locals[cdt][cdn];
 		if (row.currency == 'SAR' && row.cost_price) {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price);
 		} else {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
 		}
+		calculateTechnicalServices(frm, cdt, cdn, "_training", frm.doc.training);
+		
 	},
 	quantity: function (frm, cdt, cdn) {
 		calculateTechnicalServices(frm, cdt, cdn, "_training", frm.doc.training);
