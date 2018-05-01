@@ -21,10 +21,10 @@ function getRiskSellingTotals(frm, string, doc) {
 
 
 	});
-	risk_sell_total /= 0.01;
+	risk_sell_total *= 0.01;
 
-	cur_frm.set_value("total_cost_price_risk_contingency", risk_sell_total);
-	cur_frm.set_value("total_selling_price_risk_contingency", Math.round(risk_sell_total));
+	cur_frm.set_value("total_cost_price_risk_contingency", risk_sell_total.toFixed(2));
+	cur_frm.set_value("total_selling_price_risk_contingency", Math.round(risk_sell_total).toFixed(2));
 }
 
 function getFinalTotals(frm, string, doc) {
@@ -136,7 +136,6 @@ function calculateTechnicalServices(frm, cdt, cdn, string, doc) {
 	getFinalTotals(frm, string, doc);
 	getRiskSellingTotals(frm, string, doc)
 	frm.refresh_fields();
-	getRiskSellingTotals(frm, string, doc);
 
 
 }
