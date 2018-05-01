@@ -21,8 +21,10 @@ function getRiskSellingTotals(frm, string, doc) {
 
 
 	});
-	cur_frm.set_value("total_cost_price_risk_contingency", risk_sell_total);
-	cur_frm.set_value("total_selling_price_risk_contingency", Math.round(risk_sell_total));
+	risk_sell_total *= 0.01;
+
+	cur_frm.set_value("total_cost_price_risk_contingency", risk_sell_total.toFixed(2));
+	cur_frm.set_value("total_selling_price_risk_contingency", Math.round(risk_sell_total).toFixed(2));
 }
 
 function getFinalTotals(frm, string, doc) {
@@ -132,9 +134,9 @@ function calculateTechnicalServices(frm, cdt, cdn, string, doc) {
 	getProfit(child);
 	getMargin(child);
 	getFinalTotals(frm, string, doc);
-	getRiskSellingTotals(frm, string, doc)
 	frm.refresh_fields();
-	getRiskSellingTotals(frm, string, doc);
+	getRiskSellingTotals(frm, string, doc)
+
 
 
 }
@@ -166,28 +168,34 @@ frappe.ui.form.on('Project Management and Technical Services', {
 	},
 	employee: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
-		if (!d.designation && d.employee != "" && d.employee != undefined) {
+		if (d.designation && d.employee != "" && d.employee != undefined) {
+			frappe.call({
+				method: "pmo.project_services.doctype.project_quotation.project_quotation.get_basic_salary",
+				args: {
+					employee: d.employee
+				},
+				callback: function (data) {
+					frappe.model.set_value(cdt, cdn, "cost_price", data.message);
+				}
+			});
+			calculateTechnicalServices(frm, cdt, cdn, "_pmts", frm.doc.project_management_and_technical_services);
+
+		} else if (!d.designation && d.employee != "" && d.employee != undefined) {
 			frappe.model.set_value(cdt, cdn, "employee", "");
 			frappe.throw('Please Specify A Designation');
 
+
 		}
-		frappe.call({
-			method: "pmo.project_services.doctype.project_quotation.project_quotation.get_basic_salary",
-			args: {
-				employee: d.employee
-			},
-			callback: function (data) {
-				frappe.model.set_value(cdt, cdn, "cost_price", data.message);
-			}
-		});
+
 
 	},
 	designation: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
-		if (d.designation && d.designation != "" && d.designation != undefined) {
-			frappe.model.set_value(cdt, cdn, "employee", "");
+		// if (d.designation == "" || d.designation == undefined) {
+		frappe.model.set_value(cdt, cdn, "employee", "");
 
-		}
+		// }
+		calculateTechnicalServices(frm, cdt, cdn, "_pmts", frm.doc.project_management_and_technical_services);
 	}
 });
 
@@ -217,13 +225,14 @@ frappe.ui.form.on('Development Services', {
 		getFinalTotals(frm, "_develop", frm.doc.development_services);
 	},
 	cost_price: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_develop", frm.doc.development_services);
 		var row = locals[cdt][cdn];
 		if (row.currency == 'SAR' && row.cost_price) {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price);
 		} else {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
 		}
+		calculateTechnicalServices(frm, cdt, cdn, "_develop", frm.doc.development_services);
+
 	},
 	quantity: function (frm, cdt, cdn) {
 		calculateTechnicalServices(frm, cdt, cdn, "_develop", frm.doc.development_services);
@@ -238,9 +247,10 @@ frappe.ui.form.on('Development Services', {
 
 	},
 	items: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_develop", frm.doc.development_services);
 		var row = locals[cdt][cdn];
 		get_item_price(frm, cdt, cdn, row.items, "cost_price", frm.doc.development_services);
+		calculateTechnicalServices(frm, cdt, cdn, "_develop", frm.doc.development_services);
+
 
 	},
 	group_code: function (frm, cdt, cdn) {
@@ -249,6 +259,7 @@ frappe.ui.form.on('Development Services', {
 			frappe.model.set_value(cdt, cdn, "items", "");
 
 		}
+		calculateTechnicalServices(frm, cdt, cdn, "_develop", frm.doc.development_services);
 	},
 	currency: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
@@ -268,13 +279,14 @@ frappe.ui.form.on('Hardware', {
 		getFinalTotals(frm, "_hw", frm.doc.hardware);
 	},
 	cost_price: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_hw", frm.doc.hardware);
 		var row = locals[cdt][cdn];
 		if (row.currency == 'SAR' && row.cost_price) {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price);
 		} else {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
 		}
+		calculateTechnicalServices(frm, cdt, cdn, "_hw", frm.doc.hardware);
+
 	},
 	quantity: function (frm, cdt, cdn) {
 		calculateTechnicalServices(frm, cdt, cdn, "_hw", frm.doc.hardware);
@@ -289,9 +301,10 @@ frappe.ui.form.on('Hardware', {
 
 	},
 	items: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_hw", frm.doc.hardware);
 		var row = locals[cdt][cdn];
 		get_item_price(frm, cdt, cdn, row.items, "cost_price", frm.doc.hardware);
+		calculateTechnicalServices(frm, cdt, cdn, "_hw", frm.doc.hardware);
+
 
 	},
 	group_code: function (frm, cdt, cdn) {
@@ -300,6 +313,7 @@ frappe.ui.form.on('Hardware', {
 			frappe.model.set_value(cdt, cdn, "items", "");
 
 		}
+		calculateTechnicalServices(frm, cdt, cdn, "_hw", frm.doc.hardware);
 	},
 	currency: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
@@ -308,7 +322,7 @@ frappe.ui.form.on('Hardware', {
 		} else {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
 		}
-		calculateTechnicalServices(frm, cdt, cdn, "_develop", frm.doc.development_services);
+		calculateTechnicalServices(frm, cdt, cdn, "_hw", frm.doc.hardware);
 	}
 
 });
@@ -329,13 +343,14 @@ frappe.ui.form.on('Software', {
 		getFinalTotals(frm, "_sw", frm.doc.software);
 	},
 	cost_price: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_sw", frm.doc.software);
 		var row = locals[cdt][cdn];
 		if (row.currency == 'SAR' && row.cost_price) {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price);
 		} else {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
 		}
+		calculateTechnicalServices(frm, cdt, cdn, "_sw", frm.doc.software);
+
 	},
 	quantity: function (frm, cdt, cdn) {
 		calculateTechnicalServices(frm, cdt, cdn, "_sw", frm.doc.software);
@@ -350,9 +365,10 @@ frappe.ui.form.on('Software', {
 
 	},
 	items: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_sw", frm.doc.software);
 		var row = locals[cdt][cdn];
 		get_item_price(frm, cdt, cdn, row.items, "cost_price", frm.doc.software);
+		calculateTechnicalServices(frm, cdt, cdn, "_sw", frm.doc.software);
+
 
 	},
 	group_code: function (frm, cdt, cdn) {
@@ -361,6 +377,7 @@ frappe.ui.form.on('Software', {
 			frappe.model.set_value(cdt, cdn, "items", "");
 
 		}
+		calculateTechnicalServices(frm, cdt, cdn, "_sw", frm.doc.software);
 	},
 	currency: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
@@ -369,7 +386,7 @@ frappe.ui.form.on('Software', {
 		} else {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
 		}
-		calculateTechnicalServices(frm, cdt, cdn, "_develop", frm.doc.development_services);
+		calculateTechnicalServices(frm, cdt, cdn, "_sw", frm.doc.software);
 	}
 
 });
@@ -409,32 +426,33 @@ frappe.ui.form.on('Man Power', {
 
 	},
 	overhead_value: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_manpower", frm.doc.project_management_and_technical_services);
+		calculateTechnicalServices(frm, cdt, cdn, "_manpower", frm.doc.man_power);
 	},
 	employee: function (frm, cdt, cdn) {
-		var d = locals[cdt][cdn];
-		if (!d.designation & d.employee != "") {
-			frappe.model.set_value(cdt, cdn, "employee", "");
-			frappe.throw('Please Specify A Designation');
+		// var d = locals[cdt][cdn];
+		// if (!d.designation & d.employee != "") {
+		// 	frappe.model.set_value(cdt, cdn, "employee", "");
+		// 	frappe.throw('Please Specify A Designation');
 
-		}
-		frappe.call({
-			method: "pmo.project_services.doctype.project_quotation.project_quotation.get_basic_salary",
-			args: {
-				employee: d.employee
-			},
-			callback: function (data) {
-				frappe.model.set_value(cdt, cdn, "cost_price", data.message);
-			}
-		});
-
+		// }
+		// frappe.call({
+		// 	method: "pmo.project_services.doctype.project_quotation.project_quotation.get_basic_salary",
+		// 	args: {
+		// 		employee: d.employee
+		// 	},
+		// 	callback: function (data) {
+		// 		frappe.model.set_value(cdt, cdn, "cost_price", data.message);
+		// 	}
+		// });
+		// calculateTechnicalServices(frm, cdt, cdn, "_manpower", frm.doc.man_power);
 	},
 	designation: function (frm, cdt, cdn) {
-		var d = locals[cdt][cdn];
-		if (d.designation && d.designation != "" && d.designation != undefined) {
-			frappe.model.set_value(cdt, cdn, "employee", "");
+		// var d = locals[cdt][cdn];
+		// if (d.designation && d.designation != "" && d.designation != undefined) {
+		// 	frappe.model.set_value(cdt, cdn, "employee", "");
 
-		}
+		// }
+		// calculateTechnicalServices(frm, cdt, cdn, "_manpower", frm.doc.man_power);
 	}
 
 
@@ -460,13 +478,14 @@ frappe.ui.form.on('Support License Renew', {
 
 	},
 	cost_price: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_support", frm.doc.support_license_renew);
 		var row = locals[cdt][cdn];
 		if (row.currency == 'SAR' && row.cost_price) {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price);
 		} else {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
 		}
+		calculateTechnicalServices(frm, cdt, cdn, "_support", frm.doc.support_license_renew);
+
 	},
 	quantity: function (frm, cdt, cdn) {
 		calculateTechnicalServices(frm, cdt, cdn, "_support", frm.doc.support_license_renew);
@@ -483,6 +502,7 @@ frappe.ui.form.on('Support License Renew', {
 	items: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
 		get_item_price(frm, cdt, cdn, row.items, "cost_price", frm.doc.support_license_renew);
+		calculateTechnicalServices(frm, cdt, cdn, "_support", frm.doc.support_license_renew);
 
 	},
 	group_code: function (frm, cdt, cdn) {
@@ -491,6 +511,7 @@ frappe.ui.form.on('Support License Renew', {
 			frappe.model.set_value(cdt, cdn, "items", "");
 
 		}
+		calculateTechnicalServices(frm, cdt, cdn, "_support", frm.doc.support_license_renew);
 	},
 	currency: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
@@ -499,7 +520,7 @@ frappe.ui.form.on('Support License Renew', {
 		} else {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
 		}
-		calculateTechnicalServices(frm, cdt, cdn, "_develop", frm.doc.development_services);
+		calculateTechnicalServices(frm, cdt, cdn, "_support", frm.doc.support_license_renew);
 	}
 
 });
@@ -520,13 +541,14 @@ frappe.ui.form.on('Training', {
 		getFinalTotals(frm, "_training", frm.doc.training);
 	},
 	cost_price: function (frm, cdt, cdn) {
-		calculateTechnicalServices(frm, cdt, cdn, "_training", frm.doc.training);
 		var row = locals[cdt][cdn];
 		if (row.currency == 'SAR' && row.cost_price) {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price);
 		} else {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
 		}
+		calculateTechnicalServices(frm, cdt, cdn, "_training", frm.doc.training);
+
 	},
 	quantity: function (frm, cdt, cdn) {
 		calculateTechnicalServices(frm, cdt, cdn, "_training", frm.doc.training);
@@ -543,7 +565,7 @@ frappe.ui.form.on('Training', {
 	items: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
 		get_item_price(frm, cdt, cdn, row.items, "cost_price", frm.doc.training);
-
+		calculateTechnicalServices(frm, cdt, cdn, "_training", frm.doc.training);
 	},
 	group_code: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
@@ -551,6 +573,7 @@ frappe.ui.form.on('Training', {
 			frappe.model.set_value(cdt, cdn, "items", "");
 
 		}
+		calculateTechnicalServices(frm, cdt, cdn, "_training", frm.doc.training);
 	},
 	currency: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
@@ -559,7 +582,7 @@ frappe.ui.form.on('Training', {
 		} else {
 			frappe.model.set_value(cdt, cdn, "sar_cost_price", row.cost_price * 3.75);
 		}
-		calculateTechnicalServices(frm, cdt, cdn, "_develop", frm.doc.development_services);
+		calculateTechnicalServices(frm, cdt, cdn, "_training", frm.doc.training);
 	}
 
 });
@@ -603,6 +626,7 @@ frappe.ui.form.on('Expenses', {
 			frappe.model.set_value(cdt, cdn, "items", "");
 
 		}
+		calculateTechnicalServices(frm, cdt, cdn, "_expenses", frm.doc.expenses);
 	},
 
 

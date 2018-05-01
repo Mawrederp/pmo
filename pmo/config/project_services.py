@@ -55,21 +55,21 @@ def get_data():
                 }
             ]
         },
-        #  {
-        #     "label": _("Projects Purchase"),
-        #     "items": [
-        #         {
-        #             "type": "doctype",
-        #             "name": "Project Quotation",
-        #             "label": _("Project Quotation"),
-        #             "description": _("Project Quotation."),
-        #         },
-        #         {
-        #             "type": "doctype",
-        #             "name": "General Pricing",
-        #             "label": _("General Pricing"),
-        #             "description": _("General Pricing."),
-        #         }
-        #     ]
-        # }
+         {
+            "label": _("Projects Studies"),
+            "items": [
+                {
+                    "type": "doctype",
+                    "name": "Project Quotation",
+                    "label": _("Project Quotation"),
+                    "description": _("Project Quotation."),
+                },
+                {
+                    "type": "doctype",
+                    "name": "General Pricing",
+                    "label": _("General Pricing"),
+                    "description": _("General Pricing."),
+                }
+            ]
+        }
     ]
