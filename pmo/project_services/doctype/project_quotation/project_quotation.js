@@ -3,6 +3,9 @@
 
 var first_time = false
 
+frappe.ui.form.on('Project Quotation', {
+
+});
 
 function getRiskSellingTotals(frm, string, doc) {
 	var list = ["_pmts", "_develop", "_hw", "_sw", "_manpower", "_support", "_training", "_expenses"];
