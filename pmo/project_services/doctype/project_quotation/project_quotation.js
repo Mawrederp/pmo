@@ -168,29 +168,33 @@ frappe.ui.form.on('Project Management and Technical Services', {
 	},
 	employee: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
-		if (!d.designation && d.employee != "" && d.employee != undefined) {
+		if (d.designation && d.employee != "" && d.employee != undefined) {
+			frappe.call({
+				method: "pmo.project_services.doctype.project_quotation.project_quotation.get_basic_salary",
+				args: {
+					employee: d.employee
+				},
+				callback: function (data) {
+					frappe.model.set_value(cdt, cdn, "cost_price", data.message);
+				}
+			});
+			calculateTechnicalServices(frm, cdt, cdn, "_pmts", frm.doc.project_management_and_technical_services);
+
+		} else if (!d.designation && d.employee != "" && d.employee != undefined) {
 			frappe.model.set_value(cdt, cdn, "employee", "");
 			frappe.throw('Please Specify A Designation');
 
+
 		}
-		frappe.call({
-			method: "pmo.project_services.doctype.project_quotation.project_quotation.get_basic_salary",
-			args: {
-				employee: d.employee
-			},
-			callback: function (data) {
-				frappe.model.set_value(cdt, cdn, "cost_price", data.message);
-			}
-		});
-		calculateTechnicalServices(frm, cdt, cdn, "_pmts", frm.doc.project_management_and_technical_services);
+
 
 	},
 	designation: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
-		if (d.designation && d.designation != "" && d.designation != undefined) {
-			frappe.model.set_value(cdt, cdn, "employee", "");
+		// if (d.designation == "" || d.designation == undefined) {
+		frappe.model.set_value(cdt, cdn, "employee", "");
 
-		}
+		// }
 		calculateTechnicalServices(frm, cdt, cdn, "_pmts", frm.doc.project_management_and_technical_services);
 	}
 });
@@ -425,30 +429,30 @@ frappe.ui.form.on('Man Power', {
 		calculateTechnicalServices(frm, cdt, cdn, "_manpower", frm.doc.man_power);
 	},
 	employee: function (frm, cdt, cdn) {
-		var d = locals[cdt][cdn];
-		if (!d.designation & d.employee != "") {
-			frappe.model.set_value(cdt, cdn, "employee", "");
-			frappe.throw('Please Specify A Designation');
+		// var d = locals[cdt][cdn];
+		// if (!d.designation & d.employee != "") {
+		// 	frappe.model.set_value(cdt, cdn, "employee", "");
+		// 	frappe.throw('Please Specify A Designation');
 
-		}
-		frappe.call({
-			method: "pmo.project_services.doctype.project_quotation.project_quotation.get_basic_salary",
-			args: {
-				employee: d.employee
-			},
-			callback: function (data) {
-				frappe.model.set_value(cdt, cdn, "cost_price", data.message);
-			}
-		});
-		calculateTechnicalServices(frm, cdt, cdn, "_manpower", frm.doc.man_power);
+		// }
+		// frappe.call({
+		// 	method: "pmo.project_services.doctype.project_quotation.project_quotation.get_basic_salary",
+		// 	args: {
+		// 		employee: d.employee
+		// 	},
+		// 	callback: function (data) {
+		// 		frappe.model.set_value(cdt, cdn, "cost_price", data.message);
+		// 	}
+		// });
+		// calculateTechnicalServices(frm, cdt, cdn, "_manpower", frm.doc.man_power);
 	},
 	designation: function (frm, cdt, cdn) {
-		var d = locals[cdt][cdn];
-		if (d.designation && d.designation != "" && d.designation != undefined) {
-			frappe.model.set_value(cdt, cdn, "employee", "");
+		// var d = locals[cdt][cdn];
+		// if (d.designation && d.designation != "" && d.designation != undefined) {
+		// 	frappe.model.set_value(cdt, cdn, "employee", "");
 
-		}
-		calculateTechnicalServices(frm, cdt, cdn, "_manpower", frm.doc.man_power);
+		// }
+		// calculateTechnicalServices(frm, cdt, cdn, "_manpower", frm.doc.man_power);
 	}
 
 
