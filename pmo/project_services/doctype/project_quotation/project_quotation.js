@@ -6,18 +6,56 @@ var first_time = false
 frappe.ui.form.on('Project Quotation', {
 	risk_percentage: function (frm, cdt, cdn) {
 		getRiskSellingTotals()
+		getFinanceSellingTotals()
+		getCommissionSellingTotals()
+		getVatSellingTotals()
 	},
 	financing_percentage: function (frm, cdt, cdn) {
 		getFinanceSellingTotals()
+		getCommissionSellingTotals()
+		getVatSellingTotals()
 	},
 	commission_percentage: function (frm, cdt, cdn) {
-		//getCommissionSellingTotals()
+		getCommissionSellingTotals()
+		getVatSellingTotals()
 	},
 	vat_percentage: function (frm, cdt, cdn) {
-		//getVatSellingTotals()
+		getVatSellingTotals()
 	},
 
+	risk_value: function (frm, cdt, cdn) {
+		// getRiskPercentage();
+	},
+	financing_value: function (frm, cdt, cdn) {},
+	commission_value: function (frm, cdt, cdn) {},
+	vat_value: function (frm, cdt, cdn) {},
+
 });
+
+/* 
+function getRiskPercentage() {
+	var list = ["_pmts", "_develop", "_hw", "_sw", "_manpower", "_support", "_training", "_expenses"];
+	var risk_sell_total = 0;
+	list.forEach(element => {
+		var x = 0
+		console.log()
+
+		if (flt(cur_frm.doc["total_cost_price" + element])) {
+			risk_sell_total += flt(cur_frm.doc["total_cost_price" + element]);
+
+		}
+
+
+	});
+	var risk = cur_frm.doc.risk_value;
+	console.log(risk)
+	if (!risk || risk == "" || risk == undefined) {
+		cur_frm.set_value("risk_value", 0);
+		risk = 0;
+	}
+	risk = (risk / risk_sell_total) * 100;
+	cur_frm.set_value("risk_percentage", (risk).toFixed(2));
+} */
 
 function getRiskSellingTotals() {
 	var list = ["_pmts", "_develop", "_hw", "_sw", "_manpower", "_support", "_training", "_expenses"];
@@ -58,10 +96,13 @@ function getFinanceSellingTotals() {
 
 
 	});
+
+	finance_sell_total += parseFloat(cur_frm.doc.risk_value);
+
 	var financing = cur_frm.doc.financing_percentage;
 	if (!financing || financing == "" || financing == undefined) {
-		cur_frm.set_value("financing_percentage", 1);
-		financing = 1;
+		cur_frm.set_value("financing_percentage", 0);
+		financing = 0;
 	}
 	financing = financing / 100;
 	cur_frm.set_value("total_cost_price_original_finance", (finance_sell_total).toFixed(2));
@@ -69,6 +110,57 @@ function getFinanceSellingTotals() {
 	cur_frm.set_value("total_cost_price_finance", ((finance_sell_total * financing) + finance_sell_total).toFixed(2));
 }
 
+function getCommissionSellingTotals() {
+	var list = ["_pmts", "_develop", "_hw", "_sw", "_manpower", "_support", "_training", "_expenses"];
+	var commission_sell_total = 0;
+	list.forEach(element => {
+		var x = 0
+		console.log()
+
+		if (flt(cur_frm.doc["total_cost_price" + element])) {
+			commission_sell_total += flt(cur_frm.doc["total_cost_price" + element]);
+
+		}
+
+
+	});
+	commission_sell_total += parseFloat(cur_frm.doc.risk_value) + parseFloat(cur_frm.doc.financing_value);
+	var commission = cur_frm.doc.commission_percentage;
+	if (!commission || commission == "" || commission == undefined) {
+		cur_frm.set_value("commission_percentage", 0);
+		commission = 0;
+	}
+	commission = commission / 100;
+	cur_frm.set_value("total_cost_price_original_commission", (commission_sell_total).toFixed(2));
+	cur_frm.set_value("commission_value", (commission_sell_total * commission).toFixed(2));
+	cur_frm.set_value("total_cost_price_commission", ((commission_sell_total * commission) + commission_sell_total).toFixed(2));
+}
+
+function getVatSellingTotals() {
+	var list = ["_pmts", "_develop", "_hw", "_sw", "_manpower", "_support", "_training", "_expenses"];
+	var vat_sell_total = 0;
+	list.forEach(element => {
+		var x = 0
+		console.log()
+
+		if (flt(cur_frm.doc["total_cost_price" + element])) {
+			vat_sell_total += flt(cur_frm.doc["total_cost_price" + element]);
+
+		}
+
+
+	});
+	vat_sell_total += parseFloat(cur_frm.doc.risk_value) + parseFloat(cur_frm.doc.financing_value) + parseFloat(cur_frm.doc.commission_value);
+	var vat = cur_frm.doc.vat_percentage;
+	if (!vat || vat == "" || vat == undefined) {
+		cur_frm.set_value("vat_percentage", 0);
+		vat = 0;
+	}
+	vat = vat / 100;
+	cur_frm.set_value("total_cost_price_original_vat", (vat_sell_total).toFixed(2));
+	cur_frm.set_value("vat_value", (vat_sell_total * vat).toFixed(2));
+	cur_frm.set_value("total_cost_price_vat", ((vat_sell_total * vat) + vat_sell_total).toFixed(2));
+}
 
 function getFinalTotals(frm, string, doc) {
 	getTotalOfField('total_cost_price', "total_cost_price" + string, doc, frm);
@@ -177,8 +269,10 @@ function calculateTechnicalServices(frm, cdt, cdn, string, doc) {
 	getMargin(child);
 	getFinalTotals(frm, string, doc);
 	frm.refresh_fields();
-	getRiskSellingTotals()
-	getFinanceSellingTotals()
+	getRiskSellingTotals();
+	getFinanceSellingTotals();
+	getCommissionSellingTotals();
+	getVatSellingTotals();
 
 
 
