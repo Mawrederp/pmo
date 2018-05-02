@@ -16,16 +16,63 @@ class ProjectInitiation(Document):
                 self.docstatus = 2
 
 
+    # def validate_emp(self):
+    #     if self.get('__islocal'):
+    #         if self.project_coordinator and self.project_manager:
+    #             self.workflow_state = "Pending(PC+PM)"
+    #         elif self.project_coordinator and self.senior_project_manager:
+    #             self.workflow_state = "Pending(PC+SPM)"
+    #         elif self.project_manager:
+    #             self.workflow_state = "Pending(PM)"
+    #         elif self.senior_project_manager:
+    #             self.workflow_state = "Pending(SPM)"
+
+
     def validate_emp(self):
         if self.get('__islocal'):
-            if self.project_coordinator and self.project_manager:
-                self.workflow_state = "Pending(PC+PM)"
-            elif self.project_coordinator and self.senior_project_manager:
-                self.workflow_state = "Pending(PC+SPM)"
+            if self.project_coordinator:
+                if self.project_manager:
+                    if self.senior_project_manager:
+                        if self.program_manager:
+                            self.workflow_state = "Pending(PC+ProjM+SPM+ProgM)"
+                        else:
+                            self.workflow_state = "Pending(PC+ProjM+SPM)"
+                    else:
+                        if self.program_manager:
+                            self.workflow_state = "Pending(PC+ProjM+ProgM)"
+                        else:
+                            self.workflow_state = "Pending(PC+ProjM)"
+                else:
+                    if self.senior_project_manager:
+                        if self.program_manager:
+                            self.workflow_state = "Pending(PC+SPM+ProgM)"
+                        else:
+                            self.workflow_state = "Pending(PC+SPM)"
+                    else:
+                        if self.program_manager:
+                            self.workflow_state = "Pending(PC+ProgM)"
+                        else:
+                            self.workflow_state = "Pending(PC)"
             elif self.project_manager:
-                self.workflow_state = "Pending(PM)"
+                if self.senior_project_manager:
+                    if self.program_manager:
+                        self.workflow_state = "Pending(ProjM+SPM+ProgM)"
+                    else:
+                        self.workflow_state = "Pending(ProjM+SPM)"
+                else:
+                    if self.program_manager:
+                        self.workflow_state = "Pending(ProjM+ProgM)"
+                    else:
+                        self.workflow_state = "Pending(ProjM)"
             elif self.senior_project_manager:
-                self.workflow_state = "Pending(SPM)"
+                if self.program_manager:
+                    self.workflow_state = "Pending(SPM+ProgM)"
+                else:
+                    self.workflow_state = "Pending(SPM)"
+            elif self.program_manager:
+                self.workflow_state = "Pending(ProgM)"
+
+
 
 
     def on_submit(self):
