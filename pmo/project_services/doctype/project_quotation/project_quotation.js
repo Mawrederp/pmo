@@ -4,10 +4,22 @@
 var first_time = false
 
 frappe.ui.form.on('Project Quotation', {
+	risk_percentage: function (frm, cdt, cdn) {
+		getRiskSellingTotals()
+	},
+	financing_percentage: function (frm, cdt, cdn) {
+		getFinanceSellingTotals()
+	},
+	commission_percentage: function (frm, cdt, cdn) {
+		//getCommissionSellingTotals()
+	},
+	vat_percentage: function (frm, cdt, cdn) {
+		//getVatSellingTotals()
+	},
 
 });
 
-function getRiskSellingTotals(frm, string, doc) {
+function getRiskSellingTotals() {
 	var list = ["_pmts", "_develop", "_hw", "_sw", "_manpower", "_support", "_training", "_expenses"];
 	var risk_sell_total = 0;
 	list.forEach(element => {
@@ -21,11 +33,42 @@ function getRiskSellingTotals(frm, string, doc) {
 
 
 	});
-	risk_sell_total *= 0.01;
-
-	cur_frm.set_value("total_cost_price_risk_contingency", risk_sell_total.toFixed(2));
-	cur_frm.set_value("total_selling_price_risk_contingency", Math.round(risk_sell_total).toFixed(2));
+	var risk = cur_frm.doc.risk_percentage;
+	if (!risk || risk == "" || risk == undefined) {
+		cur_frm.set_value("risk_percentage", 1);
+		risk = 1;
+	}
+	risk = risk / 100;
+	cur_frm.set_value("total_cost_price_original_risk", (risk_sell_total).toFixed(2));
+	cur_frm.set_value("risk_value", (risk_sell_total * risk).toFixed(2));
+	cur_frm.set_value("total_cost_price_risk_contingency", ((risk_sell_total * risk) + risk_sell_total).toFixed(2));
 }
+
+function getFinanceSellingTotals() {
+	var list = ["_pmts", "_develop", "_hw", "_sw", "_manpower", "_support", "_training", "_expenses"];
+	var finance_sell_total = 0;
+	list.forEach(element => {
+		var x = 0
+		console.log()
+
+		if (flt(cur_frm.doc["total_cost_price" + element])) {
+			finance_sell_total += flt(cur_frm.doc["total_cost_price" + element]);
+
+		}
+
+
+	});
+	var financing = cur_frm.doc.financing_percentage;
+	if (!financing || financing == "" || financing == undefined) {
+		cur_frm.set_value("financing_percentage", 1);
+		financing = 1;
+	}
+	financing = financing / 100;
+	cur_frm.set_value("total_cost_price_original_finance", (finance_sell_total).toFixed(2));
+	cur_frm.set_value("financing_value", (finance_sell_total * financing).toFixed(2));
+	cur_frm.set_value("total_cost_price_finance", ((finance_sell_total * financing) + finance_sell_total).toFixed(2));
+}
+
 
 function getFinalTotals(frm, string, doc) {
 	getTotalOfField('total_cost_price', "total_cost_price" + string, doc, frm);
@@ -134,7 +177,8 @@ function calculateTechnicalServices(frm, cdt, cdn, string, doc) {
 	getMargin(child);
 	getFinalTotals(frm, string, doc);
 	frm.refresh_fields();
-	getRiskSellingTotals(frm, string, doc)
+	getRiskSellingTotals()
+	getFinanceSellingTotals()
 
 
 
