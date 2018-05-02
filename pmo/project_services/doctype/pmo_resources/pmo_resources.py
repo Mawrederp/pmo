@@ -45,9 +45,9 @@ class PMOResources(Document):
         users = frappe.db.sql("select distinct parent from `tabHas Role` where parenttype='User' and role in ('Project Coordinator','Program Manager','Project Manager','Senior Project Manager','PMO Director') and parent not in ('Administrator') ")
         if users:
             for i in range(len(users)):
-                emp = frappe.db.sql("select name,user_id,designation from `tabEmployee` where user_id = '{0}'".format(users[i][0]))
+                emp = frappe.db.sql("select name,user_id,designation,employee_name from `tabEmployee` where user_id = '{0}'".format(users[i][0]))
                 if emp:
-                    self.append("role_assignment", {"employee": emp[0][0],"user_id": emp[0][1],"designation": emp[0][2]})
+                    self.append("role_assignment", {"employee": emp[0][0],"user_id": emp[0][1],"designation": emp[0][2],"employee_name": emp[0][3]})
 
 
     def check_role(self, user_id):
