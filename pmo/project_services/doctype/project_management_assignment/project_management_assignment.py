@@ -11,6 +11,7 @@ class ProjectManagementAssignment(Document):
         doc = frappe.get_doc("Create Project", self.project_name)
         doc_initiation = frappe.get_doc("Project Initiation", self.project_name)
         if doc and doc_initiation:
+            
             doc.project_coordinator = self.project_coordinator
             doc.project_manager = self.project_manager
             doc.senior_project_manager = self.senior_project_manager
@@ -22,6 +23,23 @@ class ProjectManagementAssignment(Document):
             doc_initiation.save()
             
             frappe.msgprint("Success Assigned to Project : "+self.project_name)
+            self.validate_emp()
+
+
+    def validate_emp(self):
+        doc = frappe.get_doc("Project Initiation", self.project_name)
+        if doc:
+            if self.project_coordinator and self.project_manager:
+                doc.workflow_state = "Pending(PC+PM)"
+            elif self.project_coordinator and self.senior_project_manager:
+                doc.workflow_state = "Pending(PC+SPM)"
+            elif self.project_manager:
+                doc.workflow_state = "Pending(PM)"
+            elif self.senior_project_manager:
+                doc.workflow_state = "Pending(SPM)"
+            doc.save(ignore_permissions=True)
+
+
 
     def before_save(self):
         frappe.db.sql("delete from `tabUser Permission` where for_value ='{0}'".format(self.project_name))
