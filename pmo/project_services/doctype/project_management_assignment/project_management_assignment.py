@@ -15,11 +15,13 @@ class ProjectManagementAssignment(Document):
             doc.project_coordinator = self.project_coordinator
             doc.project_manager = self.project_manager
             doc.senior_project_manager = self.senior_project_manager
+            doc.program_manager = self.senior_project_manager
             doc.save()
 
             doc_initiation.project_coordinator = self.project_coordinator
-            doc_initiation.project_manager_role = self.project_manager
+            doc_initiation.project_manager = self.project_manager
             doc_initiation.senior_project_manager = self.senior_project_manager
+            doc_initiation.program_manager = self.senior_project_manager
             doc_initiation.save()
             
             frappe.msgprint("Success Assigned to Project : "+self.project_name)
@@ -65,6 +67,15 @@ class ProjectManagementAssignment(Document):
             frappe.get_doc({
                 "doctype":"User Permission",
                 "user": self.senior_project_manager,
+                "allow": "Project",
+                "for_value": self.project_name,
+                "apply_for_all_roles": 0
+            }).insert(ignore_permissions=True)
+
+        if self.program_manager:
+            frappe.get_doc({
+                "doctype":"User Permission",
+                "user": self.program_manager,
                 "allow": "Project",
                 "for_value": self.project_name,
                 "apply_for_all_roles": 0
@@ -124,13 +135,21 @@ class ProjectManagementAssignment(Document):
 
     def get_wf_assignment(self):
         doc = frappe.get_doc("Create Project", self.project_name)
-        if doc and (doc.project_coordinator or doc.project_manager or doc.senior_project_manager):
-            return doc.project_coordinator,doc.project_manager,doc.senior_project_manager            
+        if doc and (doc.project_coordinator or doc.project_manager or doc.senior_project_manager or doc.program_manager):
+            return doc.project_coordinator,doc.project_manager,doc.senior_project_manager,doc.program_manager
         else:
             pass
 
 
-def get_projects_users(doctype, txt, searchfield, start, page_len, filters):
-    return frappe.db.sql(""" select distinct parent from `tabHas Role` where parenttype='User' and role in ('Project Coordinator','Program Manager','Project Manager','Senior Project Manager','PMO Director') and parent not in ('Administrator') """)
+def get_project_coordinator(doctype, txt, searchfield, start, page_len, filters):
+    return frappe.db.sql(""" select distinct parent from `tabHas Role` where parenttype='User' and role in ('Project Coordinator') and parent not in ('Administrator') """)
 
-    
+def get_project_manager(doctype, txt, searchfield, start, page_len, filters):
+    return frappe.db.sql(""" select distinct parent from `tabHas Role` where parenttype='User' and role in ('Project Manager') and parent not in ('Administrator') """)
+
+def get_senior_project_manager(doctype, txt, searchfield, start, page_len, filters):
+    return frappe.db.sql(""" select distinct parent from `tabHas Role` where parenttype='User' and role in ('Senior Project Manager') and parent not in ('Administrator') """)
+
+def get_program_manager(doctype, txt, searchfield, start, page_len, filters):
+    return frappe.db.sql(""" select distinct parent from `tabHas Role` where parenttype='User' and role in ('Program Manager') and parent not in ('Administrator') """)
+
