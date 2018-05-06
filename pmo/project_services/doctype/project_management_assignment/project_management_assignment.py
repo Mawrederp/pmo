@@ -15,14 +15,14 @@ class ProjectManagementAssignment(Document):
             doc.project_coordinator = self.project_coordinator
             doc.project_manager = self.project_manager
             doc.senior_project_manager = self.senior_project_manager
-            doc.program_manager = self.senior_project_manager
-            doc.save()
+            doc.program_manager = self.program_manager
+            doc.save(ignore_permissions=True)
 
             doc_initiation.project_coordinator = self.project_coordinator
-            doc_initiation.project_manager = self.project_manager
+            doc_initiation.project_manager_role = self.project_manager
             doc_initiation.senior_project_manager = self.senior_project_manager
-            doc_initiation.program_manager = self.senior_project_manager
-            doc_initiation.save()
+            doc_initiation.program_manager = self.program_manager
+            doc_initiation.save(ignore_permissions=True)
             
             frappe.msgprint("Success Assigned to Project : "+self.project_name)
             self.validate_emp()
