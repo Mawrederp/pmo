@@ -30,7 +30,7 @@ def save_tasks(tasks, project_name):
 		end_date = formatdate(task["end_date"], "yyyy-MM-dd")
 		# return task["doctype"]
 
-		if task['type'] == "project" and task["name"] == project_name:
+		if "doctype" in task and task['doctype'] == "Project" and task["name"] == project_name:
 			# '{0}-{1}-{2}'.format()
 			# frappe.throw(str(task["id"]))
 			project_doc = frappe.get_doc("Project", task["name"])
@@ -66,7 +66,8 @@ def save_tasks(tasks, project_name):
 				"project": project_name,
 				"id": task["id"],
 				"parent_task": parent_task,
-				"subject": task["text"]
+				"subject": task["text"],
+				"priority": task["priority"]
 				# "expected_end_date": add_days(getdate(task["start_date"]), task["duration"])
 				}
 			if "name" in task:

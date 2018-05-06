@@ -81,21 +81,33 @@ frappe.ui.form.on('Project Gantt', {
 				project_doc["start_date"] = start_date;
 				project_doc["end_date"] = end_date;
 				project_doc["text"] = project_doc.project_name;
-				// project_doc["progress"] = 0.4;
-				project_doc["type"]=project_gantt.config.types.project;
-
-				data.push(project_doc);
+				
 				
 				calculate_progress(project_gantt);
-				
+				project_doc["type"]=project_gantt.config.types.project;
+				// console.log(project_doc);
+				data.push(project_doc);
 
 				project_gantt.config.open_tree_initially = true;
-				gantt.config.columns=[
-					{name:"text",       label:"Task name",  tree:true, width:'*' },
-					{name:"start_date", label:"Start time", align: "center" },
-					{name:"duration",   label:"Duration",   align: "center" },
-					{name:"add",        label:"" }
+
+				project_gantt.locale.labels.section_priority = "Priority";
+				var opts = [
+				    { key: 'Low', label: 'Low' },
+				    { key: 'Medium', label: 'Medium' },
+				    { key: 'High', label: 'High' },
+				    { key: 'Urgent', label: 'Urgent' }
 				];
+				project_gantt.config.lightbox.sections = [
+					{name:"description", height:70, map_to:"text", type:"textarea", focus:true},
+			    	{name:"priority", height:30, map_to:"priority", type:"select", options:opts},
+			    	{name:"time", height:72, map_to:"auto", type:"duration"}
+		    	];
+				// gantt.config.columns=[
+				// 	{name:"text",       label:"Task name",  tree:true, width:'*' },
+				// 	{name:"start_date", label:"Start time", align: "center" },
+				// 	{name:"duration",   label:"Duration",   align: "center" },
+				// 	{name:"add",        label:"" }
+				// ];
 
 				project_gantt.config.show_progress = true;
 				project_gantt.init("gantt_here");
@@ -191,6 +203,7 @@ function add_additional_data(project_gantt, task, project_name){
 			task["start_date"] = exp_start_date;
 			task["text"] = task.subject;
 			task["progress"] = task["progress"] / 100;
+			// task["priority"] = task.priority;
 			task["doctype"] = "Task";
 
 			if(!task.parent_task){
@@ -220,6 +233,16 @@ function event_handlers(project_gantt){
 
 	// 	// console.log(item.progress);
 	// });
+	project_gantt.attachEvent("onLightbox", function(id) {
+
+		var task = project_gantt.getTask(id);
+		console.log(task.priority);
+		console.log(project_gantt.getLightboxSection('priority'));
+		project_gantt.getLightboxSection('priority').setValue(task.priority);
+    	return true;
+		
+	    // console.log(tsk);
+	});
 
 	project_gantt.attachEvent("onAfterTaskDelete", function(id,item){
     	if("name" in item){

@@ -23,7 +23,14 @@ def get_data():
                     "name": "Projects List",
                     "label": _("Project Details"),
                     "description": _("Projects List."),
+                },
+                {
+                    "type": "doctype",
+                    "name": "Project Gantt",
+                    "label": _("Project Gantt"),
+                    "description": _("Project Gantt."),
                 }
+
             ]
         },
         {
