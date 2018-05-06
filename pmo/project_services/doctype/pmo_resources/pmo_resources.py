@@ -12,6 +12,8 @@ class PMOResources(Document):
         prefered_email = frappe.get_value("Employee", filters = {"user_id": self.user_id}, fieldname = "prefered_email")
         content_msg="You have owned a new role for project services"
 
+        # frappe.db.sql("delete from `tabHas Role` where parent='{0}' and role in ('Project Coordinator','Senior Project Manager','Program Manager','PMO Director','Project Manager')".format(self.user_id))
+
         if self.project_coordinator == 1:
             if 'Project Coordinator' not in frappe.utils.user.get_roles(self.user_id):
                     frappe.utils.user.add_role(self.user_id,'Project Coordinator')
