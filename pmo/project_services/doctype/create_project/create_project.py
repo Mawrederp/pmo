@@ -26,7 +26,8 @@ class CreateProject(Document):
 
         frappe.get_doc({
             "doctype": "Projects List",
-            "project_name": self.project_name
+            "project_name": self.project_name,
+            "project": self.project_name
         }).save(ignore_permissions = True)
 
         frappe.db.commit()
