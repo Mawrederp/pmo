@@ -51,6 +51,9 @@ frappe.ui.form.on('Project Initiation', {
         
 
 	},
+	onload: function(frm){
+		cur_frm.refresh_fields(["workflow_state"]);
+	},
 	workflow_state: function(frm){
         cur_frm.refresh_fields(["workflow_state"]);
     },

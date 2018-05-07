@@ -44,7 +44,7 @@
   }, 
   {
    "allow_bulk_edit": 0, 
-   "allow_on_submit": 1, 
+   "allow_on_submit": 0, 
    "bold": 0, 
    "collapsible": 0, 
    "columns": 0, 
@@ -2660,11 +2660,11 @@
  "idx": 0, 
  "image_view": 0, 
  "in_create": 1, 
- "is_submittable": 1, 
+ "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2018-05-07 10:46:45.222401", 
+ "modified": "2018-05-07 12:51:39.525913", 
  "modified_by": "Administrator", 
  "module": "Project Services", 
  "name": "Project Initiation", 
@@ -2674,7 +2674,7 @@
   {
    "amend": 0, 
    "apply_user_permissions": 0, 
-   "cancel": 1, 
+   "cancel": 0, 
    "create": 0, 
    "delete": 1, 
    "email": 1, 
@@ -2688,13 +2688,13 @@
    "role": "System Manager", 
    "set_user_permissions": 0, 
    "share": 1, 
-   "submit": 1, 
+   "submit": 0, 
    "write": 1
   }, 
   {
    "amend": 0, 
    "apply_user_permissions": 0, 
-   "cancel": 1, 
+   "cancel": 0, 
    "create": 1, 
    "delete": 1, 
    "email": 1, 
@@ -2708,7 +2708,7 @@
    "role": "Administrator", 
    "set_user_permissions": 0, 
    "share": 1, 
-   "submit": 1, 
+   "submit": 0, 
    "write": 1
   }, 
   {
@@ -2794,7 +2794,7 @@
   {
    "amend": 0, 
    "apply_user_permissions": 0, 
-   "cancel": 1, 
+   "cancel": 0, 
    "create": 0, 
    "delete": 1, 
    "email": 1, 
@@ -2808,7 +2808,7 @@
    "role": "PMO Director", 
    "set_user_permissions": 0, 
    "share": 1, 
-   "submit": 1, 
+   "submit": 0, 
    "write": 1
   }
  ], 
