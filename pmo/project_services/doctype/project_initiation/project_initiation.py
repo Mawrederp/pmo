@@ -10,6 +10,10 @@ from frappe.model.document import Document
 class ProjectInitiation(Document):
     def validate(self):
         self.validate_emp()
+        
+        if self.workflow_state == 'Approved by PMO Director':
+	        self.make_project_planning()
+    
         if self.workflow_state:
             if "Rejected" in self.workflow_state:
                 self.docstatus = 1
@@ -75,7 +79,19 @@ class ProjectInitiation(Document):
 
 
 
-    def on_submit(self):
+    # def on_submit(self):
+    #     frappe.get_doc({
+    #         "doctype": "Project Planning",
+    #         "project_name": self.project_name
+    #     }).save(ignore_permissions = True)
+
+    #     frappe.db.commit()
+
+    #     pp = frappe.get_value("Project Planning", filters = {"project_name": self.project_name}, fieldname = "name")
+
+    #     frappe.msgprint(_("""Project Planning have been created: <b><a href="#Form/Project Planning/{pp}">{pp}</a></b>""".format(pp = pp)))
+
+    def make_project_planning(self):
         frappe.get_doc({
             "doctype": "Project Planning",
             "project_name": self.project_name

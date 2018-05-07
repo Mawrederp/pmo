@@ -8,6 +8,14 @@ from frappe.model.document import Document
 
 class ProjectManagementAssignment(Document):
     def validate(self):
+        from frappe.core.doctype.communication.email import make
+        prefered_email_program_manager = frappe.get_value("Employee", filters = {"user_id": self.program_manager}, fieldname = "prefered_email")
+        prefered_email_senior_project_manager = frappe.get_value("Employee", filters = {"user_id": self.senior_project_manager}, fieldname = "prefered_email")
+        prefered_email_project_manager = frappe.get_value("Employee", filters = {"user_id": self.project_manager}, fieldname = "prefered_email")
+        prefered_email_project_coordinator = frappe.get_value("Employee", filters = {"user_id": self.project_coordinator}, fieldname = "prefered_email")
+
+        content_msg="You are now part of the {0} roject, please use your access credentials to login into the system and work on the project.".format(self.project_name)
+
         doc = frappe.get_doc("Create Project", self.project_name)
         doc_initiation = frappe.get_doc("Project Initiation", self.project_name)
         if doc and doc_initiation:
@@ -25,6 +33,35 @@ class ProjectManagementAssignment(Document):
             doc_initiation.save(ignore_permissions=True)
             
             frappe.msgprint("Success Assigned to Project : "+self.project_name)
+
+            if self.program_manager and prefered_email_program_manager:
+                try:
+                    make(subject = "ERP PMO Action Required", content=content_msg, recipients=prefered_email,
+                        send_email=True, sender="erp@tawari.sa")
+                except:
+                    frappe.msgprint("could not send")
+
+            if self.senior_project_manager and prefered_email_senior_project_manager:
+                try:
+                    make(subject = "ERP PMO Action Required", content=content_msg, recipients=prefered_email,
+                        send_email=True, sender="erp@tawari.sa")
+                except:
+                    frappe.msgprint("could not send")
+
+            if self.project_manager and prefered_email_project_manager:
+                try:
+                    make(subject = "ERP PMO Action Required", content=content_msg, recipients=prefered_email,
+                        send_email=True, sender="erp@tawari.sa")
+                except:
+                    frappe.msgprint("could not send")
+
+            if self.project_coordinator and prefered_email_project_coordinator:
+                try:
+                    make(subject = "ERP PMO Action Required", content=content_msg, recipients=prefered_email,
+                        send_email=True, sender="erp@tawari.sa")
+                except:
+                    frappe.msgprint("could not send")
+
             self.validate_emp()
 
 

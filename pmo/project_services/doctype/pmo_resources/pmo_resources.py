@@ -10,7 +10,7 @@ class PMOResources(Document):
     def validate(self):
         from frappe.core.doctype.communication.email import make
         prefered_email = frappe.get_value("Employee", filters = {"user_id": self.user_id}, fieldname = "prefered_email")
-        content_msg="You have owned a new role for project services"
+        content_msg="You are now part of the ERP PMO, Please use your access credentials to access the ERP PMO system."
 
         # frappe.db.sql("delete from `tabHas Role` where parent='{0}' and role in ('Project Coordinator','Senior Project Manager','Program Manager','PMO Director','Project Manager')".format(self.user_id))
 
@@ -37,7 +37,7 @@ class PMOResources(Document):
         if self.project_coordinator or self.senior_project_manager or self.program_manager or self.pmo_director or self.project_manager:
             if prefered_email:
                 try:
-                    make(subject = "Assigne a new role", content=content_msg, recipients=prefered_email,
+                    make(subject = "ERP PMO Action Required", content=content_msg, recipients=prefered_email,
                         send_email=True, sender="erp@tawari.sa")
                 except:
                     frappe.msgprint("could not send")
