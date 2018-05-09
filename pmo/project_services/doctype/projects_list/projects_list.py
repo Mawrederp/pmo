@@ -11,7 +11,8 @@ class ProjectsList(Document):
     def on_submit(self):
         frappe.get_doc({
             "doctype": "Project",
-            "project_name": self.project_name
+            "project_name": self.project_name,
+            "projects_list": self.name
         }).save(ignore_permissions = True)
 
         frappe.db.commit()
@@ -19,7 +20,8 @@ class ProjectsList(Document):
         frappe.get_doc({
             "doctype": "Project Initiation",
             "project_name": self.project_name,
-            "project": self.project_name
+            "project": self.project_name,
+            "projects_list": self.name
         }).save(ignore_permissions = True)
 
         frappe.db.commit()
