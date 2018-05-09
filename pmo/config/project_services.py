@@ -10,11 +10,6 @@ def get_data():
                 "items": [
                 {
                     "type": "doctype",
-                    "name": "Create Project",
-                    "description": _("Create Project."),
-                },
-                {
-                    "type": "doctype",
                     "name": "Projects List",
                     "description": _("Projects List."),
                 },
