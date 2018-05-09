@@ -94,7 +94,9 @@ class ProjectInitiation(Document):
     def make_project_planning(self):
         frappe.get_doc({
             "doctype": "Project Planning",
-            "project_name": self.project_name
+            "project_name": self.project_name,
+            "project": self.project_name,
+            "projects_list": self.projects_list
         }).save(ignore_permissions = True)
 
         frappe.db.commit()

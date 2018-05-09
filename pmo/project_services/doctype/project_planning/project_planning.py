@@ -57,8 +57,9 @@ class ProjectPlanning(Document):
     def on_submit(self):
         doc = frappe.get_doc({
             "doctype":"Project Implementation Monitoring and Controlling",
-            "project_name": self.project_name
-
+            "project_name": self.project_name,
+            "project": self.project_name,
+            "projects_list": self.projects_list
         })
         doc.flags.ignore_mandatory = True
         doc.insert(ignore_permissions=True)
