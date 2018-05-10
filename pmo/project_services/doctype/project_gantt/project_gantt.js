@@ -100,7 +100,7 @@ frappe.ui.form.on('Project Gantt', {
 				project_gantt.config.lightbox.sections = [
 					{name:"description", height:70, map_to:"text", type:"textarea", focus:true},
 			    	{name:"priority", height:30, map_to:"priority", type:"select", options:opts},
-			    	{name:"time", height:72, map_to:"auto", type:"duration"}
+			    	{name:"time", height:72, map_to:"auto", type:"time"}
 		    	];
 				// gantt.config.columns=[
 				// 	{name:"text",       label:"Task name",  tree:true, width:'*' },
