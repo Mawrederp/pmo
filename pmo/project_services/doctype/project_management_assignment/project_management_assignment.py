@@ -16,7 +16,7 @@ class ProjectManagementAssignment(Document):
 
         content_msg="You are now part of the {0} roject, please use your access credentials to login into the system and work on the project.".format(self.project_name)
 
-        doc = frappe.get_doc("Create Project", self.project_name)
+        doc = frappe.get_doc("Projects List", self.project_name)
         doc_initiation = frappe.get_doc("Project Initiation", self.project_name)
         if doc and doc_initiation:
             
@@ -219,7 +219,7 @@ class ProjectManagementAssignment(Document):
 
 
     def get_wf_assignment(self):
-        doc = frappe.get_doc("Create Project", self.project_name)
+        doc = frappe.get_doc("Projects List", self.project_name)
         if doc and (doc.project_coordinator or doc.project_manager or doc.senior_project_manager or doc.program_manager):
             return doc.project_coordinator,doc.project_manager,doc.senior_project_manager,doc.program_manager
         else:

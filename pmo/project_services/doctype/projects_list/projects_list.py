@@ -8,23 +8,34 @@ from frappe import _
 from frappe.model.document import Document
 
 class ProjectsList(Document):
+    # def validate(self):
+    #     if self.is_new() and frappe.db.exists("Project", {"project": self.project_name}):
+    #         frappe.throw('This project name is already exist, please choose another project name')
+            
+
     def on_submit(self):
         frappe.get_doc({
             "doctype": "Project",
-            "project_name": self.project_name
+            "project_name": self.project_name,
+            "projects_list": self.name
         }).save(ignore_permissions = True)
-
         frappe.db.commit()
 
         frappe.get_doc({
             "doctype": "Project Initiation",
             "project_name": self.project_name,
-            "project": self.project_name
+            "project": self.project_name,
+            "projects_list": self.name
         }).save(ignore_permissions = True)
-
         frappe.db.commit()
+        self.project_initiation = self.project_name
 
         frappe.msgprint(_("""Project {project} has been created""".format(project=self.project_name)))
+
+
+    def on_trash(self):
+        if frappe.db.exists("Project Initiation", {"project": self.project_name}):
+            frappe.throw("You cannot delete this project list because its link with Project Initiation phase")
 
 
     def existing_project_initiation(self):
