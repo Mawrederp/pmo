@@ -7,7 +7,7 @@ import frappe
 from frappe.model.document import Document
 
 class ProjectManagementAssignment(Document):
-    def validate(self):
+    def on_submit(self):
         from frappe.core.doctype.communication.email import make
         prefered_email_program_manager = frappe.get_value("Employee", filters = {"user_id": self.program_manager}, fieldname = "prefered_email")
         prefered_email_senior_project_manager = frappe.get_value("Employee", filters = {"user_id": self.senior_project_manager}, fieldname = "prefered_email")
