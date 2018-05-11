@@ -22,6 +22,7 @@ frappe.ui.form.on('Project Gantt', {
 		            // async: false,
 		            callback: function(r) {
 		            	if(!r.exc){
+		            		console.log(r.message);
 		            		var links = frm.project_gantt.getLinks();
 
 		            		if(links){
@@ -77,7 +78,7 @@ frappe.ui.form.on('Project Gantt', {
             	var duration = moment(project_doc.end_date).diff(project_doc.start_date, "days");
 
 				project_doc["id"] = project_doc.name;
-				project_doc["duration"] = duration;
+				// project_doc["duration"] = duration;
 				project_doc["start_date"] = start_date;
 				project_doc["end_date"] = end_date;
 				project_doc["text"] = project_doc.project_name;
@@ -85,12 +86,21 @@ frappe.ui.form.on('Project Gantt', {
 				
 				calculate_progress(project_gantt);
 				project_doc["type"]=project_gantt.config.types.project;
-				// console.log(project_doc);
+				
+				// project_gantt.config.lightbox_additional_height = 150;
+
+				project_gantt.config.lightbox.project_sections = [
+					{name:"description", height:70, map_to:"text", type:"textarea", focus:true},
+			    	{name:"time", height:40, map_to:"auto", type:"time"}
+		    	];
+
 				data.push(project_doc);
 
 				project_gantt.config.open_tree_initially = true;
 
 				project_gantt.locale.labels.section_priority = "Priority";
+
+
 				var opts = [
 				    { key: 'Low', label: 'Low' },
 				    { key: 'Medium', label: 'Medium' },
@@ -100,14 +110,14 @@ frappe.ui.form.on('Project Gantt', {
 				project_gantt.config.lightbox.sections = [
 					{name:"description", height:70, map_to:"text", type:"textarea", focus:true},
 			    	{name:"priority", height:30, map_to:"priority", type:"select", options:opts},
-			    	{name:"time", height:72, map_to:"auto", type:"time"}
+			    	{name:"time", height:40, map_to:"auto", type:"time"}
 		    	];
-				// gantt.config.columns=[
-				// 	{name:"text",       label:"Task name",  tree:true, width:'*' },
-				// 	{name:"start_date", label:"Start time", align: "center" },
-				// 	{name:"duration",   label:"Duration",   align: "center" },
-				// 	{name:"add",        label:"" }
-				// ];
+				project_gantt.config.columns=[
+					{name:"text",       label:"Task name",  tree:true, width:'*' },
+					{name:"start_date", label:"Start time", align: "center" },
+					{name:"end_date",   label:"End time",   align: "center" },
+					{name:"add",        label:"" }
+				];
 
 				project_gantt.config.show_progress = true;
 				project_gantt.init("gantt_here");
@@ -196,11 +206,13 @@ function add_additional_data(project_gantt, task, project_name){
 		// task comes from db
 		if ("name" in task){
 			var exp_start_date = moment(task.exp_start_date).format("DD-MM-YYYY");
-			var task_duration = moment(task.exp_end_date).diff(task.exp_start_date, "days");
+			var exp_end_date = moment(task.exp_end_date).format("DD-MM-YYYY");
+			// var task_duration = moment(task.exp_end_date).diff(task.exp_start_date, "days");
 
 			task["id"] = task.name;
-			task["duration"] = task_duration;
+			// task["duration"] = task_duration;
 			task["start_date"] = exp_start_date;
+			task["end_date"] = exp_end_date;
 			task["text"] = task.subject;
 			task["progress"] = task["progress"] / 100;
 			// task["priority"] = task.priority;
@@ -236,11 +248,12 @@ function event_handlers(project_gantt){
 	project_gantt.attachEvent("onLightbox", function(id) {
 
 		var task = project_gantt.getTask(id);
-		console.log(task.priority);
-		console.log(project_gantt.getLightboxSection('priority'));
-		project_gantt.getLightboxSection('priority').setValue(task.priority);
-    	return true;
-		
+		if (task.type == "task"){
+			console.log(task.priority);
+			console.log(project_gantt.getLightboxSection('priority'));
+			project_gantt.getLightboxSection('priority').setValue(task.priority);
+	    	return true;
+		}
 	    // console.log(tsk);
 	});
 
@@ -423,19 +436,19 @@ function calculate_progress(project_gantt){
 		})();
 	})();
 
-	project_gantt.config.lightbox.sections = [
-		{name: "description", height: 70, map_to: "text", type: "textarea", focus: true},
-		{name: "time", type: "duration", map_to: "auto"}
-	];
+	// project_gantt.config.lightbox.sections = [
+	// 	{name: "description", height: 70, map_to: "text", type: "textarea", focus: true},
+	// 	{name: "time", type: "duration", map_to: "auto"}
+	// ];
 
-	project_gantt.config.scale_unit = "month";
-	project_gantt.config.date_scale = "%F, %Y";
+	// project_gantt.config.scale_unit = "month";
+	// project_gantt.config.date_scale = "%F, %Y";
 
-	project_gantt.config.scale_height = 50;
+	// project_gantt.config.scale_height = 50;
 
-	project_gantt.config.subscales = [
-		{unit: "day", step: 1, date: "%j, %D"}
-	];
+	// project_gantt.config.subscales = [
+	// 	{unit: "day", step: 1, date: "%j, %D"}
+	// ];
 
 	project_gantt.templates.progress_text = function (start, end, task) {
 		return "<span style='text-align:left;'>" + Math.round(task.progress * 100) + "% </span>";

@@ -28,7 +28,7 @@ def save_tasks(tasks, project_name):
 	for task in data:
 		start_date = formatdate(task["start_date"], "yyyy-MM-dd")
 		end_date = formatdate(task["end_date"], "yyyy-MM-dd")
-		# return task["doctype"]
+		return end_date
 
 		if "doctype" in task and task['doctype'] == "Project" and task["name"] == project_name:
 			# '{0}-{1}-{2}'.format()
