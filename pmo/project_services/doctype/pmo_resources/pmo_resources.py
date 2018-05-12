@@ -26,15 +26,11 @@ class PMOResources(Document):
             if 'Program Manager' not in frappe.utils.user.get_roles(self.user_id):
                     frappe.utils.user.add_role(self.user_id,'Program Manager')
 
-        if self.pmo_director == 1:
-            if 'PMO Director' not in frappe.utils.user.get_roles(self.user_id):
-                    frappe.utils.user.add_role(self.user_id,'PMO Director')
-
         if self.project_manager == 1:
             if 'Project Manager' not in frappe.utils.user.get_roles(self.user_id):
                     frappe.utils.user.add_role(self.user_id,'Project Manager')
 
-        if self.project_coordinator or self.senior_project_manager or self.program_manager or self.pmo_director or self.project_manager:
+        if self.project_coordinator or self.senior_project_manager or self.program_manager or self.project_manager:
             if prefered_email:
                 try:
                     make(subject = "ERP PMO Action Required", content=content_msg, recipients=prefered_email,
@@ -64,8 +60,49 @@ class PMOResources(Document):
                 if emp:
                     self.append("role_assignment", {"employee": emp[0][0],"user_id": emp[0][1],"designation": emp[0][2],"employee_name": emp[0][3],"roles": roles})
 
-
         
+
+        # pmo_resources = frappe.db.sql("select project_name,program_manager,senior_project_manager,project_manager,project_coordinator from `tabProject Management Assignment` where docstatus=1")
+        # proj = []
+        # for i in pmo_resources:
+        #     if i[1]:
+        #         for x in self.role_assignment:
+        #             if i[1] == x.user_id:
+        #                 proj.append(i[0])
+        #             if i[2] == x.user_id:
+        #                 proj.append(i[0])
+        #             if i[3] == x.user_id:
+        #                 proj.append(i[0])
+        #             if i[4] == x.user_id:
+        #                 proj.append(i[0])
+
+        #             for proj_name in range(len(proj)):
+        #                 if proj[proj_name] not in str(x.assigned_project):
+        #                     x.assigned_project = proj[proj_name]+"\n"
+        #                     print '*****************************'
+        #                     print proj[proj_name]
+        #                     print '*****************************'
+            
+
+        #     # if i[2]:
+        #     #     proj = ''
+        #     #     for x in self.role_assignment:
+        #     #         if i[2] == x.user_id:
+        #     #             proj =  i[0]
+        #     #         x.assigned_project = proj
+        #     #     print '*****************************'
+        #     #     print proj
+        #     #     print '*****************************'
+
+        #     # if i[3]:
+        #     #     for x in self.role_assignment:
+        #     #         if i[3] == x.user_id:
+        #     #             x.assigned_project = i[0]+"\n"
+        #     # if i[4]:
+        #     #     for x in self.role_assignment:
+        #     #         if i[4] == x.user_id:
+        #     #             x.assigned_project = i[0]+"\n"
+
 
     def check_role(self, user_id):
         arr = []
@@ -80,4 +117,28 @@ class PMOResources(Document):
         if 'Project Manager' in frappe.utils.user.get_roles(user_id):
             arr.append('Project Manager')
         return arr
+
+
+    # def check_assigned_project(self):
+    #     pmo_resources = frappe.db.sql("select project_name,program_manager,senior_project_manager,project_manager,project_coordinator from `tabProject Management Assignment` where docstatus=1")
+    #     program_manager = []
+    #     senior_project_manager = []
+    #     project_manager = []
+    #     project_coordinator = []
+
+    #     for i in pmo_resources:
+    #         if i[1]:
+    #             program_manager.append(i[0])
+    #     for i in pmo_resources:
+    #         if i[2]:
+    #             senior_project_manager.append(i[0])
+    #     for i in pmo_resources:
+    #         if i[3]:
+    #             project_manager.append(i[0])
+    #     for i in pmo_resources:
+    #         if i[4]:
+    #             project_coordinator.append(i[0])
+
+    #     return program_manager,senior_project_manager,project_manager,project_coordinator
+    #     
 
