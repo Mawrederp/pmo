@@ -5,8 +5,32 @@ cur_frm.add_fetch('employee', 'user_id', 'user_id');
 
 frappe.ui.form.on('PMO Resources', {
 	refresh: function(frm) {
+		// frm.add_custom_button(__("Send Email"), function () {
 
+  //       });
+
+
+		
+
+		
 	},
+	// onload: function(frm) {
+	// 	frappe.call({
+ //            "method": "check_assigned_project",
+ //            doc: cur_frm.doc,
+ //            args: { "user_id": cur_frm.doc.user_id },
+ //            callback: function(r) {
+     	
+ //        		$.each(frm.doc.role_assignment, function(index, row){
+	// 				for(var i = 0 ;i<r.message[0].length;i++){
+ //            			console.log(r.message[0][i])
+	// 					frappe.model.set_value(row.doctype, row.name, "assigned_project", r.message[0][i]+"\n");
+	// 				}
+	// 			})
+            	
+ //            }
+ //        });
+	// },
 	employee: function(frm) {
 		arr = []
 		if(cur_frm.doc.user_id){
@@ -21,7 +45,6 @@ frappe.ui.form.on('PMO Resources', {
 	            	frm.set_value("program_manager", 0);
 	            	frm.set_value("project_coordinator", 0);
 	            	frm.set_value("senior_project_manager", 0);
-	            	frm.set_value("pmo_director", 0);
 	            	frm.set_value("project_manager", 0);
 
 	                if (arr.includes('Program Manager')){
@@ -33,9 +56,6 @@ frappe.ui.form.on('PMO Resources', {
 	                if (arr.includes('Senior Project Manager')){
 	                	frm.set_value("senior_project_manager", 1);
 	                }
-	                if (arr.includes('PMO Director')){
-	                	frm.set_value("pmo_director", 1);
-	                }
 	                if (arr.includes('Project Manager')){
 	                	frm.set_value("project_manager", 1);
 	                }
@@ -45,41 +65,5 @@ frappe.ui.form.on('PMO Resources', {
 	}
 
 });
-
-
-
-// frappe.ui.form.on("Role Assignment", {
-// 	employee: function(frm, cdt, cdn) {
-// 		arr = []
-// 		var row = locals[cdt][cdn];
-// 		if(row.user_id){
-// 			frappe.call({
-// 	            "method": "check_role",
-// 	            doc: cur_frm.doc,
-// 	            args: { "user_id": row.user_id },
-// 	            callback: function(r) {
-// 	            	for(var i = 0 ;i<r.message.length;i++){
-// 	            		arr.push(r.message[i])
-// 	            	}
-// 	                if (arr.includes('Program Manager')){
-// 	                	frappe.model.set_value(cdt, cdn, "program_manager", 1);
-// 	                }
-// 	                if (arr.indexOf('Project Coordinator') >= 0){
-// 	                	frappe.model.set_value(cdt, cdn, "project_coordinator", 1);
-// 	                }
-// 	                if (arr.includes('Senior Project Manager')){
-// 	                	frappe.model.set_value(cdt, cdn, "senior_project_manager", 1);
-// 	                }
-// 	                if (arr.includes('PMO Director')){
-// 	                	frappe.model.set_value(cdt, cdn, "pmo_director", 1);
-// 	                }
-// 	                if (arr.includes('Project Manager')){
-// 	                	frappe.model.set_value(cdt, cdn, "project_manager", 1);
-// 	                }
-// 	            }
-// 	        });
-// 	    }
-// 	}
-// });
 
 
