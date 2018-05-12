@@ -78,7 +78,7 @@ frappe.ui.form.on('Project Gantt', {
             	var duration = moment(project_doc.end_date).diff(project_doc.start_date, "days");
 
 				project_doc["id"] = project_doc.name;
-				// project_doc["duration"] = duration;
+				project_doc["duration"] = duration;
 				project_doc["start_date"] = start_date;
 				project_doc["end_date"] = end_date;
 				project_doc["text"] = project_doc.project_name;
@@ -88,7 +88,15 @@ frappe.ui.form.on('Project Gantt', {
 				project_doc["type"]=project_gantt.config.types.project;
 				
 				// project_gantt.config.lightbox_additional_height = 150;
-
+				// project_gantt.config.scale_offset_minimal = false;
+				// project_gantt.config.correct_work_time = true;
+				project_gantt.config.xml_date = "%d-%m-%Y";
+				// project_gantt.config.work_time = false;
+				// project_gantt.config.date_grid = "%d-%m-%Y";
+				// project_gantt.ignore_time = function(date){
+				//    if(date.getDay() == 0 || date.getDay() == 6)
+				//       return true;
+				// };
 				project_gantt.config.lightbox.project_sections = [
 					{name:"description", height:70, map_to:"text", type:"textarea", focus:true},
 			    	{name:"time", height:40, map_to:"auto", type:"time"}
@@ -205,12 +213,13 @@ function add_additional_data(project_gantt, task, project_name){
 	if(task){
 		// task comes from db
 		if ("name" in task){
-			var exp_start_date = moment(task.exp_start_date).format("DD-MM-YYYY");
-			var exp_end_date = moment(task.exp_end_date).format("DD-MM-YYYY");
-			// var task_duration = moment(task.exp_end_date).diff(task.exp_start_date, "days");
+			var exp_start_date = moment(task.exp_start_date).format("DD-MM-YYYY HH:mm:ss");
+			var exp_end_date = moment(task.exp_end_date).format("DD-MM-YYYY HH:mm:ss");
+
+			var task_duration = moment(task.exp_end_date).diff(task.exp_start_date, "days");
 
 			task["id"] = task.name;
-			// task["duration"] = task_duration;
+			task["duration"] = task_duration;
 			task["start_date"] = exp_start_date;
 			task["end_date"] = exp_end_date;
 			task["text"] = task.subject;
@@ -228,6 +237,12 @@ function add_additional_data(project_gantt, task, project_name){
 			}
 			project_gantt.addTask(task);
 		}
+		console.log(exp_start_date);
+		console.log(task["start_date"]);
+		console.log(exp_end_date);
+		console.log(task["end_date"]);
+		// var state = gantt.getState();
+		// console.log(state);
 		// task newly added to gantt
 		// else{
 			
@@ -249,8 +264,8 @@ function event_handlers(project_gantt){
 
 		var task = project_gantt.getTask(id);
 		if (task.type == "task"){
-			console.log(task.priority);
-			console.log(project_gantt.getLightboxSection('priority'));
+			// console.log(task.priority);
+			// console.log(project_gantt.getLightboxSection('priority'));
 			project_gantt.getLightboxSection('priority').setValue(task.priority);
 	    	return true;
 		}
@@ -305,9 +320,10 @@ function event_handlers(project_gantt){
 				task["is_group"] = 0;
 			}
 		}
+		// console.log(task);
 		// if(cur_frm.doc.project){
-  //   		add_additional_data(project_gantt, task, cur_frm.doc.project)
-  //   	}
+	  //   		add_additional_data(project_gantt, task, cur_frm.doc.project)
+	  //   	}
 	});
 
 	project_gantt.attachEvent("onBeforeTaskAdd", function(id,task){
@@ -440,15 +456,14 @@ function calculate_progress(project_gantt){
 	// 	{name: "description", height: 70, map_to: "text", type: "textarea", focus: true},
 	// 	{name: "time", type: "duration", map_to: "auto"}
 	// ];
+	project_gantt.config.scale_unit = "month";
+	project_gantt.config.date_scale = "%F, %Y";
 
-	// project_gantt.config.scale_unit = "month";
-	// project_gantt.config.date_scale = "%F, %Y";
-
-	// project_gantt.config.scale_height = 50;
-
-	// project_gantt.config.subscales = [
-	// 	{unit: "day", step: 1, date: "%j, %D"}
-	// ];
+	project_gantt.config.scale_height = 50;
+	// project_gantt.config.skip_off_time = true;
+	project_gantt.config.subscales = [
+		{unit: "day", step: 1, date: "%D"}
+	];
 
 	project_gantt.templates.progress_text = function (start, end, task) {
 		return "<span style='text-align:left;'>" + Math.round(task.progress * 100) + "% </span>";
