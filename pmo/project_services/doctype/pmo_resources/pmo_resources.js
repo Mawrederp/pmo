@@ -5,6 +5,8 @@ cur_frm.add_fetch('employee', 'user_id', 'user_id');
 
 frappe.ui.form.on('PMO Resources', {
 	refresh: function(frm) {
+		frm.refresh_field("accounts");
+		
 		// frm.add_custom_button(__("Send Email"), function () {
 
   //       });

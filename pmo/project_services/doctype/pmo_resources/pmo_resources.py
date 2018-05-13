@@ -12,23 +12,31 @@ class PMOResources(Document):
         prefered_email = frappe.get_value("Employee", filters = {"user_id": self.user_id}, fieldname = "prefered_email")
         content_msg="You are now part of the ERP PMO, Please use your access credentials to access the ERP PMO system."
 
-        # frappe.db.sql("delete from `tabHas Role` where parent='{0}' and role in ('Project Coordinator','Senior Project Manager','Program Manager','PMO Director','Project Manager')".format(self.user_id))
-
+        # frappe.db.sql("delete from `tabHas Role` where parenttype='User' and parent='{0}' and role in ('Project Coordinator','Senior Project Manager','Program Manager','Project Manager')".format(self.user_id))
+        
         if self.project_coordinator == 1:
             if 'Project Coordinator' not in frappe.utils.user.get_roles(self.user_id):
-                    frappe.utils.user.add_role(self.user_id,'Project Coordinator')
+                frappe.utils.user.add_role(self.user_id,'Project Coordinator')
+        else:
+            frappe.db.sql("delete from `tabHas Role` where parenttype='User' and parent='{0}' and role='Project Coordinator'".format(self.user_id))
 
         if self.senior_project_manager == 1:
             if 'Senior Project Manager' not in frappe.utils.user.get_roles(self.user_id):
-                    frappe.utils.user.add_role(self.user_id,'Senior Project Manager')
+                frappe.utils.user.add_role(self.user_id,'Senior Project Manager')
+        else:
+            frappe.db.sql("delete from `tabHas Role` where parenttype='User' and parent='{0}' and role='Senior Project Manager'".format(self.user_id))
 
         if self.program_manager == 1:
             if 'Program Manager' not in frappe.utils.user.get_roles(self.user_id):
-                    frappe.utils.user.add_role(self.user_id,'Program Manager')
+                frappe.utils.user.add_role(self.user_id,'Program Manager')
+        else:
+            frappe.db.sql("delete from `tabHas Role` where parenttype='User' and parent='{0}' and role='Program Manager'".format(self.user_id))
 
         if self.project_manager == 1:
             if 'Project Manager' not in frappe.utils.user.get_roles(self.user_id):
-                    frappe.utils.user.add_role(self.user_id,'Project Manager')
+                frappe.utils.user.add_role(self.user_id,'Project Manager')
+        else:
+            frappe.db.sql("delete from `tabHas Role` where parenttype='User' and parent='{0}' and role='Project Manager'".format(self.user_id))
 
         if self.project_coordinator or self.senior_project_manager or self.program_manager or self.project_manager:
             if prefered_email:
@@ -52,6 +60,8 @@ class PMOResources(Document):
                     roles += 'Senior Project Manager'+"\n"
                 if 'Program Manager' in frappe.utils.user.get_roles(users[i][0]):
                     roles += 'Program Manager'+"\n"
+                # if 'Program Manager' in frappe.get_all("Has Role", fields=["role"], filters = {"parenttype": "User", "parent": users[i][0], "role": ("in", ['Project Coordinator','Program Manager','Project Manager','Senior Project Manager','PMO Director'])}):
+                    # roles += 'Program Manager'+"\n"
                 if 'PMO Director' in frappe.utils.user.get_roles(users[i][0]):
                     roles += 'PMO Director'+"\n"
                 if 'Project Manager' in frappe.utils.user.get_roles(users[i][0]):
