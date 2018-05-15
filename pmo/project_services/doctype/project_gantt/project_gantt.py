@@ -28,7 +28,9 @@ def save_tasks(tasks, project_name):
 	for task in data:
 		start_date = formatdate(task["start_date"], "yyyy-MM-dd")
 		end_date = formatdate(task["end_date"], "yyyy-MM-dd")
-		frappe.throw(str(frappe.utils.now()))
+		start_date = add_days(start_date, 1)
+		end_date = add_days(end_date, 1)
+		# frappe.throw(str(task["start_date"]))
 		# return end_date
 
 		if "doctype" in task and task['doctype'] == "Project" and task["name"] == project_name:
@@ -47,7 +49,7 @@ def save_tasks(tasks, project_name):
 
 		else:
 			if task["parent"] == project_name:
-				parent_task = None
+				parent_task = ""
 			else:
 				parent_task = frappe.get_value("Task", filters={"id": task["parent"]}, fieldname="name")
 
@@ -57,8 +59,18 @@ def save_tasks(tasks, project_name):
 			else:
 				progress = 0
 
+			if task["type"] == "milestone":
+				end_date = start_date
+				# progress = None
+				task["is_group"] = 0
+				is_milestone = 1
+			else:
+				is_milestone = 0
+
 			task_data = {
 				"progress": progress,
+				"type": task["type"],
+				"is_milestone": is_milestone,
 				"exp_start_date": start_date,
 				"exp_end_date": end_date,
 				"act_start_date": start_date,

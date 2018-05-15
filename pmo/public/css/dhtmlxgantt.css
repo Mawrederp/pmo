@@ -258,6 +258,7 @@
   -moz-opacity: 0.6;
   opacity: 0.6;
   top: 0;
+  display: none;
 }
 .gantt_grid_head_cell.gantt_grid_head_add:hover {
   -moz-opacity: 1;

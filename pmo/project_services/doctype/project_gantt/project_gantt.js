@@ -75,10 +75,10 @@ frappe.ui.form.on('Project Gantt', {
 
             	var start_date = moment(project_doc.start_date).format("DD-MM-YYYY");
             	var end_date = moment(project_doc.end_date).format("DD-MM-YYYY");
-            	var duration = moment(project_doc.end_date).diff(project_doc.start_date, "days");
+            	// var duration = moment(project_doc.end_date).diff(project_doc.start_date, "days");
 
 				project_doc["id"] = project_doc.name;
-				project_doc["duration"] = duration;
+				// project_doc["duration"] = duration;
 				project_doc["start_date"] = start_date;
 				project_doc["end_date"] = end_date;
 				project_doc["text"] = project_doc.project_name;
@@ -107,19 +107,36 @@ frappe.ui.form.on('Project Gantt', {
 				project_gantt.config.open_tree_initially = true;
 
 				project_gantt.locale.labels.section_priority = "Priority";
+				project_gantt.locale.labels.section_type = "Type"
 
-
-				var opts = [
+				var p_opts = [
 				    { key: 'Low', label: 'Low' },
 				    { key: 'Medium', label: 'Medium' },
 				    { key: 'High', label: 'High' },
 				    { key: 'Urgent', label: 'Urgent' }
 				];
+				var t_opts = [
+					{ key: 'task', label: 'Task' },
+				    { key: 'milestone', label: 'Milestone' },
+
+				];
 				project_gantt.config.lightbox.sections = [
 					{name:"description", height:70, map_to:"text", type:"textarea", focus:true},
-			    	{name:"priority", height:30, map_to:"priority", type:"select", options:opts},
-			    	{name:"time", height:40, map_to:"auto", type:"time"}
+			    	{name:"priority", height:30, map_to:"priority", type:"select", options:p_opts},
+			    	{name:"type", height:30, type:"select", map_to:"type", options:t_opts, onchange: function(){
+			    		// project_gantt.getLightboxSection("time").section.single_date = true;
+			    		// project_gantt.getLightboxSection("time").section.single_date=true;
+			    		// console.log(project_gantt.getLightboxSection("time").section);
+
+			    		}
+			    	},
+			    	{name:"time", height:40, map_to:"auto", type:"time", single_date: false}
 		    	];
+
+		   //  	project_gantt.config.lightbox.milestone_sections = [
+					// {name:"description", height:70, map_to:"text", type:"textarea", focus:true},
+			  //   	{name:"type", height:30, type:"select", map_to:"type", options:t_opts, single_date: true}
+			  //   ];
 				project_gantt.config.columns=[
 					{name:"text",       label:"Task name",  tree:true, width:'*' },
 					{name:"start_date", label:"Start time", align: "center" },
@@ -127,6 +144,13 @@ frappe.ui.form.on('Project Gantt', {
 					{name:"add",        label:"" }
 				];
 
+				// project_gantt.templates.grid_header_class = function(columnName, column){
+				//     if(columnName == "add"){
+				//     	console.log(column)
+				//     }
+				// };
+
+				project_gantt.config.grid_resize = true; 
 				project_gantt.config.show_progress = true;
 				project_gantt.init("gantt_here");
 				project_gantt.parse({"data": data});
@@ -204,28 +228,47 @@ frappe.ui.form.on('Project Gantt', {
     			frm["project_gantt"] = project_gantt;
     			event_handlers(project_gantt);
 
+    			var els = document.querySelectorAll("input[name='scale']");
+				for (var i = 0; i < els.length; i++) {
+				    els[i].onclick = function(e){
+				        e = e || window.event;
+				        var el = e.target || e.srcElement;
+				        var value = el.value;
+				        setScaleConfig(project_gantt, value);
+				        project_gantt.render();
+				    };
+				}
+
 			});
 		}
 	}
 });
 
+function single_date(e){
+	console.log(e);
+}
+
 function add_additional_data(project_gantt, task, project_name){
 	if(task){
 		// task comes from db
 		if ("name" in task){
+
+			// console.log(task["type"])
 			var exp_start_date = moment(task.exp_start_date).format("DD-MM-YYYY HH:mm:ss");
 			var exp_end_date = moment(task.exp_end_date).format("DD-MM-YYYY HH:mm:ss");
 
-			var task_duration = moment(task.exp_end_date).diff(task.exp_start_date, "days");
-
 			task["id"] = task.name;
-			task["duration"] = task_duration;
-			task["start_date"] = exp_start_date;
-			task["end_date"] = exp_end_date;
+			// task["duration"] = task_duration;
 			task["text"] = task.subject;
-			task["progress"] = task["progress"] / 100;
-			// task["priority"] = task.priority;
+			task["start_date"] = exp_start_date;
 			task["doctype"] = "Task";
+			task["end_date"] = exp_end_date;
+
+			if(task["is_milestone"] != 1){
+				
+					
+				task["progress"] = task["progress"] / 100;
+			}
 
 			if(!task.parent_task){
 				task["parent"] = project_name;
@@ -235,12 +278,17 @@ function add_additional_data(project_gantt, task, project_name){
 
 				
 			}
-			project_gantt.addTask(task);
+			
+
+			// var task_duration = moment(task.exp_end_date).diff(task.exp_start_date, "days");
+
+			
+			// project_gantt.addTask(task);
 		}
-		console.log(exp_start_date);
-		console.log(task["start_date"]);
-		console.log(exp_end_date);
-		console.log(task["end_date"]);
+		// console.log(exp_start_date);
+		// console.log(task["start_date"]);
+		// console.log(exp_end_date);
+		// console.log(task["end_date"]);
 		// var state = gantt.getState();
 		// console.log(state);
 		// task newly added to gantt
@@ -312,12 +360,20 @@ function event_handlers(project_gantt){
 	});
 
 	project_gantt.attachEvent("onAfterTaskAdd", function(id,task){
-		if(task.type == "task" && !("is_group" in task)){
-			if(project_gantt.hasChild(task.id)){
+		// console.log(task);
+		// console.log(project_gantt.getChildren(task["id"]));
+		// console.log(task["id"]);
+		// console.log(task.doctype);
+		if(task["type"] == "task"){
+			// console.log("dddddd");
+			
+			if(project_gantt.getChildren(task["id"]).length > 0){
 				task["is_group"] = 1;
+				// console.log(task);
 			}
 			else{
 				task["is_group"] = 0;
+				// console.log(task);
 			}
 		}
 		// console.log(task);
@@ -326,9 +382,11 @@ function event_handlers(project_gantt){
 	  //   	}
 	});
 
-	project_gantt.attachEvent("onBeforeTaskAdd", function(id,task){
-		task["type"]=project_gantt.config.types.project;
-	});
+	// project_gantt.attachEvent("onBeforeTaskAdd", function(id,task){
+	// 	if(task.doctype != "Project"){
+	// 		task["type"]=project_gantt.config.types.task;
+	// 	}
+	// });
 
 	// project_doc["type"]=project_gantt.config.types.project;
 	// project_gantt.attachEvent("onLinkValidation", function(link){
@@ -354,7 +412,24 @@ function calculate_progress(project_gantt){
 		function setTaskType(id) {
 			id = id.id ? id.id : id;
 			var task = project_gantt.getTask(id);
-			var type = project_gantt.hasChild(task.id) ? project_gantt.config.types.project : project_gantt.config.types.task;
+
+			// console.log("ddddddddddddddddddd");
+			// console.log(project_gantt.getChildren(task.id).length);
+			// console.log("ddddddddddddddddddd");
+
+			// var type = project_gantt.getChildren(task.id).length > 0 ? project_gantt.config.types.project : project_gantt.config.types.task;
+			var type = "";
+			if (project_gantt.getChildren(task.id).length > 0){
+				type = project_gantt.config.types.project;
+			}
+			else if(task.type == "task"){
+				type = project_gantt.config.types.task;
+			}
+
+			else if(task.type == "milestone"){
+				type = project_gantt.config.types.milestone;
+			}
+
 			if (type != task.type) {
 				task.type = type;
 				project_gantt.updateTask(id);
@@ -367,7 +442,9 @@ function calculate_progress(project_gantt){
 			});
 		});
 
-		project_gantt.attachEvent("onAfterTaskAdd", function onAfterTaskAdd(id) {
+		// I think there is no need for this
+
+		project_gantt.attachEvent("onAfterTaskAdd", function(id) {
 			project_gantt.batchUpdate(checkParents(id));
 
 		});
@@ -462,7 +539,7 @@ function calculate_progress(project_gantt){
 	project_gantt.config.scale_height = 50;
 	// project_gantt.config.skip_off_time = true;
 	project_gantt.config.subscales = [
-		{unit: "day", step: 1, date: "%D"}
+		{unit: "day", step: 1, date: "%j, %D"}
 	];
 
 	project_gantt.templates.progress_text = function (start, end, task) {
@@ -474,6 +551,61 @@ function calculate_progress(project_gantt){
 			return "hide_project_progress_drag";
 	};
 
+}
 
-
+function setScaleConfig(gantt, level) {
+    switch (level) {
+        case "day":
+            gantt.config.scale_unit = "day";
+            gantt.config.step = 1;
+            gantt.config.date_scale = "%d %M";
+            gantt.templates.date_scale = null;
+ 
+            gantt.config.scale_height = 27;
+ 
+            gantt.config.subscales = [];
+            break;
+        case "week":
+            var weekScaleTemplate = function (date) {
+              var dateToStr = gantt.date.date_to_str("%d %M");
+              var endDate = gantt.date.add(gantt.date.add(date, 1, "week"), -1, "day");
+              return dateToStr(date) + " - " + dateToStr(endDate);
+            };
+ 
+            gantt.config.scale_unit = "week";
+            gantt.config.step = 1;
+            gantt.templates.date_scale = weekScaleTemplate;
+ 
+            gantt.config.scale_height = 50;
+ 
+            gantt.config.subscales = [
+                {unit: "day", step: 1, date: "%D"}
+            ];
+            break;
+        case "month":
+            gantt.config.scale_unit = "month";
+            gantt.config.date_scale = "%F, %Y";
+            gantt.templates.date_scale = null;
+ 
+            gantt.config.scale_height = 50;
+ 
+            gantt.config.subscales = [
+                {unit: "day", step: 1, date: "%j, %D"}
+            ];
+ 
+            break;
+        case "year":
+            gantt.config.scale_unit = "year";
+            gantt.config.step = 1;
+            gantt.config.date_scale = "%Y";
+            gantt.templates.date_scale = null;
+ 
+            gantt.config.min_column_width = 50;
+            gantt.config.scale_height = 90;
+ 
+            gantt.config.subscales = [
+                {unit: "month", step: 1, date: "%M"}
+            ];
+            break;
+    }
 }
