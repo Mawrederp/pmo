@@ -39,7 +39,7 @@ class ProjectsList(Document):
 
 
     def existing_project_initiation(self):
-        if not frappe.db.exists("Project Management Assignment", {"name": self.name}):
+        if not frappe.db.exists("Project Management Assignment", {"name": self.name,"docstatus": 1}):
             frappe.throw("""You should assign roles from <b><a href="#List/Project Management Assignment">Project Management Assignment</a></b> to this project before open it """)
         else:
             project_name = frappe.get_value("Project Initiation", filters = {"project_name": self.project_name}, fieldname = "name")

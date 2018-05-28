@@ -36,28 +36,28 @@ class ProjectManagementAssignment(Document):
 
             if self.program_manager and prefered_email_program_manager:
                 try:
-                    make(subject = "ERP PMO Action Required", content=content_msg, recipients=prefered_email,
+                    make(subject = "ERP PMO Action Required", content=content_msg, recipients=prefered_email_program_manager,
                         send_email=True, sender="erp@tawari.sa")
                 except:
                     frappe.msgprint("could not send")
 
             if self.senior_project_manager and prefered_email_senior_project_manager:
                 try:
-                    make(subject = "ERP PMO Action Required", content=content_msg, recipients=prefered_email,
+                    make(subject = "ERP PMO Action Required", content=content_msg, recipients=prefered_email_senior_project_manager,
                         send_email=True, sender="erp@tawari.sa")
                 except:
                     frappe.msgprint("could not send")
 
             if self.project_manager and prefered_email_project_manager:
                 try:
-                    make(subject = "ERP PMO Action Required", content=content_msg, recipients=prefered_email,
+                    make(subject = "ERP PMO Action Required", content=content_msg, recipients=prefered_email_project_manager,
                         send_email=True, sender="erp@tawari.sa")
                 except:
                     frappe.msgprint("could not send")
 
             if self.project_coordinator and prefered_email_project_coordinator:
                 try:
-                    make(subject = "ERP PMO Action Required", content=content_msg, recipients=prefered_email,
+                    make(subject = "ERP PMO Action Required", content=content_msg, recipients=prefered_email_project_coordinator,
                         send_email=True, sender="erp@tawari.sa")
                 except:
                     frappe.msgprint("could not send")
