@@ -7,6 +7,14 @@ frappe.ui.form.on('Project Management Assignment', {
 	},
 	onload: function(frm) {
 
+		cur_frm.set_query("project_name", function() {
+            return {
+		          "filters": {
+					"docstatus": 1
+				}
+		      }
+        });
+
 		cur_frm.set_query("project_coordinator", function() {
             return {
                 query: "pmo.project_services.doctype.project_management_assignment.project_management_assignment.get_project_coordinator"

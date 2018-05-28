@@ -50,6 +50,12 @@ def get_data():
             "items": [
                 {
                     "type": "doctype",
+                    "name": "Policy and Procedure",
+                    "label": _("Policy and Procedure"),
+                    "description": _("Policy and Procedure")
+                },
+                {
+                    "type": "doctype",
                     "name": "PMO Resources",
                     "label": _("PMO Resources"),
                     "description": _("PMO Resources")
