@@ -54,17 +54,21 @@ class PMOResources(Document):
             for i in range(len(users)):
                 roles=''
                 emp = frappe.db.sql("select name,user_id,designation,employee_name from `tabEmployee` where user_id = '{0}'".format(users[i][0]))
-                if 'Project Coordinator' in frappe.utils.user.get_roles(users[i][0]):
+                user_roles=[]
+                role = frappe.db.sql("select role from `tabHas Role` where parenttype='User' and parent='{0}' ".format(users[i][0]),as_list=1)
+                for i in role:
+                    user_roles.append(i[0])
+                if 'Project Coordinator' in user_roles:
                     roles += 'Project Coordinator'+"\n"
-                if 'Senior Project Manager' in frappe.utils.user.get_roles(users[i][0]):
+                if 'Senior Project Manager' in user_roles:
                     roles += 'Senior Project Manager'+"\n"
-                if 'Program Manager' in frappe.utils.user.get_roles(users[i][0]):
+                if 'Program Manager' in user_roles:
                     roles += 'Program Manager'+"\n"
                 # if 'Program Manager' in frappe.get_all("Has Role", fields=["role"], filters = {"parenttype": "User", "parent": users[i][0], "role": ("in", ['Project Coordinator','Program Manager','Project Manager','Senior Project Manager','PMO Director'])}):
                     # roles += 'Program Manager'+"\n"
-                if 'PMO Director' in frappe.utils.user.get_roles(users[i][0]):
+                if 'PMO Director' in user_roles:
                     roles += 'PMO Director'+"\n"
-                if 'Project Manager' in frappe.utils.user.get_roles(users[i][0]):
+                if 'Project Manager' in user_roles:
                     roles += 'Project Manager'+"\n"
 
                 if emp:
@@ -114,19 +118,29 @@ class PMOResources(Document):
         #     #             x.assigned_project = i[0]+"\n"
 
 
+    # def check_role(self, user_id):
+    #     arr = []
+    #     if 'Program Manager' in frappe.utils.user.get_roles(user_id):
+    #         arr.append('Program Manager')
+    #     if 'Project Coordinator' in frappe.utils.user.get_roles(user_id):
+    #         arr.append('Project Coordinator')
+    #     if 'Senior Project Manager' in frappe.utils.user.get_roles(user_id):
+    #         arr.append('Senior Project Manager')
+    #     if 'PMO Director' in frappe.utils.user.get_roles(user_id):
+    #         arr.append('PMO Director')
+    #     if 'Project Manager' in frappe.utils.user.get_roles(user_id):
+    #         arr.append('Project Manager')
+    #     return arr
+
+
     def check_role(self, user_id):
         arr = []
-        if 'Program Manager' in frappe.utils.user.get_roles(user_id):
-            arr.append('Program Manager')
-        if 'Project Coordinator' in frappe.utils.user.get_roles(user_id):
-            arr.append('Project Coordinator')
-        if 'Senior Project Manager' in frappe.utils.user.get_roles(user_id):
-            arr.append('Senior Project Manager')
-        if 'PMO Director' in frappe.utils.user.get_roles(user_id):
-            arr.append('PMO Director')
-        if 'Project Manager' in frappe.utils.user.get_roles(user_id):
-            arr.append('Project Manager')
+        role = frappe.db.sql("select role from `tabHas Role` where parenttype='User' and parent='{0}' ".format(user_id),as_list=1)
+        for i in role:
+            arr.append(i[0])
         return arr
+
+
 
 
     # def check_assigned_project(self):
