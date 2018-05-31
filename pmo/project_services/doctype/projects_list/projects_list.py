@@ -26,6 +26,21 @@ class ProjectsList(Document):
             "project_name": self.project_name,
             "project": self.project_name,
             "projects_list": self.name
+            # "project_sponsor": ,
+            # "project_owner": ,
+            # "project_manager": ,
+            # "project_sponsor_name": ,
+            # "project_owner_name": ,
+            # "project_manager_name": ,
+            # "default_warehouse": ,
+            # "project_manager_ch": ,
+            # "project_sponsor_ch": ,
+            # "project_owner_ch": ,
+            # "project_managr_ch": ,
+            # "project_sponsor_name_ch": ,
+            # "project_owner_name_ch": ,
+            # "project_manager_name_ch": ,
+            # "employee_ch": 
         }).save(ignore_permissions = True)
         frappe.db.commit()
         self.project_initiation = self.project_name
