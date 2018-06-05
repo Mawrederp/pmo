@@ -8,9 +8,9 @@ from frappe.model.document import Document
 
 class PMOResources(Document):
     def validate(self):
-        from frappe.core.doctype.communication.email import make
-        prefered_email = frappe.get_value("Employee", filters = {"user_id": self.user_id}, fieldname = "prefered_email")
-        content_msg="You are now part of the ERP PMO, Please use your access credentials to access the ERP PMO system."
+        # from frappe.core.doctype.communication.email import make
+        # prefered_email = frappe.get_value("Employee", filters = {"user_id": self.user_id}, fieldname = "prefered_email")
+        # content_msg="You are now part of the ERP PMO, Please use your access credentials to access the ERP PMO system."
 
         # frappe.db.sql("delete from `tabHas Role` where parenttype='User' and parent='{0}' and role in ('Project Coordinator','Senior Project Manager','Program Manager','Project Manager')".format(self.user_id))
         
@@ -38,13 +38,13 @@ class PMOResources(Document):
         else:
             frappe.db.sql("delete from `tabHas Role` where parenttype='User' and parent='{0}' and role='Project Manager'".format(self.user_id))
 
-        if self.project_coordinator or self.senior_project_manager or self.program_manager or self.project_manager:
-            if prefered_email:
-                try:
-                    make(subject = "ERP PMO Action Required", content=content_msg, recipients=prefered_email,
-                        send_email=True, sender="erp@tawari.sa")
-                except:
-                    frappe.msgprint("could not send")
+        # if self.project_coordinator or self.senior_project_manager or self.program_manager or self.project_manager:
+        #     if prefered_email:
+        #         try:
+        #             make(subject = "ERP PMO Action Required", content=content_msg, recipients=prefered_email,
+        #                 send_email=True, sender="erp@tawari.sa")
+        #         except:
+        #             frappe.msgprint("could not send")
 
 
     def onload(self):
@@ -73,6 +73,24 @@ class PMOResources(Document):
 
                 if emp:
                     self.append("role_assignment", {"employee": emp[0][0],"user_id": emp[0][1],"designation": emp[0][2],"employee_name": emp[0][3],"roles": roles})
+
+
+    def send_notifications(self,employee):
+        from frappe.core.doctype.communication.email import make
+        content_msg="You are now part of the ERP PMO, Please use your access credentials to access the ERP PMO system."
+
+        for emp in employee:
+            prefered_email = frappe.get_value("Employee", filters = {"name": emp}, fieldname = "prefered_email")
+
+            if prefered_email:
+                try:
+                    make(subject = "ERP PMO Action Required", content=content_msg, recipients=prefered_email,
+                        send_email=True, sender="erp@tawari.sa")
+                    
+                    msg = """Email send successfully to Employee : <b><a href="#Form/Employee/{cc}">{cc}</a></b>""".format(cc=emp)
+                    frappe.msgprint(msg)
+                except:
+                    frappe.msgprint("could not send")
 
         
 
