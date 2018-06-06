@@ -4,5 +4,8 @@
 frappe.ui.form.on('Policy and Procedure', {
 	refresh: function(frm) {
 
-	}
+	},
+    onload: function(frm) {
+        $(".form-attachments .add-attachment").hide();
+    }
 });

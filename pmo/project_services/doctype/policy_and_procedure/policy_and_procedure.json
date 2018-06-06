@@ -44,7 +44,7 @@
   }, 
   {
    "allow_bulk_edit": 0, 
-   "allow_on_submit": 0, 
+   "allow_on_submit": 1, 
    "bold": 0, 
    "collapsible": 0, 
    "columns": 2, 
@@ -161,7 +161,7 @@
   }, 
   {
    "allow_bulk_edit": 0, 
-   "allow_on_submit": 0, 
+   "allow_on_submit": 1, 
    "bold": 0, 
    "collapsible": 0, 
    "columns": 0, 
@@ -259,7 +259,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2018-06-06 11:45:37.264911", 
+ "modified": "2018-06-06 11:56:36.473992", 
  "modified_by": "Administrator", 
  "module": "Project Services", 
  "name": "Policy and Procedure", 
