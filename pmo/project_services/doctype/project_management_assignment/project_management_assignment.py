@@ -20,6 +20,7 @@ class ProjectManagementAssignment(Document):
         doc_initiation = frappe.get_doc("Project Initiation", self.project_name)
         if doc and doc_initiation:
             
+            doc.project = self.name
             doc.project_coordinator = self.project_coordinator
             doc.project_manager = self.project_manager
             doc.senior_project_manager = self.senior_project_manager
