@@ -86,6 +86,10 @@ frappe.ui.form.on('PMO Resources', {
 	},
     onload: function(frm) {
         $(".grid-add-row").hide();
+        $(".grid-buttons").hide();
+        $(".grid-footer").hide();
+        $(".row-index").hide();
+
     }
 
 });
