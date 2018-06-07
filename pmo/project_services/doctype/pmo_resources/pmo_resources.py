@@ -184,3 +184,6 @@ class PMOResources(Document):
     #     return program_manager,senior_project_manager,project_manager,project_coordinator
     #     
 
+    def check_emp(self):
+    	if 'PMO Director' in frappe.utils.user.get_roles(frappe.session.user):
+    		return 1

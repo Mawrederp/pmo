@@ -7,31 +7,46 @@ frappe.ui.form.on('PMO Resources', {
 	refresh: function(frm) {
 		frm.refresh_field("accounts");
 		
-		frm.add_custom_button(__("Send Email"), function () {
-			arr = []
-			for(row= 0;row<cur_frm.doc.role_assignment.length;row++){
-				if(cur_frm.doc.role_assignment[row].notification == 1){
-					arr.push(cur_frm.doc.role_assignment[row].employee)
-				}
 
-			}
-
-			frappe.call({
-	            "method": "send_notifications",
+		frappe.call({
+	            "method": "check_emp",
 	            doc: cur_frm.doc,
-	            args: { "employee": arr }
-	          //   callback: function(r) {
-	        		// if(r.message){
-	        		// 	console.log(r.message)
-	        		// }  	
-	          //   }
+	            callback: function(r) {
+	        		if(r.message){
+	        			if(r.message==1){
+
+	        				frm.add_custom_button(__("Send Email"), function () {
+								alert(user)
+								arr = []
+								for(row= 0;row<cur_frm.doc.role_assignment.length;row++){
+									if(cur_frm.doc.role_assignment[row].notification == 1){
+										arr.push(cur_frm.doc.role_assignment[row].employee)
+									}
+
+								}
+
+								frappe.call({
+						            "method": "send_notifications",
+						            doc: cur_frm.doc,
+						            args: { "employee": arr }
+						          //   callback: function(r) {
+						        		// if(r.message){
+						        		// 	console.log(r.message)
+						        		// }  	
+						          //   }
+						        });
+
+
+					        });
+
+
+
+	        			}
+	        		}  	
+	            }
 	        });
 
 
-        });
-
-
-		
 
 		
 	},
