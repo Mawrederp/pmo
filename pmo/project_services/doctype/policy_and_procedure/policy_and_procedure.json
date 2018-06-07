@@ -259,7 +259,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2018-06-07 11:20:44.699939", 
+ "modified": "2018-06-07 11:25:33.491947", 
  "modified_by": "Administrator", 
  "module": "Project Services", 
  "name": "Policy and Procedure", 
@@ -267,7 +267,7 @@
  "owner": "Administrator", 
  "permissions": [
   {
-   "amend": 0, 
+   "amend": 1, 
    "apply_user_permissions": 0, 
    "cancel": 1, 
    "create": 1, 
@@ -287,7 +287,7 @@
    "write": 1
   }, 
   {
-   "amend": 0, 
+   "amend": 1, 
    "apply_user_permissions": 0, 
    "cancel": 1, 
    "create": 1, 

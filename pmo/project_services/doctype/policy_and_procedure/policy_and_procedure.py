@@ -9,6 +9,7 @@ from frappe.model.document import Document
 class PolicyandProcedure(Document):
     def validate(self):
         self.send_notifications()
+        # frappe.db.sql("delete from `tabPolicy and Procedure`")
 
 
     def send_notifications(self):
