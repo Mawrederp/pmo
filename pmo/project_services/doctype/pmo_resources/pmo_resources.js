@@ -16,7 +16,6 @@ frappe.ui.form.on('PMO Resources', {
 	        			if(r.message==1){
 
 	        				frm.add_custom_button(__("Send Email"), function () {
-								alert(user)
 								arr = []
 								for(row= 0;row<cur_frm.doc.role_assignment.length;row++){
 									if(cur_frm.doc.role_assignment[row].notification == 1){
