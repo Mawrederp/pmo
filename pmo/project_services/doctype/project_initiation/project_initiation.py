@@ -9,10 +9,10 @@ from frappe.model.document import Document
 
 class ProjectInitiation(Document):
     def validate(self):
-        self.validate_emp()
         
         if self.workflow_state == 'Approved by PMO Director':
-	        self.make_project_planning()
+            self.make_project_planning()
+            self.validate_emp()
     
         if self.workflow_state:
             if "Rejected" in self.workflow_state:
@@ -33,48 +33,102 @@ class ProjectInitiation(Document):
 
 
     def validate_emp(self):
-        if self.get('__islocal'):
+        doc = frappe.get_doc("Project Planning", self.project_name)
+        if doc:
             if self.project_coordinator:
-                if self.project_manager:
+                if self.project_manager_role:
                     if self.senior_project_manager:
                         if self.program_manager:
-                            self.workflow_state = "Pending(PC+ProjM+SPM+ProgM)"
+                            doc.workflow_state = "Pending(PC+ProjM+SPM+ProgM)"
                         else:
-                            self.workflow_state = "Pending(PC+ProjM+SPM)"
+                            doc.workflow_state = "Pending(PC+ProjM+SPM)"
                     else:
                         if self.program_manager:
-                            self.workflow_state = "Pending(PC+ProjM+ProgM)"
+                            doc.workflow_state = "Pending(PC+ProjM+ProgM)"
                         else:
-                            self.workflow_state = "Pending(PC+ProjM)"
+                            doc.workflow_state = "Pending(PC+ProjM)"
                 else:
                     if self.senior_project_manager:
                         if self.program_manager:
-                            self.workflow_state = "Pending(PC+SPM+ProgM)"
+                            doc.workflow_state = "Pending(PC+SPM+ProgM)"
                         else:
-                            self.workflow_state = "Pending(PC+SPM)"
+                            doc.workflow_state = "Pending(PC+SPM)"
                     else:
                         if self.program_manager:
-                            self.workflow_state = "Pending(PC+ProgM)"
+                            doc.workflow_state = "Pending(PC+ProgM)"
                         else:
-                            self.workflow_state = "Pending(PC)"
-            elif self.project_manager:
+                            doc.workflow_state = "Pending(PC)"
+            elif self.project_manager_role:
                 if self.senior_project_manager:
                     if self.program_manager:
-                        self.workflow_state = "Pending(ProjM+SPM+ProgM)"
+                        doc.workflow_state = "Pending(ProjM+SPM+ProgM)"
                     else:
-                        self.workflow_state = "Pending(ProjM+SPM)"
+                        doc.workflow_state = "Pending(ProjM+SPM)"
                 else:
                     if self.program_manager:
-                        self.workflow_state = "Pending(ProjM+ProgM)"
+                        doc.workflow_state = "Pending(ProjM+ProgM)"
                     else:
-                        self.workflow_state = "Pending(ProjM)"
+                        doc.workflow_state = "Pending(ProjM)"
             elif self.senior_project_manager:
                 if self.program_manager:
-                    self.workflow_state = "Pending(SPM+ProgM)"
+                    doc.workflow_state = "Pending(SPM+ProgM)"
                 else:
-                    self.workflow_state = "Pending(SPM)"
+                    doc.workflow_state = "Pending(SPM)"
             elif self.program_manager:
-                self.workflow_state = "Pending(ProgM)"
+                doc.workflow_state = "Pending(ProgM)"
+
+            doc.program_manager = self.program_manager
+            doc.senior_project_manager = self.senior_project_manager
+            doc.project_manager_role = self.project_manager_role
+            doc.project_coordinator = self.project_coordinator
+
+            doc.save(ignore_permissions=True)
+
+
+
+    # def validate_emp(self):
+    #     if self.get('__islocal'):
+    #         if self.project_coordinator:
+    #             if self.project_manager:
+    #                 if self.senior_project_manager:
+    #                     if self.program_manager:
+    #                         self.workflow_state = "Pending(PC+ProjM+SPM+ProgM)"
+    #                     else:
+    #                         self.workflow_state = "Pending(PC+ProjM+SPM)"
+    #                 else:
+    #                     if self.program_manager:
+    #                         self.workflow_state = "Pending(PC+ProjM+ProgM)"
+    #                     else:
+    #                         self.workflow_state = "Pending(PC+ProjM)"
+    #             else:
+    #                 if self.senior_project_manager:
+    #                     if self.program_manager:
+    #                         self.workflow_state = "Pending(PC+SPM+ProgM)"
+    #                     else:
+    #                         self.workflow_state = "Pending(PC+SPM)"
+    #                 else:
+    #                     if self.program_manager:
+    #                         self.workflow_state = "Pending(PC+ProgM)"
+    #                     else:
+    #                         self.workflow_state = "Pending(PC)"
+    #         elif self.project_manager:
+    #             if self.senior_project_manager:
+    #                 if self.program_manager:
+    #                     self.workflow_state = "Pending(ProjM+SPM+ProgM)"
+    #                 else:
+    #                     self.workflow_state = "Pending(ProjM+SPM)"
+    #             else:
+    #                 if self.program_manager:
+    #                     self.workflow_state = "Pending(ProjM+ProgM)"
+    #                 else:
+    #                     self.workflow_state = "Pending(ProjM)"
+    #         elif self.senior_project_manager:
+    #             if self.program_manager:
+    #                 self.workflow_state = "Pending(SPM+ProgM)"
+    #             else:
+    #                 self.workflow_state = "Pending(SPM)"
+    #         elif self.program_manager:
+    #             self.workflow_state = "Pending(ProgM)"
 
 
 
