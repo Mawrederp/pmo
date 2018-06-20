@@ -7,20 +7,74 @@ import frappe
 from frappe.model.document import Document
 
 class ProjectImplementationMonitoringandControlling(Document):
-    def on_submit(self):
+    def validate(self):
+        if self.workflow_state == 'Approved by PMO Director':
+            self.make_project_closure()
+            self.validate_emp()
+    
+        if self.workflow_state:
+            if "Rejected" in self.workflow_state:
+                self.docstatus = 1
+                self.docstatus = 2
 
-        # doc.flags.ignore_mandatory = True
-        # doc.insert(ignore_permissions=True)
+
+    def validate_emp(self):
+        doc = frappe.get_doc("Project Closure", self.project_name)
+        if doc:
+            if self.project_coordinator:
+                if self.project_manager_role:
+                    if self.senior_project_manager:
+                        if self.program_manager:
+                            doc.workflow_state = "Pending(PC+ProjM+SPM+ProgM)"
+                        else:
+                            doc.workflow_state = "Pending(PC+ProjM+SPM)"
+                    else:
+                        if self.program_manager:
+                            doc.workflow_state = "Pending(PC+ProjM+ProgM)"
+                        else:
+                            doc.workflow_state = "Pending(PC+ProjM)"
+                else:
+                    if self.senior_project_manager:
+                        if self.program_manager:
+                            doc.workflow_state = "Pending(PC+SPM+ProgM)"
+                        else:
+                            doc.workflow_state = "Pending(PC+SPM)"
+                    else:
+                        if self.program_manager:
+                            doc.workflow_state = "Pending(PC+ProgM)"
+                        else:
+                            doc.workflow_state = "Pending(PC)"
+            elif self.project_manager_role:
+                if self.senior_project_manager:
+                    if self.program_manager:
+                        doc.workflow_state = "Pending(ProjM+SPM+ProgM)"
+                    else:
+                        doc.workflow_state = "Pending(ProjM+SPM)"
+                else:
+                    if self.program_manager:
+                        doc.workflow_state = "Pending(ProjM+ProgM)"
+                    else:
+                        doc.workflow_state = "Pending(ProjM)"
+            elif self.senior_project_manager:
+                if self.program_manager:
+                    doc.workflow_state = "Pending(SPM+ProgM)"
+                else:
+                    doc.workflow_state = "Pending(SPM)"
+            elif self.program_manager:
+                doc.workflow_state = "Pending(ProgM)"
+
+            doc.program_manager = self.program_manager
+            doc.senior_project_manager = self.senior_project_manager
+            doc.project_manager_role = self.project_manager_role
+            doc.project_coordinator = self.project_coordinator
+
+            doc.save(ignore_permissions=True)
+
+    def make_project_closure(self):
         doc_proj = frappe.get_doc("Project",self.project_name)
         doc_proj.state = "Implementation Monitoring and Controlling"
         doc_proj.save(ignore_permissions = True)
         frappe.db.commit()
-
-        # pp = frappe.get_doc({
-        #     "doctype":"Project Planning",
-        #     "project_name": self.project_name
-        #     }).save(ignore_permissions = True)
-        # frappe.db.commit()
 
         doc = frappe.get_doc({
             "doctype":"Project Closure",

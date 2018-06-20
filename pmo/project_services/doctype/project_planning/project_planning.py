@@ -7,6 +7,69 @@ import frappe
 from frappe.model.document import Document
 
 class ProjectPlanning(Document):
+    def validate(self):
+        if self.workflow_state == 'Approved by PMO Director':
+            self.make_project_controlling()
+            self.validate_emp()
+    
+        if self.workflow_state:
+            if "Rejected" in self.workflow_state:
+                self.docstatus = 1
+                self.docstatus = 2
+
+    def validate_emp(self):
+        doc = frappe.get_doc("Project Implementation Monitoring and Controlling", self.project_name)
+        if doc:
+            if self.project_coordinator:
+                if self.project_manager_role:
+                    if self.senior_project_manager:
+                        if self.program_manager:
+                            doc.workflow_state = "Pending(PC+ProjM+SPM+ProgM)"
+                        else:
+                            doc.workflow_state = "Pending(PC+ProjM+SPM)"
+                    else:
+                        if self.program_manager:
+                            doc.workflow_state = "Pending(PC+ProjM+ProgM)"
+                        else:
+                            doc.workflow_state = "Pending(PC+ProjM)"
+                else:
+                    if self.senior_project_manager:
+                        if self.program_manager:
+                            doc.workflow_state = "Pending(PC+SPM+ProgM)"
+                        else:
+                            doc.workflow_state = "Pending(PC+SPM)"
+                    else:
+                        if self.program_manager:
+                            doc.workflow_state = "Pending(PC+ProgM)"
+                        else:
+                            doc.workflow_state = "Pending(PC)"
+            elif self.project_manager_role:
+                if self.senior_project_manager:
+                    if self.program_manager:
+                        doc.workflow_state = "Pending(ProjM+SPM+ProgM)"
+                    else:
+                        doc.workflow_state = "Pending(ProjM+SPM)"
+                else:
+                    if self.program_manager:
+                        doc.workflow_state = "Pending(ProjM+ProgM)"
+                    else:
+                        doc.workflow_state = "Pending(ProjM)"
+            elif self.senior_project_manager:
+                if self.program_manager:
+                    doc.workflow_state = "Pending(SPM+ProgM)"
+                else:
+                    doc.workflow_state = "Pending(SPM)"
+            elif self.program_manager:
+                doc.workflow_state = "Pending(ProgM)"
+
+            doc.program_manager = self.program_manager
+            doc.senior_project_manager = self.senior_project_manager
+            doc.project_manager_role = self.project_manager_role
+            doc.project_coordinator = self.project_coordinator
+
+            doc.save(ignore_permissions=True)
+
+
     def onload(self):
         roles_and_responsibilities = frappe.db.sql("select name1,party,project_role from `tabRoles And Responsibilities` where parent='{0}'".format(self.name))
         
@@ -54,7 +117,7 @@ class ProjectPlanning(Document):
                         self.partner_technical_name = row[0]
 
 
-    def on_submit(self):
+    def make_project_controlling(self):
         doc = frappe.get_doc({
             "doctype":"Project Implementation Monitoring and Controlling",
             "project_name": self.project_name,
