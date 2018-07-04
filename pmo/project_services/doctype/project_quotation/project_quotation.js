@@ -84,6 +84,9 @@ frappe.ui.form.on('Items Details', {
 		if(cur_frm.doc.total_overhead_expenses){
 			frappe.model.set_value(cdt, cdn, "tawaris_services", cur_frm.doc.total_overhead_expenses);
 		}
+		frappe.model.set_value(cdt, cdn, "total_cost", d.total_cost_price+d.cost_price_ts);
+		frappe.model.set_value(cdt, cdn, "contingency", (d.risk/100)*d.total_cost);
+		frappe.model.set_value(cdt, cdn, "selling_price", d.total_selling_price+d.selling_price_ts);
 		frappe.model.set_value(cdt, cdn, "final_selling_price", d.contingency+d.selling_price);
 	},
 	currency: function (frm, cdt, cdn) {
@@ -95,7 +98,9 @@ frappe.ui.form.on('Items Details', {
 		}else{
 			var total = 0
 		}
-
+		frappe.model.set_value(cdt, cdn, "total_cost", d.total_cost_price+d.cost_price_ts);
+		frappe.model.set_value(cdt, cdn, "contingency", (d.risk/100)*d.total_cost);
+		frappe.model.set_value(cdt, cdn, "selling_price", d.total_selling_price+d.selling_price_ts);
 		frappe.model.set_value(cdt, cdn, "sar_cost_price", total);
 		frappe.model.set_value(cdt, cdn, "final_selling_price", d.contingency+d.selling_price);
 	},
@@ -113,6 +118,8 @@ frappe.ui.form.on('Items Details', {
 			frappe.model.set_value(cdt, cdn, "cost_price_unit", total);
 		}
 		frappe.model.set_value(cdt, cdn, "final_selling_price", d.contingency+d.selling_price);
+		frappe.model.set_value(cdt, cdn, "total_cost", d.total_cost_price+d.cost_price_ts);
+		frappe.model.set_value(cdt, cdn, "selling_price", d.total_selling_price+d.selling_price_ts);
 	},
 	markup: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
@@ -120,6 +127,9 @@ frappe.ui.form.on('Items Details', {
 			frappe.model.set_value(cdt, cdn, "markup_follow", d.markup);
 		}
 		frappe.model.set_value(cdt, cdn, "final_selling_price", d.contingency+d.selling_price);
+		frappe.model.set_value(cdt, cdn, "total_cost", d.total_cost_price+d.cost_price_ts);
+		frappe.model.set_value(cdt, cdn, "contingency", (d.risk/100)*d.total_cost);
+		frappe.model.set_value(cdt, cdn, "selling_price", d.total_selling_price+d.selling_price_ts);
 	},
 	cost_price_unit: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
@@ -131,6 +141,7 @@ frappe.ui.form.on('Items Details', {
 			var total = d.cost_price_unit*d.time_unit
 			frappe.model.set_value(cdt, cdn, "total_cost_price", total);
 		}
+		frappe.model.set_value(cdt, cdn, "final_selling_price", d.contingency+d.selling_price);
 	},
 	markup_follow: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
@@ -142,6 +153,10 @@ frappe.ui.form.on('Items Details', {
 			var total = d.cost_price_ts+(d.cost_price_ts*d.markup_follow)
 			frappe.model.set_value(cdt, cdn, "selling_price_ts", total);
 		}
+		frappe.model.set_value(cdt, cdn, "total_cost", d.total_cost_price+d.cost_price_ts);
+		frappe.model.set_value(cdt, cdn, "final_selling_price", d.contingency+d.selling_price);
+		frappe.model.set_value(cdt, cdn, "contingency", (d.risk/100)*d.total_cost);
+		frappe.model.set_value(cdt, cdn, "selling_price", d.total_selling_price+d.selling_price_ts);
 	},
 	time_unit: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
@@ -154,6 +169,9 @@ frappe.ui.form.on('Items Details', {
 			frappe.model.set_value(cdt, cdn, "total_selling_price", total);
 		}
 		frappe.model.set_value(cdt, cdn, "final_selling_price", d.contingency+d.selling_price);
+		frappe.model.set_value(cdt, cdn, "total_cost", d.total_cost_price+d.cost_price_ts);
+		frappe.model.set_value(cdt, cdn, "contingency", (d.risk/100)*d.total_cost);
+		frappe.model.set_value(cdt, cdn, "selling_price", d.total_selling_price+d.selling_price_ts);
 	},
 	selling_price_unit: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
@@ -161,6 +179,7 @@ frappe.ui.form.on('Items Details', {
 			var total = d.selling_price_unit*d.time_unit
 			frappe.model.set_value(cdt, cdn, "total_selling_price", total);
 		}
+		frappe.model.set_value(cdt, cdn, "final_selling_price", d.contingency+d.selling_price);
 	},
 	tawaris_services: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
@@ -168,6 +187,7 @@ frappe.ui.form.on('Items Details', {
 			var total = d.tawaris_services*d.time_unit_services
 			frappe.model.set_value(cdt, cdn, "cost_price_ts", total);
 		}
+		frappe.model.set_value(cdt, cdn, "final_selling_price", d.contingency+d.selling_price);
 	},
 	time_unit_services: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
@@ -177,6 +197,9 @@ frappe.ui.form.on('Items Details', {
 			frappe.model.set_value(cdt, cdn, "cost_price_ts", total);
 		}
 		frappe.model.set_value(cdt, cdn, "final_selling_price", d.contingency+d.selling_price);
+		frappe.model.set_value(cdt, cdn, "total_cost", d.total_cost_price+d.cost_price_ts);
+		frappe.model.set_value(cdt, cdn, "contingency", (d.risk/100)*d.total_cost);
+		frappe.model.set_value(cdt, cdn, "selling_price", d.total_selling_price+d.selling_price_ts);
 	},
 	cost_price_ts: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
@@ -188,6 +211,11 @@ frappe.ui.form.on('Items Details', {
 			var total = d.total_cost_price+d.cost_price_ts
 			frappe.model.set_value(cdt, cdn, "total_cost", total);
 		}
+		frappe.model.set_value(cdt, cdn, "total_cost", d.total_cost_price+d.cost_price_ts);
+		frappe.model.set_value(cdt, cdn, "contingency", (d.risk/100)*d.total_cost);
+		frappe.model.set_value(cdt, cdn, "contingency", (d.risk/100)*d.total_cost);
+		frappe.model.set_value(cdt, cdn, "selling_price", d.total_selling_price+d.selling_price_ts);
+		frappe.model.set_value(cdt, cdn, "final_selling_price", d.contingency+d.selling_price);
 	},
 	total_cost_price: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
@@ -195,6 +223,8 @@ frappe.ui.form.on('Items Details', {
 			var total = d.total_cost_price+d.cost_price_ts
 			frappe.model.set_value(cdt, cdn, "total_cost", total);
 		}
+		frappe.model.set_value(cdt, cdn, "total_cost", d.total_cost_price+d.cost_price_ts);
+		frappe.model.set_value(cdt, cdn, "final_selling_price", d.contingency+d.selling_price);
 	},
 	total_selling_price: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
@@ -202,6 +232,8 @@ frappe.ui.form.on('Items Details', {
 			var total = d.total_selling_price+d.selling_price_ts
 			frappe.model.set_value(cdt, cdn, "selling_price", total);
 		}
+		frappe.model.set_value(cdt, cdn, "selling_price", d.total_selling_price+d.selling_price_ts);
+		frappe.model.set_value(cdt, cdn, "final_selling_price", d.contingency+d.selling_price);
 	},
 	selling_price_ts: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
@@ -209,6 +241,7 @@ frappe.ui.form.on('Items Details', {
 			var total = d.total_selling_price+d.selling_price_ts
 			frappe.model.set_value(cdt, cdn, "selling_price", total);
 		}
+		frappe.model.set_value(cdt, cdn, "selling_price", d.total_selling_price+d.selling_price_ts);
 	},
 	total_cost: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
@@ -216,7 +249,7 @@ frappe.ui.form.on('Items Details', {
 			var total = d.selling_price-d.total_cost
 			frappe.model.set_value(cdt, cdn, "profit", total);
 		}
-		if(d.risk&&d.total_cost){
+		if(d.total_cost){
 			var total = (d.risk/100)*d.total_cost
 			frappe.model.set_value(cdt, cdn, "contingency", total);
 		}
@@ -231,14 +264,16 @@ frappe.ui.form.on('Items Details', {
 			var total = d.contingency+d.selling_price
 			frappe.model.set_value(cdt, cdn, "final_selling_price", total);
 		}
+		frappe.model.set_value(cdt, cdn, "final_selling_price", d.contingency+d.selling_price);
 	},
 	risk: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
 		frappe.model.set_value(cdt, cdn, "final_selling_price", 0);
-		if(d.risk&&d.total_cost){
+		if(d.total_cost){
 			var total = (d.risk/100)*d.total_cost
 			frappe.model.set_value(cdt, cdn, "contingency", total);
 		}
+		frappe.model.set_value(cdt, cdn, "contingency", (d.risk/100)*d.total_cost);
 		frappe.model.set_value(cdt, cdn, "final_selling_price", d.contingency+d.selling_price);
 	},
 	contingency: function (frm, cdt, cdn) {
@@ -247,6 +282,7 @@ frappe.ui.form.on('Items Details', {
 			var total = d.contingency+d.selling_price
 			frappe.model.set_value(cdt, cdn, "final_selling_price", total);
 		}
+		frappe.model.set_value(cdt, cdn, "final_selling_price", d.contingency+d.selling_price);
 	},
 	profit: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
