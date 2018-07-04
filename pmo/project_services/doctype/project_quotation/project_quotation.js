@@ -10,9 +10,26 @@ frappe.ui.form.on('Project Quotation', {
 		var margin = cur_frm.doc.profit/cur_frm.doc.total_selling_price
 		cur_frm.set_value("markup", Math.round(markup*100));
 		cur_frm.set_value("margin", Math.round(margin*100));
-	},
+	}
 	
 });
+
+
+
+cur_frm.cscript.total_overhead_expenses = function(frm, cdt, cdn){
+	$.each(cur_frm.doc.items_details || [], function(i, d) {
+    	d.tawaris_services = cur_frm.doc.total_overhead_expenses
+    });    
+}
+
+
+// frappe.ui.form.on("Project Quotation", "total_overhead_expenses", function(frm, cdt, cdn) {
+//     $.each(frm.doc.items_details || [], function(i, d) {
+//     	d.tawaris_services = cur_frm.doc.total_overhead_expenses
+//     });
+// });
+
+
 
 
 frappe.ui.form.on('Resources Details', {
