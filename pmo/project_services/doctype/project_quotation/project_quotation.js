@@ -15,21 +15,11 @@ frappe.ui.form.on('Project Quotation', {
 });
 
 
-
 cur_frm.cscript.total_overhead_expenses = function(frm, cdt, cdn){
 	$.each(cur_frm.doc.items_details || [], function(i, d) {
-    	d.tawaris_services = cur_frm.doc.total_overhead_expenses
+    	frappe.model.set_value("Items Details", d.name , 'tawaris_services', cur_frm.doc.total_overhead_expenses);
     });    
 }
-
-
-// frappe.ui.form.on("Project Quotation", "total_overhead_expenses", function(frm, cdt, cdn) {
-//     $.each(frm.doc.items_details || [], function(i, d) {
-//     	d.tawaris_services = cur_frm.doc.total_overhead_expenses
-//     });
-// });
-
-
 
 
 frappe.ui.form.on('Resources Details', {
