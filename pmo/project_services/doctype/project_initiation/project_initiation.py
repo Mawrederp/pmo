@@ -19,6 +19,11 @@ class ProjectInitiation(Document):
                 self.docstatus = 1
                 self.docstatus = 2
 
+        # doc = frappe.db.sql("select data from `tabVersion` where ref_doctype='Project Initiation' and docname='tst omar proj' and name='d3ff4c08cb' order by creation desc ")
+        # print '************************'
+        # print doc[0][0]
+        # print '************************'
+        # self.cur_validate_emp()
 
     # def validate_emp(self):
     #     if self.get('__islocal'):
@@ -30,6 +35,50 @@ class ProjectInitiation(Document):
     #             self.workflow_state = "Pending(PM)"
     #         elif self.senior_project_manager:
     #             self.workflow_state = "Pending(SPM)"
+
+    def cur_validate_emp(self):
+        if self.project_coordinator:
+            if self.project_manager_role:
+                if self.senior_project_manager:
+                    if self.program_manager:
+                        self.workflow_state = "Pending(PC+ProjM+SPM+ProgM)"
+                    else:
+                        self.workflow_state = "Pending(PC+ProjM+SPM)"
+                else:
+                    if self.program_manager:
+                        self.workflow_state = "Pending(PC+ProjM+ProgM)"
+                    else:
+                        self.workflow_state = "Pending(PC+ProjM)"
+            else:
+                if self.senior_project_manager:
+                    if self.program_manager:
+                        self.workflow_state = "Pending(PC+SPM+ProgM)"
+                    else:
+                        self.workflow_state = "Pending(PC+SPM)"
+                else:
+                    if self.program_manager:
+                        self.workflow_state = "Pending(PC+ProgM)"
+                    else:
+                        self.workflow_state = "Pending(PC)"
+        elif self.project_manager_role:
+            if self.senior_project_manager:
+                if self.program_manager:
+                    self.workflow_state = "Pending(ProjM+SPM+ProgM)"
+                else:
+                    self.workflow_state = "Pending(ProjM+SPM)"
+            else:
+                if self.program_manager:
+                    self.workflow_state = "Pending(ProjM+ProgM)"
+                else:
+                    self.workflow_state = "Pending(ProjM)"
+        elif self.senior_project_manager:
+            if self.program_manager:
+                self.workflow_state = "Pending(SPM+ProgM)"
+            else:
+                self.workflow_state = "Pending(SPM)"
+        elif self.program_manager:
+            self.workflow_state = "Pending(ProgM)"
+
 
 
     def validate_emp(self):
