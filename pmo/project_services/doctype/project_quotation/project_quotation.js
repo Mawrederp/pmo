@@ -59,7 +59,7 @@ frappe.ui.form.on('Resources Details', {
 
 
 frappe.ui.form.on("Resources Details", "overhead_expenses", function(frm, cdt, cdn) {
-    grand_total = 0;
+    var grand_total = 0;
     $.each(frm.doc.resources_details || [], function(i, d) {
         grand_total += flt(d.overhead_expenses);
     });
@@ -274,7 +274,7 @@ frappe.ui.form.on('Items Details', {
 
 frappe.ui.form.on("Items Details", "total_cost", function(frm, cdt, cdn) {
     // code for calculate total and set on parent field.
-    grand_total = 0;
+    var grand_total = 0;
     $.each(frm.doc.items_details || [], function(i, d) {
         grand_total += flt(d.total_cost);
     });
@@ -284,7 +284,7 @@ frappe.ui.form.on("Items Details", "total_cost", function(frm, cdt, cdn) {
 
 frappe.ui.form.on("Items Details", "selling_price", function(frm, cdt, cdn) {
     // code for calculate total and set on parent field.
-    grand_total = 0;
+    var grand_total = 0;
     $.each(frm.doc.items_details || [], function(i, d) {
         grand_total += flt(d.selling_price);
     });
@@ -294,7 +294,7 @@ frappe.ui.form.on("Items Details", "selling_price", function(frm, cdt, cdn) {
 
 frappe.ui.form.on("Items Details", "contingency", function(frm, cdt, cdn) {
     // code for calculate total and set on parent field.
-    grand_total = 0;
+    var grand_total = 0;
     $.each(frm.doc.items_details || [], function(i, d) {
         grand_total += flt(d.contingency);
     });
@@ -304,7 +304,7 @@ frappe.ui.form.on("Items Details", "contingency", function(frm, cdt, cdn) {
 
 frappe.ui.form.on("Items Details", "final_selling_price", function(frm, cdt, cdn) {
     // code for calculate total and set on parent field.
-    grand_total = 0;
+    var grand_total = 0;
     $.each(frm.doc.items_details || [], function(i, d) {
         grand_total += flt(d.final_selling_price);
     });
@@ -314,7 +314,7 @@ frappe.ui.form.on("Items Details", "final_selling_price", function(frm, cdt, cdn
 
 frappe.ui.form.on("Items Details", "profit", function(frm, cdt, cdn) {
     // code for calculate total and set on parent field.
-    grand_total = 0;
+    var grand_total = 0;
     $.each(frm.doc.items_details || [], function(i, d) {
         grand_total += flt(d.profit);
     });
