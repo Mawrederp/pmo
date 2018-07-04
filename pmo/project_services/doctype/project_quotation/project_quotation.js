@@ -273,6 +273,9 @@ frappe.ui.form.on('Items Details', {
 			var total = (d.risk/100)*d.total_cost
 			frappe.model.set_value(cdt, cdn, "contingency", total);
 		}
+		frappe.model.set_value(cdt, cdn, "total_cost", d.total_cost_price+d.cost_price_ts);
+		frappe.model.set_value(cdt, cdn, "contingency", (d.risk/100)*d.total_cost);
+		frappe.model.set_value(cdt, cdn, "selling_price", d.total_selling_price+d.selling_price_ts);
 		frappe.model.set_value(cdt, cdn, "contingency", (d.risk/100)*d.total_cost);
 		frappe.model.set_value(cdt, cdn, "final_selling_price", d.contingency+d.selling_price);
 	},
