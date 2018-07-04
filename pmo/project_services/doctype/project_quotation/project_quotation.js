@@ -10,6 +10,48 @@ frappe.ui.form.on('Project Quotation', {
 		var margin = cur_frm.doc.profit/cur_frm.doc.total_selling_price
 		cur_frm.set_value("markup", Math.round(markup*100));
 		cur_frm.set_value("margin", Math.round(margin*100));
+	},
+	validate: function (frm) {
+		$.each(cur_frm.doc.items_details || [], function(i, d) {
+	    	frappe.model.set_value("Items Details", d.name , 'tawaris_services', cur_frm.doc.total_overhead_expenses);
+	    }); 
+
+		var grand_total = 0;
+	    $.each(frm.doc.resources_details || [], function(i, d) {
+	        grand_total += flt(d.overhead_expenses);
+	    });
+	    frm.set_value("total_overhead_expenses", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details || [], function(i, d) {
+	        grand_total += flt(d.total_cost);
+	    });
+	    frm.set_value("cost", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details || [], function(i, d) {
+	        grand_total += flt(d.selling_price);
+	    });
+	    frm.set_value("selling_price", grand_total);
+
+		var grand_total = 0;
+	    $.each(frm.doc.items_details || [], function(i, d) {
+	        grand_total += flt(d.contingency);
+	    });
+	    frm.set_value("risk_contingency", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details || [], function(i, d) {
+	        grand_total += flt(d.final_selling_price);
+	    });
+	    frm.set_value("total_selling_price", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details || [], function(i, d) {
+	        grand_total += flt(d.profit);
+	    });
+	    frm.set_value("profit", grand_total);
+
 	}
 	
 });
@@ -18,7 +60,9 @@ frappe.ui.form.on('Project Quotation', {
 cur_frm.cscript.total_overhead_expenses = function(frm, cdt, cdn){
 	$.each(cur_frm.doc.items_details || [], function(i, d) {
     	frappe.model.set_value("Items Details", d.name , 'tawaris_services', cur_frm.doc.total_overhead_expenses);
-    });    
+    }); 
+    
+
 }
 
 
@@ -349,7 +393,4 @@ frappe.ui.form.on("Items Details", "profit", function(frm, cdt, cdn) {
     });
     frm.set_value("profit", grand_total);
 });
-
-
-
 
