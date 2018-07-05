@@ -209,7 +209,7 @@ class ProjectInitiation(Document):
 
             frappe.msgprint(_("""Project Planning have been created: <b><a href="#Form/Project Planning/{pp}">{pp}</a></b>""".format(pp = pp)))
         except:
-            mydoc = frappe.get_doc(Project Planning, self.project_name)
+            mydoc = frappe.get_doc("Project Planning", self.project_name)
             mydoc.project = "project": self.project_name
             mydoc.projects_list = self.projects_list
             mydoc.save(ignore_permissions = True)
