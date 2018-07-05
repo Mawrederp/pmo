@@ -10,7 +10,7 @@ from frappe.model.document import Document
 class ProjectClosure(Document):
     def on_submit(self):
         doc = frappe.get_doc("Project", self.project_name)
-    	doc.state = "Closed"
+        doc.state = "Closed"
         doc.status = "Completed"
         doc.save(ignore_permissions=True)
 
