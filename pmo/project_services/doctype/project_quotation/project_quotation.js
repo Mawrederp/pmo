@@ -41,6 +41,68 @@ frappe.ui.form.on('Project Quotation', {
 		cur_frm.set_value("markup_5", Math.round(markup_5*100));
 		cur_frm.set_value("margin_5", Math.round(margin_5*100));
 	},
+	profit_6: function (frm) {
+		var markup_6 = cur_frm.doc.profit_6/(cur_frm.doc.cost_6+cur_frm.doc.risk_contingency_6)
+		var margin_6 = cur_frm.doc.profit_6/cur_frm.doc.total_selling_price_6
+		cur_frm.set_value("markup_6", Math.round(markup_6*100));
+		cur_frm.set_value("margin_6", Math.round(margin_6*100));
+	},
+	profit_7: function (frm) {
+		var markup_7 = cur_frm.doc.profit_7/(cur_frm.doc.cost_7+cur_frm.doc.risk_contingency_7)
+		var margin_7 = cur_frm.doc.profit_7/cur_frm.doc.total_selling_price_7
+		cur_frm.set_value("markup_7", Math.round(markup_7*100));
+		cur_frm.set_value("margin_7", Math.round(margin_7*100));
+	},
+	profit_8: function (frm) {
+		var markup_8 = cur_frm.doc.profit_8/(cur_frm.doc.cost_8+cur_frm.doc.risk_contingency_8)
+		var margin_8 = cur_frm.doc.profit_8/cur_frm.doc.total_selling_price_8
+		cur_frm.set_value("markup_8", Math.round(markup_8*100));
+		cur_frm.set_value("margin_8", Math.round(margin_8*100));
+	},
+	profit_9: function (frm) {
+		var markup_9 = cur_frm.doc.profit_9/(cur_frm.doc.cost_9+cur_frm.doc.risk_contingency_9)
+		var margin_9 = cur_frm.doc.profit_9/cur_frm.doc.total_selling_price_9
+		cur_frm.set_value("markup_9", Math.round(markup_9*100));
+		cur_frm.set_value("margin_9", Math.round(margin_9*100));
+	},
+	profit_10: function (frm) {
+		var markup_10 = cur_frm.doc.profit_10/(cur_frm.doc.cost_10+cur_frm.doc.risk_contingency_10)
+		var margin_10 = cur_frm.doc.profit_10/cur_frm.doc.total_selling_price_10
+		cur_frm.set_value("markup_10", Math.round(markup_10*100));
+		cur_frm.set_value("margin_10", Math.round(margin_10*100));
+	},
+	profit_11: function (frm) {
+		var markup_11 = cur_frm.doc.profit_11/(cur_frm.doc.cost_11+cur_frm.doc.risk_contingency_11)
+		var margin_11 = cur_frm.doc.profit_11/cur_frm.doc.total_selling_price_11
+		cur_frm.set_value("markup_11", Math.round(markup_11*100));
+		cur_frm.set_value("margin_11", Math.round(margin_11*100));
+	},
+	profit_12: function (frm) {
+		var markup_12 = cur_frm.doc.profit_12/(cur_frm.doc.cost_12+cur_frm.doc.risk_contingency_12)
+		var margin_12 = cur_frm.doc.profit_12/cur_frm.doc.total_selling_price_12
+		cur_frm.set_value("markup_12", Math.round(markup_12*100));
+		cur_frm.set_value("margin_12", Math.round(margin_12*100));
+	},
+	profit_13: function (frm) {
+		var markup_13 = cur_frm.doc.profit_13/(cur_frm.doc.cost_13+cur_frm.doc.risk_contingency_13)
+		var margin_13 = cur_frm.doc.profit_13/cur_frm.doc.total_selling_price_13
+		cur_frm.set_value("markup_13", Math.round(markup_13*100));
+		cur_frm.set_value("margin_13", Math.round(margin_13*100));
+	},
+	profit_14: function (frm) {
+		var markup_14 = cur_frm.doc.profit_14/(cur_frm.doc.cost_14+cur_frm.doc.risk_contingency_14)
+		var margin_14 = cur_frm.doc.profit_14/cur_frm.doc.total_selling_price_14
+		cur_frm.set_value("markup_14", Math.round(markup_14*100));
+		cur_frm.set_value("margin_14", Math.round(margin_14*100));
+	},
+	profit_15: function (frm) {
+		var markup_15 = cur_frm.doc.profit_15/(cur_frm.doc.cost_15+cur_frm.doc.risk_contingency_15)
+		var margin_15 = cur_frm.doc.profit_15/cur_frm.doc.total_selling_price_15
+		cur_frm.set_value("markup_15", Math.round(markup_15*100));
+		cur_frm.set_value("margin_15", Math.round(margin_15*100));
+	},
+	
+	
 	validate: function (frm) {
 		$.each(cur_frm.doc.items_details || [], function (i, d) {
 			frappe.model.set_value("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses);
@@ -323,6 +385,412 @@ frappe.ui.form.on('Project Quotation', {
 	    });
 	    frm.set_value("profit_5", grand_total);
 
+
+		$.each(cur_frm.doc.items_details_6 || [], function(i, d) {
+	    	frappe.model.set_value("Items Details", d.name , 'tawaris_services', cur_frm.doc.total_overhead_expenses_6);
+		}); 
+		
+		var grand_total = 0;
+	    $.each(frm.doc.resources_details_6 || [], function(i, d) {
+	        grand_total += flt(d.overhead_expenses);
+	    });
+	    frm.set_value("total_overhead_expenses_6", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_6 || [], function(i, d) {
+	        grand_total += flt(d.total_cost);
+	    });
+	    frm.set_value("cost_6", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_6 || [], function(i, d) {
+	        grand_total += flt(d.selling_price_6);
+	    });
+	    frm.set_value("selling_price_6", grand_total);
+
+		var grand_total = 0;
+	    $.each(frm.doc.items_details_6 || [], function(i, d) {
+	        grand_total += flt(d.contingency);
+	    });
+	    frm.set_value("risk_contingency_6", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_6 || [], function(i, d) {
+	        grand_total += flt(d.final_selling_price);
+	    });
+	    frm.set_value("total_selling_price_6", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_6 || [], function(i, d) {
+	        grand_total += flt(d.profit_6);
+	    });
+	    frm.set_value("profit_6", grand_total);
+
+
+
+		$.each(cur_frm.doc.items_details_7 || [], function(i, d) {
+	    	frappe.model.set_value("Items Details", d.name , 'tawaris_services', cur_frm.doc.total_overhead_expenses_7);
+		}); 
+		
+		var grand_total = 0;
+	    $.each(frm.doc.resources_details_7 || [], function(i, d) {
+	        grand_total += flt(d.overhead_expenses);
+	    });
+	    frm.set_value("total_overhead_expenses_7", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_7 || [], function(i, d) {
+	        grand_total += flt(d.total_cost);
+	    });
+	    frm.set_value("cost_7", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_7 || [], function(i, d) {
+	        grand_total += flt(d.selling_price_7);
+	    });
+	    frm.set_value("selling_price_7", grand_total);
+
+		var grand_total = 0;
+	    $.each(frm.doc.items_details_7 || [], function(i, d) {
+	        grand_total += flt(d.contingency);
+	    });
+	    frm.set_value("risk_contingency_7", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_7 || [], function(i, d) {
+	        grand_total += flt(d.final_selling_price);
+	    });
+	    frm.set_value("total_selling_price_7", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_7 || [], function(i, d) {
+	        grand_total += flt(d.profit_7);
+	    });
+	    frm.set_value("profit_7", grand_total);
+
+
+
+		$.each(cur_frm.doc.items_details_8 || [], function(i, d) {
+	    	frappe.model.set_value("Items Details", d.name , 'tawaris_services', cur_frm.doc.total_overhead_expenses_8);
+	    }); 
+		var grand_total = 0;
+	    $.each(frm.doc.resources_details_8 || [], function(i, d) {
+	        grand_total += flt(d.overhead_expenses);
+	    });
+	    frm.set_value("total_overhead_expenses_8", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_8 || [], function(i, d) {
+	        grand_total += flt(d.total_cost);
+	    });
+	    frm.set_value("cost_8", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_8 || [], function(i, d) {
+	        grand_total += flt(d.selling_price_8);
+	    });
+	    frm.set_value("selling_price_8", grand_total);
+
+		var grand_total = 0;
+	    $.each(frm.doc.items_details_8 || [], function(i, d) {
+	        grand_total += flt(d.contingency);
+	    });
+	    frm.set_value("risk_contingency_8", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_8 || [], function(i, d) {
+	        grand_total += flt(d.final_selling_price);
+	    });
+	    frm.set_value("total_selling_price_8", grand_total);
+
+
+		$.each(cur_frm.doc.items_details_9 || [], function(i, d) {
+	    	frappe.model.set_value("Items Details", d.name , 'tawaris_services', cur_frm.doc.total_overhead_expenses_9);
+	    }); 
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_8 || [], function(i, d) {
+	        grand_total += flt(d.profit_8);
+	    });
+	    frm.set_value("profit_8", grand_total);
+
+		var grand_total = 0;
+	    $.each(frm.doc.resources_details_9 || [], function(i, d) {
+	        grand_total += flt(d.overhead_expenses);
+	    });
+	    frm.set_value("total_overhead_expenses_9", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_9 || [], function(i, d) {
+	        grand_total += flt(d.total_cost);
+	    });
+	    frm.set_value("cost_9", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_9 || [], function(i, d) {
+	        grand_total += flt(d.selling_price_9);
+	    });
+	    frm.set_value("selling_price_9", grand_total);
+
+		var grand_total = 0;
+	    $.each(frm.doc.items_details_9 || [], function(i, d) {
+	        grand_total += flt(d.contingency);
+	    });
+	    frm.set_value("risk_contingency_9", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_9 || [], function(i, d) {
+	        grand_total += flt(d.final_selling_price);
+	    });
+	    frm.set_value("total_selling_price_9", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_9 || [], function(i, d) {
+	        grand_total += flt(d.profit_9);
+	    });
+	    frm.set_value("profit_9", grand_total);
+
+
+		$.each(cur_frm.doc.items_details_10 || [], function(i, d) {
+	    	frappe.model.set_value("Items Details", d.name , 'tawaris_services', cur_frm.doc.total_overhead_expenses_10);
+	    }); 
+		var grand_total = 0;
+	    $.each(frm.doc.resources_details_10 || [], function(i, d) {
+	        grand_total += flt(d.overhead_expenses);
+	    });
+	    frm.set_value("total_overhead_expenses_10", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_10 || [], function(i, d) {
+	        grand_total += flt(d.total_cost);
+	    });
+	    frm.set_value("cost_10", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_10 || [], function(i, d) {
+	        grand_total += flt(d.selling_price_10);
+	    });
+	    frm.set_value("selling_price_10", grand_total);
+
+		var grand_total = 0;
+	    $.each(frm.doc.items_details_10 || [], function(i, d) {
+	        grand_total += flt(d.contingency);
+	    });
+	    frm.set_value("risk_contingency_10", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_10 || [], function(i, d) {
+	        grand_total += flt(d.final_selling_price);
+	    });
+	    frm.set_value("total_selling_price_10", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_10 || [], function(i, d) {
+	        grand_total += flt(d.profit_10);
+	    });
+	    frm.set_value("profit_10", grand_total);
+
+
+		$.each(cur_frm.doc.items_details_11 || [], function(i, d) {
+	    	frappe.model.set_value("Items Details", d.name , 'tawaris_services', cur_frm.doc.total_overhead_expenses_11);
+		}); 
+		
+		var grand_total = 0;
+	    $.each(frm.doc.resources_details_11 || [], function(i, d) {
+	        grand_total += flt(d.overhead_expenses);
+	    });
+	    frm.set_value("total_overhead_expenses_11", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_11 || [], function(i, d) {
+	        grand_total += flt(d.total_cost);
+	    });
+	    frm.set_value("cost_11", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_11 || [], function(i, d) {
+	        grand_total += flt(d.selling_price_11);
+	    });
+	    frm.set_value("selling_price_11", grand_total);
+
+		var grand_total = 0;
+	    $.each(frm.doc.items_details_11 || [], function(i, d) {
+	        grand_total += flt(d.contingency);
+	    });
+	    frm.set_value("risk_contingency_11", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_11 || [], function(i, d) {
+	        grand_total += flt(d.final_selling_price);
+	    });
+	    frm.set_value("total_selling_price_11", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_11 || [], function(i, d) {
+	        grand_total += flt(d.profit_11);
+	    });
+	    frm.set_value("profit_11", grand_total);
+
+
+		$.each(cur_frm.doc.items_details_12 || [], function(i, d) {
+	    	frappe.model.set_value("Items Details", d.name , 'tawaris_services', cur_frm.doc.total_overhead_expenses_12);
+		}); 
+		var grand_total = 0;
+	    $.each(frm.doc.resources_details_12 || [], function(i, d) {
+	        grand_total += flt(d.overhead_expenses);
+	    });
+	    frm.set_value("total_overhead_expenses_12", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_12 || [], function(i, d) {
+	        grand_total += flt(d.total_cost);
+	    });
+	    frm.set_value("cost_12", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_12 || [], function(i, d) {
+	        grand_total += flt(d.selling_price_12);
+	    });
+	    frm.set_value("selling_price_12", grand_total);
+
+		var grand_total = 0;
+	    $.each(frm.doc.items_details_12 || [], function(i, d) {
+	        grand_total += flt(d.contingency);
+	    });
+	    frm.set_value("risk_contingency_12", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_12 || [], function(i, d) {
+	        grand_total += flt(d.final_selling_price);
+	    });
+	    frm.set_value("total_selling_price_12", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_12 || [], function(i, d) {
+	        grand_total += flt(d.profit_12);
+	    });
+	    frm.set_value("profit_12", grand_total);
+
+
+		$.each(cur_frm.doc.items_details_13 || [], function(i, d) {
+	    	frappe.model.set_value("Items Details", d.name , 'tawaris_services', cur_frm.doc.total_overhead_expenses_13);
+		}); 
+		var grand_total = 0;
+	    $.each(frm.doc.resources_details_13 || [], function(i, d) {
+	        grand_total += flt(d.overhead_expenses);
+	    });
+	    frm.set_value("total_overhead_expenses_13", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_13 || [], function(i, d) {
+	        grand_total += flt(d.total_cost);
+	    });
+	    frm.set_value("cost_13", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_13 || [], function(i, d) {
+	        grand_total += flt(d.selling_price_13);
+	    });
+	    frm.set_value("selling_price_13", grand_total);
+
+		var grand_total = 0;
+	    $.each(frm.doc.items_details_13 || [], function(i, d) {
+	        grand_total += flt(d.contingency);
+	    });
+	    frm.set_value("risk_contingency_13", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_13 || [], function(i, d) {
+	        grand_total += flt(d.final_selling_price);
+	    });
+	    frm.set_value("total_selling_price_13", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_13 || [], function(i, d) {
+	        grand_total += flt(d.profit_13);
+	    });
+	    frm.set_value("profit_13", grand_total);
+
+		var grand_total = 0;
+	    $.each(frm.doc.resources_details_14 || [], function(i, d) {
+	        grand_total += flt(d.overhead_expenses);
+	    });
+	    frm.set_value("total_overhead_expenses_14", grand_total);
+
+
+		$.each(cur_frm.doc.items_details_14 || [], function(i, d) {
+	    	frappe.model.set_value("Items Details", d.name , 'tawaris_services', cur_frm.doc.total_overhead_expenses_14);
+		}); 
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_14 || [], function(i, d) {
+	        grand_total += flt(d.total_cost);
+	    });
+	    frm.set_value("cost_14", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_14 || [], function(i, d) {
+	        grand_total += flt(d.selling_price_14);
+	    });
+	    frm.set_value("selling_price_14", grand_total);
+
+		var grand_total = 0;
+	    $.each(frm.doc.items_details_14 || [], function(i, d) {
+	        grand_total += flt(d.contingency);
+	    });
+	    frm.set_value("risk_contingency_14", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_14 || [], function(i, d) {
+	        grand_total += flt(d.final_selling_price);
+	    });
+	    frm.set_value("total_selling_price_14", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_14 || [], function(i, d) {
+	        grand_total += flt(d.profit_14);
+	    });
+	    frm.set_value("profit_14", grand_total);
+
+
+		$.each(cur_frm.doc.items_details_15 || [], function(i, d) {
+	    	frappe.model.set_value("Items Details", d.name , 'tawaris_services', cur_frm.doc.total_overhead_expenses_15);
+		}); 
+		var grand_total = 0;
+	    $.each(frm.doc.resources_details_15 || [], function(i, d) {
+	        grand_total += flt(d.overhead_expenses);
+	    });
+	    frm.set_value("total_overhead_expenses_15", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_15 || [], function(i, d) {
+	        grand_total += flt(d.total_cost);
+	    });
+	    frm.set_value("cost_15", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_15 || [], function(i, d) {
+	        grand_total += flt(d.selling_price_15);
+	    });
+	    frm.set_value("selling_price_15", grand_total);
+
+		var grand_total = 0;
+	    $.each(frm.doc.items_details_15 || [], function(i, d) {
+	        grand_total += flt(d.contingency);
+	    });
+	    frm.set_value("risk_contingency_15", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_15 || [], function(i, d) {
+	        grand_total += flt(d.final_selling_price);
+	    });
+	    frm.set_value("total_selling_price_15", grand_total);
+
+	    var grand_total = 0;
+	    $.each(frm.doc.items_details_15 || [], function(i, d) {
+	        grand_total += flt(d.profit_15);
+	    });
+	    frm.set_value("profit_15", grand_total);
+
+		
 	}
 
 });
@@ -433,6 +901,66 @@ frappe.ui.form.on('Items Details', {
 			{
 				if (cur_frm.doc.total_overhead_expenses_5) {
 					frappe.model.set_value(cdt, cdn, "tawaris_services", cur_frm.doc.total_overhead_expenses_5);
+				}
+			}
+		} else if (frm.selected_doc.parentfield == "items_details_6") {
+			{
+				if (cur_frm.doc.total_overhead_expenses_6) {
+					frappe.model.set_value(cdt, cdn, "tawaris_services", cur_frm.doc.total_overhead_expenses_6);
+				}
+			}
+		} else if (frm.selected_doc.parentfield == "items_details_7") {
+			{
+				if (cur_frm.doc.total_overhead_expenses_7) {
+					frappe.model.set_value(cdt, cdn, "tawaris_services", cur_frm.doc.total_overhead_expenses_7);
+				}
+			}
+		} else if (frm.selected_doc.parentfield == "items_details_8") {
+			{
+				if (cur_frm.doc.total_overhead_expenses_8) {
+					frappe.model.set_value(cdt, cdn, "tawaris_services", cur_frm.doc.total_overhead_expenses_8);
+				}
+			}
+		} else if (frm.selected_doc.parentfield == "items_details_9") {
+			{
+				if (cur_frm.doc.total_overhead_expenses_9) {
+					frappe.model.set_value(cdt, cdn, "tawaris_services", cur_frm.doc.total_overhead_expenses_9);
+				}
+			}
+		} else if (frm.selected_doc.parentfield == "items_details_10") {
+			{
+				if (cur_frm.doc.total_overhead_expenses_10) {
+					frappe.model.set_value(cdt, cdn, "tawaris_services", cur_frm.doc.total_overhead_expenses_10);
+				}
+			}
+		} else if (frm.selected_doc.parentfield == "items_details_11") {
+			{
+				if (cur_frm.doc.total_overhead_expenses_11) {
+					frappe.model.set_value(cdt, cdn, "tawaris_services", cur_frm.doc.total_overhead_expenses_11);
+				}
+			}
+		} else if (frm.selected_doc.parentfield == "items_details_12") {
+			{
+				if (cur_frm.doc.total_overhead_expenses_12) {
+					frappe.model.set_value(cdt, cdn, "tawaris_services", cur_frm.doc.total_overhead_expenses_12);
+				}
+			}
+		} else if (frm.selected_doc.parentfield == "items_details_13") {
+			{
+				if (cur_frm.doc.total_overhead_expenses_13) {
+					frappe.model.set_value(cdt, cdn, "tawaris_services", cur_frm.doc.total_overhead_expenses_13);
+				}
+			}
+		} else if (frm.selected_doc.parentfield == "items_details_14") {
+			{
+				if (cur_frm.doc.total_overhead_expenses_14) {
+					frappe.model.set_value(cdt, cdn, "tawaris_services", cur_frm.doc.total_overhead_expenses_14);
+				}
+			}
+		} else if (frm.selected_doc.parentfield == "items_details_15") {
+			{
+				if (cur_frm.doc.total_overhead_expenses_15) {
+					frappe.model.set_value(cdt, cdn, "tawaris_services", cur_frm.doc.total_overhead_expenses_15);
 				}
 			}
 		}
@@ -1054,4 +1582,684 @@ frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
 		grand_total += flt(d.profit);
 	});
 	frm.set_value("profit_5", grand_total);
+});
+
+
+
+
+cur_frm.set_query("resources", "resources_details_6", function (doc, cdt, cdn) {
+	var d = locals[cdt][cdn];
+	return {
+		filters: [
+			['Item', 'item_group', '=', d.group_code]
+		]
+	}
+});
+cur_frm.cscript.total_overhead_expenses_6 = function (frm, cdt, cdn) {
+	$.each(cur_frm.doc.items_details_6 || [], function (i, d) {
+		frappe.model.set_value("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_6);
+	});
+
+
+}
+frappe.ui.form.on("Resources Details", "overhead_expenses", function (frm, cdt, cdn) {
+	var grand_total = 0;
+	$.each(frm.doc.resources_details_6 || [], function (i, d) {
+		grand_total += flt(d.overhead_expenses);
+	});
+	frm.set_value("total_overhead_expenses_6", grand_total);
+});
+frappe.ui.form.on("Items Details", "total_cost", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_6 || [], function (i, d) {
+		grand_total += flt(d.total_cost);
+	});
+	frm.set_value("cost_6", grand_total);
+});
+
+frappe.ui.form.on("Items Details", "selling_price", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_6 || [], function (i, d) {
+		grand_total += flt(d.selling_price);
+	});
+	frm.set_value("selling_price_6", grand_total);
+});
+
+frappe.ui.form.on("Items Details", "contingency", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_6 || [], function (i, d) {
+		grand_total += flt(d.contingency);
+	});
+	frm.set_value("risk_contingency_6", grand_total);
+});
+frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_6 || [], function (i, d) {
+		grand_total += flt(d.final_selling_price);
+	});
+	frm.set_value("total_selling_price_6", grand_total);
+});
+frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_6 || [], function (i, d) {
+		grand_total += flt(d.profit);
+	});
+	frm.set_value("profit_6", grand_total);
+});
+
+
+
+
+cur_frm.set_query("resources", "resources_details_7", function (doc, cdt, cdn) {
+	var d = locals[cdt][cdn];
+	return {
+		filters: [
+			['Item', 'item_group', '=', d.group_code]
+		]
+	}
+});
+cur_frm.cscript.total_overhead_expenses_7 = function (frm, cdt, cdn) {
+	$.each(cur_frm.doc.items_details_7 || [], function (i, d) {
+		frappe.model.set_value("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_7);
+	});
+
+
+}
+frappe.ui.form.on("Resources Details", "overhead_expenses", function (frm, cdt, cdn) {
+	var grand_total = 0;
+	$.each(frm.doc.resources_details_7 || [], function (i, d) {
+		grand_total += flt(d.overhead_expenses);
+	});
+	frm.set_value("total_overhead_expenses_7", grand_total);
+});
+frappe.ui.form.on("Items Details", "total_cost", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_7 || [], function (i, d) {
+		grand_total += flt(d.total_cost);
+	});
+	frm.set_value("cost_7", grand_total);
+});
+
+frappe.ui.form.on("Items Details", "selling_price", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_7 || [], function (i, d) {
+		grand_total += flt(d.selling_price);
+	});
+	frm.set_value("selling_price_7", grand_total);
+});
+
+frappe.ui.form.on("Items Details", "contingency", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_7 || [], function (i, d) {
+		grand_total += flt(d.contingency);
+	});
+	frm.set_value("risk_contingency_7", grand_total);
+});
+frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_7 || [], function (i, d) {
+		grand_total += flt(d.final_selling_price);
+	});
+	frm.set_value("total_selling_price_7", grand_total);
+});
+frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_7 || [], function (i, d) {
+		grand_total += flt(d.profit);
+	});
+	frm.set_value("profit_7", grand_total);
+});
+
+
+
+
+cur_frm.set_query("resources", "resources_details_8", function (doc, cdt, cdn) {
+	var d = locals[cdt][cdn];
+	return {
+		filters: [
+			['Item', 'item_group', '=', d.group_code]
+		]
+	}
+});
+cur_frm.cscript.total_overhead_expenses_8 = function (frm, cdt, cdn) {
+	$.each(cur_frm.doc.items_details_8 || [], function (i, d) {
+		frappe.model.set_value("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_8);
+	});
+
+
+}
+frappe.ui.form.on("Resources Details", "overhead_expenses", function (frm, cdt, cdn) {
+	var grand_total = 0;
+	$.each(frm.doc.resources_details_8 || [], function (i, d) {
+		grand_total += flt(d.overhead_expenses);
+	});
+	frm.set_value("total_overhead_expenses_8", grand_total);
+});
+frappe.ui.form.on("Items Details", "total_cost", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_8 || [], function (i, d) {
+		grand_total += flt(d.total_cost);
+	});
+	frm.set_value("cost_8", grand_total);
+});
+
+frappe.ui.form.on("Items Details", "selling_price", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_8 || [], function (i, d) {
+		grand_total += flt(d.selling_price);
+	});
+	frm.set_value("selling_price_8", grand_total);
+});
+
+frappe.ui.form.on("Items Details", "contingency", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_8 || [], function (i, d) {
+		grand_total += flt(d.contingency);
+	});
+	frm.set_value("risk_contingency_8", grand_total);
+});
+frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_8 || [], function (i, d) {
+		grand_total += flt(d.final_selling_price);
+	});
+	frm.set_value("total_selling_price_8", grand_total);
+});
+frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_8 || [], function (i, d) {
+		grand_total += flt(d.profit);
+	});
+	frm.set_value("profit_8", grand_total);
+});
+
+
+
+
+cur_frm.set_query("resources", "resources_details_9", function (doc, cdt, cdn) {
+	var d = locals[cdt][cdn];
+	return {
+		filters: [
+			['Item', 'item_group', '=', d.group_code]
+		]
+	}
+});
+cur_frm.cscript.total_overhead_expenses_9 = function (frm, cdt, cdn) {
+	$.each(cur_frm.doc.items_details_9 || [], function (i, d) {
+		frappe.model.set_value("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_9);
+	});
+
+
+}
+frappe.ui.form.on("Resources Details", "overhead_expenses", function (frm, cdt, cdn) {
+	var grand_total = 0;
+	$.each(frm.doc.resources_details_9 || [], function (i, d) {
+		grand_total += flt(d.overhead_expenses);
+	});
+	frm.set_value("total_overhead_expenses_9", grand_total);
+});
+frappe.ui.form.on("Items Details", "total_cost", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_9 || [], function (i, d) {
+		grand_total += flt(d.total_cost);
+	});
+	frm.set_value("cost_9", grand_total);
+});
+
+frappe.ui.form.on("Items Details", "selling_price", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_9 || [], function (i, d) {
+		grand_total += flt(d.selling_price);
+	});
+	frm.set_value("selling_price_9", grand_total);
+});
+
+frappe.ui.form.on("Items Details", "contingency", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_9 || [], function (i, d) {
+		grand_total += flt(d.contingency);
+	});
+	frm.set_value("risk_contingency_9", grand_total);
+});
+frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_9 || [], function (i, d) {
+		grand_total += flt(d.final_selling_price);
+	});
+	frm.set_value("total_selling_price_9", grand_total);
+});
+frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_9 || [], function (i, d) {
+		grand_total += flt(d.profit);
+	});
+	frm.set_value("profit_9", grand_total);
+});
+
+
+
+
+cur_frm.set_query("resources", "resources_details_10", function (doc, cdt, cdn) {
+	var d = locals[cdt][cdn];
+	return {
+		filters: [
+			['Item', 'item_group', '=', d.group_code]
+		]
+	}
+});
+cur_frm.cscript.total_overhead_expenses_10 = function (frm, cdt, cdn) {
+	$.each(cur_frm.doc.items_details_10 || [], function (i, d) {
+		frappe.model.set_value("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_10);
+	});
+
+
+}
+frappe.ui.form.on("Resources Details", "overhead_expenses", function (frm, cdt, cdn) {
+	var grand_total = 0;
+	$.each(frm.doc.resources_details_10 || [], function (i, d) {
+		grand_total += flt(d.overhead_expenses);
+	});
+	frm.set_value("total_overhead_expenses_10", grand_total);
+});
+frappe.ui.form.on("Items Details", "total_cost", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_10 || [], function (i, d) {
+		grand_total += flt(d.total_cost);
+	});
+	frm.set_value("cost_10", grand_total);
+});
+
+frappe.ui.form.on("Items Details", "selling_price", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_10 || [], function (i, d) {
+		grand_total += flt(d.selling_price);
+	});
+	frm.set_value("selling_price_10", grand_total);
+});
+
+frappe.ui.form.on("Items Details", "contingency", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_10 || [], function (i, d) {
+		grand_total += flt(d.contingency);
+	});
+	frm.set_value("risk_contingency_10", grand_total);
+});
+frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_10 || [], function (i, d) {
+		grand_total += flt(d.final_selling_price);
+	});
+	frm.set_value("total_selling_price_10", grand_total);
+});
+frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_10 || [], function (i, d) {
+		grand_total += flt(d.profit);
+	});
+	frm.set_value("profit_10", grand_total);
+});
+
+
+
+
+cur_frm.set_query("resources", "resources_details_11", function (doc, cdt, cdn) {
+	var d = locals[cdt][cdn];
+	return {
+		filters: [
+			['Item', 'item_group', '=', d.group_code]
+		]
+	}
+});
+cur_frm.cscript.total_overhead_expenses_11 = function (frm, cdt, cdn) {
+	$.each(cur_frm.doc.items_details_11 || [], function (i, d) {
+		frappe.model.set_value("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_11);
+	});
+
+
+}
+frappe.ui.form.on("Resources Details", "overhead_expenses", function (frm, cdt, cdn) {
+	var grand_total = 0;
+	$.each(frm.doc.resources_details_11 || [], function (i, d) {
+		grand_total += flt(d.overhead_expenses);
+	});
+	frm.set_value("total_overhead_expenses_11", grand_total);
+});
+frappe.ui.form.on("Items Details", "total_cost", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_11 || [], function (i, d) {
+		grand_total += flt(d.total_cost);
+	});
+	frm.set_value("cost_11", grand_total);
+});
+
+frappe.ui.form.on("Items Details", "selling_price", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_11 || [], function (i, d) {
+		grand_total += flt(d.selling_price);
+	});
+	frm.set_value("selling_price_11", grand_total);
+});
+
+frappe.ui.form.on("Items Details", "contingency", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_11 || [], function (i, d) {
+		grand_total += flt(d.contingency);
+	});
+	frm.set_value("risk_contingency_11", grand_total);
+});
+frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_11 || [], function (i, d) {
+		grand_total += flt(d.final_selling_price);
+	});
+	frm.set_value("total_selling_price_11", grand_total);
+});
+frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_11 || [], function (i, d) {
+		grand_total += flt(d.profit);
+	});
+	frm.set_value("profit_11", grand_total);
+});
+
+
+
+
+cur_frm.set_query("resources", "resources_details_12", function (doc, cdt, cdn) {
+	var d = locals[cdt][cdn];
+	return {
+		filters: [
+			['Item', 'item_group', '=', d.group_code]
+		]
+	}
+});
+cur_frm.cscript.total_overhead_expenses_12 = function (frm, cdt, cdn) {
+	$.each(cur_frm.doc.items_details_12 || [], function (i, d) {
+		frappe.model.set_value("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_12);
+	});
+
+
+}
+frappe.ui.form.on("Resources Details", "overhead_expenses", function (frm, cdt, cdn) {
+	var grand_total = 0;
+	$.each(frm.doc.resources_details_12 || [], function (i, d) {
+		grand_total += flt(d.overhead_expenses);
+	});
+	frm.set_value("total_overhead_expenses_12", grand_total);
+});
+frappe.ui.form.on("Items Details", "total_cost", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_12 || [], function (i, d) {
+		grand_total += flt(d.total_cost);
+	});
+	frm.set_value("cost_12", grand_total);
+});
+
+frappe.ui.form.on("Items Details", "selling_price", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_12 || [], function (i, d) {
+		grand_total += flt(d.selling_price);
+	});
+	frm.set_value("selling_price_12", grand_total);
+});
+
+frappe.ui.form.on("Items Details", "contingency", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_12 || [], function (i, d) {
+		grand_total += flt(d.contingency);
+	});
+	frm.set_value("risk_contingency_12", grand_total);
+});
+frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_12 || [], function (i, d) {
+		grand_total += flt(d.final_selling_price);
+	});
+	frm.set_value("total_selling_price_12", grand_total);
+});
+frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_12 || [], function (i, d) {
+		grand_total += flt(d.profit);
+	});
+	frm.set_value("profit_12", grand_total);
+});
+
+
+
+
+cur_frm.set_query("resources", "resources_details_13", function (doc, cdt, cdn) {
+	var d = locals[cdt][cdn];
+	return {
+		filters: [
+			['Item', 'item_group', '=', d.group_code]
+		]
+	}
+});
+cur_frm.cscript.total_overhead_expenses_13 = function (frm, cdt, cdn) {
+	$.each(cur_frm.doc.items_details_13 || [], function (i, d) {
+		frappe.model.set_value("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_13);
+	});
+
+
+}
+frappe.ui.form.on("Resources Details", "overhead_expenses", function (frm, cdt, cdn) {
+	var grand_total = 0;
+	$.each(frm.doc.resources_details_13 || [], function (i, d) {
+		grand_total += flt(d.overhead_expenses);
+	});
+	frm.set_value("total_overhead_expenses_13", grand_total);
+});
+frappe.ui.form.on("Items Details", "total_cost", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_13 || [], function (i, d) {
+		grand_total += flt(d.total_cost);
+	});
+	frm.set_value("cost_13", grand_total);
+});
+
+frappe.ui.form.on("Items Details", "selling_price", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_13 || [], function (i, d) {
+		grand_total += flt(d.selling_price);
+	});
+	frm.set_value("selling_price_13", grand_total);
+});
+
+frappe.ui.form.on("Items Details", "contingency", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_13 || [], function (i, d) {
+		grand_total += flt(d.contingency);
+	});
+	frm.set_value("risk_contingency_13", grand_total);
+});
+frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_13 || [], function (i, d) {
+		grand_total += flt(d.final_selling_price);
+	});
+	frm.set_value("total_selling_price_13", grand_total);
+});
+frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_13 || [], function (i, d) {
+		grand_total += flt(d.profit);
+	});
+	frm.set_value("profit_13", grand_total);
+});
+
+
+
+
+cur_frm.set_query("resources", "resources_details_14", function (doc, cdt, cdn) {
+	var d = locals[cdt][cdn];
+	return {
+		filters: [
+			['Item', 'item_group', '=', d.group_code]
+		]
+	}
+});
+cur_frm.cscript.total_overhead_expenses_14 = function (frm, cdt, cdn) {
+	$.each(cur_frm.doc.items_details_14 || [], function (i, d) {
+		frappe.model.set_value("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_14);
+	});
+
+
+}
+frappe.ui.form.on("Resources Details", "overhead_expenses", function (frm, cdt, cdn) {
+	var grand_total = 0;
+	$.each(frm.doc.resources_details_14 || [], function (i, d) {
+		grand_total += flt(d.overhead_expenses);
+	});
+	frm.set_value("total_overhead_expenses_14", grand_total);
+});
+frappe.ui.form.on("Items Details", "total_cost", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_14 || [], function (i, d) {
+		grand_total += flt(d.total_cost);
+	});
+	frm.set_value("cost_14", grand_total);
+});
+
+frappe.ui.form.on("Items Details", "selling_price", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_14 || [], function (i, d) {
+		grand_total += flt(d.selling_price);
+	});
+	frm.set_value("selling_price_14", grand_total);
+});
+
+frappe.ui.form.on("Items Details", "contingency", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_14 || [], function (i, d) {
+		grand_total += flt(d.contingency);
+	});
+	frm.set_value("risk_contingency_14", grand_total);
+});
+frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_14 || [], function (i, d) {
+		grand_total += flt(d.final_selling_price);
+	});
+	frm.set_value("total_selling_price_14", grand_total);
+});
+frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_14 || [], function (i, d) {
+		grand_total += flt(d.profit);
+	});
+	frm.set_value("profit_14", grand_total);
+});
+
+
+
+
+cur_frm.set_query("resources", "resources_details_15", function (doc, cdt, cdn) {
+	var d = locals[cdt][cdn];
+	return {
+		filters: [
+			['Item', 'item_group', '=', d.group_code]
+		]
+	}
+});
+cur_frm.cscript.total_overhead_expenses_15 = function (frm, cdt, cdn) {
+	$.each(cur_frm.doc.items_details_15 || [], function (i, d) {
+		frappe.model.set_value("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_15);
+	});
+
+
+}
+frappe.ui.form.on("Resources Details", "overhead_expenses", function (frm, cdt, cdn) {
+	var grand_total = 0;
+	$.each(frm.doc.resources_details_15 || [], function (i, d) {
+		grand_total += flt(d.overhead_expenses);
+	});
+	frm.set_value("total_overhead_expenses_15", grand_total);
+});
+frappe.ui.form.on("Items Details", "total_cost", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_15 || [], function (i, d) {
+		grand_total += flt(d.total_cost);
+	});
+	frm.set_value("cost_15", grand_total);
+});
+
+frappe.ui.form.on("Items Details", "selling_price", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_15 || [], function (i, d) {
+		grand_total += flt(d.selling_price);
+	});
+	frm.set_value("selling_price_15", grand_total);
+});
+
+frappe.ui.form.on("Items Details", "contingency", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_15 || [], function (i, d) {
+		grand_total += flt(d.contingency);
+	});
+	frm.set_value("risk_contingency_15", grand_total);
+});
+frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_15 || [], function (i, d) {
+		grand_total += flt(d.final_selling_price);
+	});
+	frm.set_value("total_selling_price_15", grand_total);
+});
+frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
+	// code for calculate total and set on parent field.
+	var grand_total = 0;
+	$.each(frm.doc.items_details_15 || [], function (i, d) {
+		grand_total += flt(d.profit);
+	});
+	frm.set_value("profit_15", grand_total);
 });
