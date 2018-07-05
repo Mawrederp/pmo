@@ -214,6 +214,7 @@ class ProjectInitiation(Document):
             mydoc.projects_list = self.projects_list
             mydoc.save(ignore_permissions = True)
             frappe.db.commit()
+            pp = frappe.get_value("Project Planning", filters = {"project_name": self.project_name}, fieldname = "name")            
             frappe.msgprint(_("""Project Planning have been updated: <b><a href="#Form/Project Planning/{pp}">{pp}</a></b>""".format(pp = pp)))
 
 
