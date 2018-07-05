@@ -195,18 +195,27 @@ class ProjectInitiation(Document):
     #     frappe.msgprint(_("""Project Planning have been created: <b><a href="#Form/Project Planning/{pp}">{pp}</a></b>""".format(pp = pp)))
 
     def make_project_planning(self):
-        frappe.get_doc({
-            "doctype": "Project Planning",
-            "project_name": self.project_name,
-            "project": self.project_name,
-            "projects_list": self.projects_list
-        }).save(ignore_permissions = True)
+        try:
+            frappe.get_doc({
+                "doctype": "Project Planning",
+                "project_name": self.project_name,
+                "project": self.project_name,
+                "projects_list": self.projects_list
+            }).save(ignore_permissions = True)
 
-        frappe.db.commit()
+            frappe.db.commit()
 
-        pp = frappe.get_value("Project Planning", filters = {"project_name": self.project_name}, fieldname = "name")
+            pp = frappe.get_value("Project Planning", filters = {"project_name": self.project_name}, fieldname = "name")
 
-        frappe.msgprint(_("""Project Planning have been created: <b><a href="#Form/Project Planning/{pp}">{pp}</a></b>""".format(pp = pp)))
+            frappe.msgprint(_("""Project Planning have been created: <b><a href="#Form/Project Planning/{pp}">{pp}</a></b>""".format(pp = pp)))
+        except:
+            mydoc = frappe.get_doc(Project Planning, self.project_name)
+            mydoc.project = "project": self.project_name
+            mydoc.projects_list = self.projects_list
+            mydoc.save(ignore_permissions = True)
+            frappe.db.commit()
+            frappe.msgprint(_("""Project Planning have been updated: <b><a href="#Form/Project Planning/{pp}">{pp}</a></b>""".format(pp = pp)))
+
 
 
     def existing_project_planning(self):
