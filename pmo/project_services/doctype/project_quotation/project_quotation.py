@@ -8,7 +8,81 @@ from frappe.model.document import Document
 
 
 class ProjectQuotation(Document):
-	pass
+	def before_save(self):
+		if(not self.get("__islocal")):
+			create_general_pricing(self)
+
+	def after_insert(self):
+		create_general_pricing(self)
+
+
+def create_general_pricing(self):
+	doc = ""
+	exists = False
+
+	field_array = ["cost","selling_price","risk_contingency", "total_selling_price",
+				   "profit", "markup", "margin"]
+	final_totals_list = [0] * 7
+
+	if frappe.db.exists("General Pricing", {"project_q": self.name}):
+		exists = True
+		gp = frappe.db.sql(
+			"""Select name from `tabGeneral Pricing` where project_q = '{0}'""".format(self.name))
+		doc = frappe.get_doc("General Pricing", gp[0][0])
+	else:
+		doc = frappe.new_doc("General Pricing")
+
+	doc.project_quotation = []
+	
+	for i in range(0,15):
+		print(i)
+		print("**************------------------------*************************")
+		if (((getattr(self, field_array[0]+"_"+str(i) ) == 0) 
+		and (getattr(self, field_array[1]+"_"+str(i))== 0)
+		and (getattr(self, field_array[3]+"_"+str(i))== 0)
+		and (getattr(self, field_array[4]+"_"+str(i))== 0))):
+			pass 
+		else:
+			for j in range(len(final_totals_list)):
+					if (getattr(self, field_array[j]+"_"+str(i))):
+						final_totals_list[j] += float(
+							str(getattr(self, field_array[j]+"_"+str(i))))
+			doc.append("project_quotation", {"items": getattr(self, "section_name"+"_"+str(i)),
+												"total_cost_price": getattr(self, field_array[0]+"_"+str(i)),
+												field_array[1]: getattr(self, field_array[1]+"_"+str(i)),
+												field_array[2]: getattr(self, field_array[2]+"_"+str(i)),
+												field_array[3]: getattr(self, field_array[3]+"_"+str(i)),
+												"total_profit": getattr(self, field_array[4]+"_"+str(i)),
+												"total_markup": getattr(self, field_array[5]+"_"+str(i)),
+												"total_margin": getattr(self, field_array[6]+"_"+str(i))
+												})
+	
+	doc.total_cost_price = final_totals_list[0]
+	doc.selling_price = final_totals_list[1]
+	doc.risk_contingency = final_totals_list[2]
+	doc.total_selling_price = final_totals_list[3]
+	doc.profit_amount = final_totals_list[4]
+	doc.total_markup = final_totals_list[5]
+	doc.total_margin = final_totals_list[6]
+
+	#Calculate with risk as A profit
+	doc.risk_contingency_risk = (final_totals_list[2] / final_totals_list[3])*100
+	doc.profit_amount_risk = final_totals_list[2] + final_totals_list[4]
+	doc.total_markup_risk = (final_totals_list[2] + final_totals_list[4]) / final_totals_list[0]
+	doc.total_markup_risk = (final_totals_list[2] + final_totals_list[4]) / final_totals_list[1]
+
+
+
+	if exists:
+		doc.save(ignore_permissions=True)
+		frappe.msgprint(
+			"<a href='desk#Form/General Pricing/{0}' >{0}</a>".format(doc.name) + " is updated")
+	else:
+		doc.project_q = self.name
+		doc.insert(ignore_permissions=True)
+		frappe.msgprint(
+			"<a href='desk#Form/General Pricing/{0}' >{0}</a>".format(doc.name) + " is inserted")
+
 
 
 
