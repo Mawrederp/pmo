@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 import frappe
 from frappe import _
 from frappe.model.document import Document
+import json
 
 class ProjectInitiation(Document):
     def validate(self):
@@ -19,22 +20,14 @@ class ProjectInitiation(Document):
                 self.docstatus = 1
                 self.docstatus = 2
 
-        # doc = frappe.db.sql("select data from `tabVersion` where ref_doctype='Project Initiation' and docname='tst omar proj' and name='d3ff4c08cb' order by creation desc ")
-        # print '************************'
-        # print doc[0][0]
-        # print '************************'
-        # self.cur_validate_emp()
+        doc = frappe.db.sql("select data from `tabVersion` where ref_doctype='Project Initiation' and docname='{0}' order by creation desc limit 1".format(self.name))
+        for i in range(len(json.loads(doc[0][0])['changed'])):
+            edit_property = json.loads(doc[0][0])['changed'][i][0]
+            if edit_property=='workflow_state' or edit_property=='overall_project_markup' or edit_property=='overall_project_margin':
+                pass
+            else:
+                self.cur_validate_emp()
 
-    # def validate_emp(self):
-    #     if self.get('__islocal'):
-    #         if self.project_coordinator and self.project_manager:
-    #             self.workflow_state = "Pending(PC+PM)"
-    #         elif self.project_coordinator and self.senior_project_manager:
-    #             self.workflow_state = "Pending(PC+SPM)"
-    #         elif self.project_manager:
-    #             self.workflow_state = "Pending(PM)"
-    #         elif self.senior_project_manager:
-    #             self.workflow_state = "Pending(SPM)"
 
     def cur_validate_emp(self):
         if self.project_coordinator:

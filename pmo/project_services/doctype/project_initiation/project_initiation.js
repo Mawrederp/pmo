@@ -167,6 +167,13 @@ frappe.ui.form.on('Project Initiation', {
 
 	},
 	validate: function(frm){
+
+		// $("div.btn-group.actions-btn-group.open").find("a.grey-link").each(function() {
+		// 	// if($(this).html())
+		// 	console.log( $(this).html() );
+		// });
+
+
 		cur_frm.refresh_fields(["workflow_state"]);
 		
 		grand_total = 0;
