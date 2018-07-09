@@ -384,3 +384,24 @@ frappe.ui.form.on('Project Costing Schedule', {
     }
 
 });
+
+
+
+//Including General Pricing items on the Project Initiation.
+frappe.ui.form.on("Project Initiation", "general_pricing", function(frm) {
+    cur_frm.doc.project_financial_detail = []
+    frappe.model.with_doc("General Pricing", frm.doc.general_pricing, function() {
+        var tabletransfer= frappe.model.get_doc("General Pricing", frm.doc.general_pricing)
+        $.each(tabletransfer.project_quotation, function(index, row){
+            d = frm.add_child("project_financial_detail");
+            d.scope_item = row.items;
+            d.selling_price = row.selling_price;
+            d.cost_price = row.total_cost_price;
+            d.additions_value = row.risk_contingency;
+            d.final_selling_price = row.total_selling_price;
+            frm.refresh_field("project_financial_detail");
+        });
+    })
+});
+
+
