@@ -2,7 +2,7 @@
 # Copyright (c) 2018, s and contributors
 # For license information, please see license.txt
 
-from __future__ import unicode_literals
+from __future__ import unicode_literals,division
 import frappe
 from frappe.model.document import Document
 
@@ -66,10 +66,11 @@ def create_general_pricing(self):
 	doc.total_margin = final_totals_list[6]
 
 	#Calculate with risk as A profit
-	doc.risk_contingency_risk = (final_totals_list[2] / final_totals_list[3])*100
-	doc.profit_amount_risk = final_totals_list[2] + final_totals_list[4]
-	doc.total_markup_risk = (final_totals_list[2] + final_totals_list[4]) / final_totals_list[0]
-	doc.total_markup_risk = (final_totals_list[2] + final_totals_list[4]) / final_totals_list[1]
+	if final_totals_list[3]!=0:
+		doc.risk_contingency_risk = (final_totals_list[2] / final_totals_list[3])*100
+		doc.profit_amount_risk = final_totals_list[2] + final_totals_list[4]
+		doc.total_markup_risk = (final_totals_list[2] + final_totals_list[4]) / final_totals_list[0]
+		doc.total_markup_risk = (final_totals_list[2] + final_totals_list[4]) / final_totals_list[1]
 
 
 
@@ -79,6 +80,7 @@ def create_general_pricing(self):
 			"<a href='desk#Form/General Pricing/{0}' >{0}</a>".format(doc.name) + " is updated")
 	else:
 		doc.project_q = self.name
+		doc.project_qname = self.name
 		doc.insert(ignore_permissions=True)
 		frappe.msgprint(
 			"<a href='desk#Form/General Pricing/{0}' >{0}</a>".format(doc.name) + " is inserted")
