@@ -771,8 +771,6 @@ cur_frm.cscript.total_overhead_expenses_0 = function (frm, cdt, cdn) {
 	$.each(cur_frm.doc.items_details_0 || [], function (i, d) {
 		frappe.model.set_value("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_0);
 	});
-
-
 }
 
 frappe.ui.form.on('Resources Details', {

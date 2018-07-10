@@ -212,6 +212,18 @@ frappe.ui.form.on('Project Initiation', {
 
 });
 
+cur_frm.cscript.custom_general_pricing = function(frm) {
+    total_cost_price = 0;
+    final_selling_price = 0;
+    $.each(cur_frm.doc.project_financial_detail || [], function(i, d) {
+        total_cost_price += flt(d.cost_price);
+        final_selling_price += flt(d.final_selling_price);
+    });
+    cur_frm.set_value("total_cost_price", total_cost_price);
+    cur_frm.set_value("total_final_selling_price", final_selling_price);
+
+}
+
 
 frappe.ui.form.on("Project Financial Details", "cost_price", function(frm, cdt, cdn) {
     // code for calculate total and set on parent field.
@@ -386,7 +398,6 @@ frappe.ui.form.on('Project Costing Schedule', {
 });
 
 
-
 //Including General Pricing items on the Project Initiation.
 frappe.ui.form.on("Project Initiation", "general_pricing", function(frm) {
     cur_frm.doc.project_financial_detail = []
@@ -403,5 +414,4 @@ frappe.ui.form.on("Project Initiation", "general_pricing", function(frm) {
         });
     })
 });
-
 
