@@ -767,6 +767,16 @@ cur_frm.set_query("resources", "resources_details_0", function (doc, cdt, cdn) {
 });
 
 
+cur_frm.set_query("group_code", "resources_details_0", function (doc, cdt, cdn) {
+	var d = locals[cdt][cdn];
+	return {
+		filters: [
+			['Item Group', 'parent_item_group', '=', 'Project']
+		]
+	}
+});
+
+
 cur_frm.cscript.total_overhead_expenses_0 = function (frm, cdt, cdn) {
 	$.each(cur_frm.doc.items_details_0 || [], function (i, d) {
 		frappe.model.set_value("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_0);
