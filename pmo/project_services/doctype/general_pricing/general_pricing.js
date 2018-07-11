@@ -3,10 +3,15 @@
 
 frappe.ui.form.on('General Pricing', {
     vat_percent: function(frm){
-        cur_frm.set_value("vat_value",(cur_frm.doc.selling_price * cur_frm.doc.vat_percent) /100)
-        cur_frm.set_value("selling_price_risk",cur_frm.doc.vat_value + cur_frm.doc.selling_price)
-
-        
-        
+        cur_frm.set_value("vat_value",(cur_frm.doc.total_selling_price * cur_frm.doc.vat_percent) /100)
+        cur_frm.set_value("selling_price_risk",cur_frm.doc.vat_value + cur_frm.doc.total_selling_price)
+    },
+    total_cost_price: function(frm){
+        var total = cur_frm.doc.profit_amount/(cur_frm.doc.total_cost_price+cur_frm.doc.risk_contingency)
+        cur_frm.set_value("total_markup", total)
+    },
+    total_selling_price: function(frm){
+        var total = cur_frm.doc.profit_amount/total_selling_price
+        cur_frm.set_value("total_margin", total)
     }
 });
