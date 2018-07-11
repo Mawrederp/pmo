@@ -144,6 +144,7 @@ frappe.ui.form.on('Project Initiation', {
 
     	total_overall_profit = flt(cur_frm.doc.total_final_selling_price) - flt(cur_frm.doc.total_cost_price) ;
     	frm.set_value("overall_project_profit",total_overall_profit);
+    	frm.set_value("overall_project_budget",total_overall_profit);
 
     	total_overall_markup = flt(cur_frm.doc.overall_project_profit) /flt(cur_frm.doc.total_cost_price) * 100;
     	frm.set_value("overall_project_markup",total_overall_markup);
@@ -157,6 +158,7 @@ frappe.ui.form.on('Project Initiation', {
 
     	total_overall_profit = flt(cur_frm.doc.total_final_selling_price) - flt(cur_frm.doc.total_cost_price) ;
     	frm.set_value("overall_project_profit",total_overall_profit);
+    	frm.set_value("overall_project_budget",total_overall_profit);
 
     	total_overall_markup = flt(cur_frm.doc.overall_project_profit) /flt(cur_frm.doc.total_cost_price) * 100;
     	frm.set_value("overall_project_markup",total_overall_markup);
@@ -190,6 +192,7 @@ frappe.ui.form.on('Project Initiation', {
 
     	total_overall_profit = flt(cur_frm.doc.total_final_selling_price) - flt(cur_frm.doc.total_cost_price) ;
     	frm.set_value("overall_project_profit",total_overall_profit);
+    	frm.set_value("overall_project_budget",total_overall_profit);
 
     	total_overall_markup = flt(cur_frm.doc.overall_project_profit) /flt(cur_frm.doc.total_cost_price) * 100;
     	frm.set_value("overall_project_markup",total_overall_markup);
