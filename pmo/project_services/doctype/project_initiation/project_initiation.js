@@ -144,6 +144,7 @@ frappe.ui.form.on('Project Initiation', {
 
     	total_overall_profit = flt(cur_frm.doc.total_final_selling_price) - flt(cur_frm.doc.total_cost_price) ;
     	frm.set_value("overall_project_profit",total_overall_profit);
+    	frm.set_value("overall_project_budget",total_overall_profit);
 
     	total_overall_markup = flt(cur_frm.doc.overall_project_profit) /flt(cur_frm.doc.total_cost_price) * 100;
     	frm.set_value("overall_project_markup",total_overall_markup);
@@ -157,6 +158,7 @@ frappe.ui.form.on('Project Initiation', {
 
     	total_overall_profit = flt(cur_frm.doc.total_final_selling_price) - flt(cur_frm.doc.total_cost_price) ;
     	frm.set_value("overall_project_profit",total_overall_profit);
+    	frm.set_value("overall_project_budget",total_overall_profit);
 
     	total_overall_markup = flt(cur_frm.doc.overall_project_profit) /flt(cur_frm.doc.total_cost_price) * 100;
     	frm.set_value("overall_project_markup",total_overall_markup);
@@ -190,6 +192,7 @@ frappe.ui.form.on('Project Initiation', {
 
     	total_overall_profit = flt(cur_frm.doc.total_final_selling_price) - flt(cur_frm.doc.total_cost_price) ;
     	frm.set_value("overall_project_profit",total_overall_profit);
+    	frm.set_value("overall_project_budget",total_overall_profit);
 
     	total_overall_markup = flt(cur_frm.doc.overall_project_profit) /flt(cur_frm.doc.total_cost_price) * 100;
     	frm.set_value("overall_project_markup",total_overall_markup);
@@ -211,6 +214,18 @@ frappe.ui.form.on('Project Initiation', {
 	}
 
 });
+
+cur_frm.cscript.custom_general_pricing = function(frm) {
+    total_cost_price = 0;
+    final_selling_price = 0;
+    $.each(cur_frm.doc.project_financial_detail || [], function(i, d) {
+        total_cost_price += flt(d.cost_price);
+        final_selling_price += flt(d.final_selling_price);
+    });
+    cur_frm.set_value("total_cost_price", total_cost_price);
+    cur_frm.set_value("total_final_selling_price", final_selling_price);
+
+}
 
 
 frappe.ui.form.on("Project Financial Details", "cost_price", function(frm, cdt, cdn) {
@@ -386,7 +401,6 @@ frappe.ui.form.on('Project Costing Schedule', {
 });
 
 
-
 //Including General Pricing items on the Project Initiation.
 frappe.ui.form.on("Project Initiation", "general_pricing", function(frm) {
     cur_frm.doc.project_financial_detail = []
@@ -403,5 +417,4 @@ frappe.ui.form.on("Project Initiation", "general_pricing", function(frm) {
         });
     })
 });
-
 
