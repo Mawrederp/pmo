@@ -67,10 +67,21 @@ def create_general_pricing(self):
 
 	#Calculate with risk as A profit
 	if final_totals_list[3]!=0:
-		doc.risk_contingency_risk = (final_totals_list[2] / final_totals_list[3])*100
+		if(final_totals_list[3]):
+			doc.risk_contingency_risk = (final_totals_list[2] / final_totals_list[3])*100
+		else:
+			doc.risk_contingency_risk = 0
+		
 		doc.profit_amount_risk = final_totals_list[2] + final_totals_list[4]
-		doc.total_markup_risk = (final_totals_list[2] + final_totals_list[4]) / final_totals_list[0]
-		doc.total_markup_risk = (final_totals_list[2] + final_totals_list[4]) / final_totals_list[1]
+		if(final_totals_list[0]):
+			doc.total_markup_risk = (final_totals_list[2] + final_totals_list[4]) / final_totals_list[0]
+		else:
+			doc.total_markup_risk = 0
+
+		if(final_totals_list[1]):		
+			doc.total_margin_risk = (final_totals_list[2] + final_totals_list[4]) / final_totals_list[1]
+		else:
+			doc.total_margin_risk = 0
 
 
 
