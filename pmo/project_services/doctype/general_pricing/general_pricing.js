@@ -3,7 +3,12 @@
 
 frappe.ui.form.on('General Pricing', {
     vat_percent: function(frm){
-        cur_frm.set_value("vat_value",(cur_frm.doc.total_selling_price * cur_frm.doc.vat_percent) /100)
+        if(cur_frm.doc.total_selling_price * cur_frm.doc.vat_percent >= 0){
+            cur_frm.set_value("vat_value",(cur_frm.doc.total_selling_price * cur_frm.doc.vat_percent) /100)
+        }else{
+            cur_frm.set_value("vat_value",(0))
+
+        }
         cur_frm.set_value("selling_price_risk",cur_frm.doc.vat_value + cur_frm.doc.total_selling_price)
     },
     total_cost_price: function(frm){

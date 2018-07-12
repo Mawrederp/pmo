@@ -35,8 +35,6 @@ def create_general_pricing(self):
 	doc.project_quotation = []
 	
 	for i in range(0,15):
-		print(i)
-		print("**************------------------------*************************")
 		if (((getattr(self, field_array[0]+"_"+str(i) ) == 0) 
 		and (getattr(self, field_array[1]+"_"+str(i))== 0)
 		and (getattr(self, field_array[3]+"_"+str(i))== 0)
@@ -67,7 +65,10 @@ def create_general_pricing(self):
 	else:
 		total_mark=round((final_totals_list[4]/(final_totals_list[0]+final_totals_list[2]))*100)
 	doc.total_markup = total_mark
-	doc.total_margin = round((final_totals_list[4]/final_totals_list[3])*100)
+	if (final_totals_list[3]):
+		doc.total_margin = round((final_totals_list[4]/final_totals_list[3])*100)
+	else:
+		doc.total_margin = 0
 
 
 	# doc.total_markup = final_totals_list[5]
@@ -94,15 +95,18 @@ def create_general_pricing(self):
 
 
 	if exists:
+		if doc.vat_percent:
+			doc.vat_value = (doc.total_selling_price * doc.vat_percent) /100
+			doc.selling_price_risk = doc.vat_value + doc.total_selling_price			
 		doc.save(ignore_permissions=True)
 		frappe.msgprint(
-			"<a href='desk#Form/General Pricing/{0}' >{0}</a>".format(doc.name) + " is updated")
+			"General Pricing " + "<b> <a href='desk#Form/General Pricing/{0}' >{0}</a> </b>".format(doc.name) + " is updated")
 	else:
 		doc.project_q = self.name
 		doc.project_qname = self.name
 		doc.insert(ignore_permissions=True)
 		frappe.msgprint(
-			"<a href='desk#Form/General Pricing/{0}' >{0}</a>".format(doc.name) + " is inserted")
+			"General Pricing " + "<b> <a href='desk#Form/General Pricing/{0}' >{0}</a> </b> ".format(doc.name) + " is inserted")
 
 
 
