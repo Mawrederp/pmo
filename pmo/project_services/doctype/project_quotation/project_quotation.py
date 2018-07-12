@@ -83,12 +83,12 @@ def create_general_pricing(self):
 		
 		doc.profit_amount_risk = final_totals_list[2] + final_totals_list[4]
 		if(final_totals_list[0]):
-			doc.total_markup_risk = (final_totals_list[2] + final_totals_list[4]) / final_totals_list[0]
+			doc.total_markup_risk = round(((final_totals_list[2] + final_totals_list[4]) / final_totals_list[0])*100)
 		else:
 			doc.total_markup_risk = 0
 
 		if(final_totals_list[1]):		
-			doc.total_margin_risk = (final_totals_list[2] + final_totals_list[4]) / final_totals_list[1]
+			doc.total_margin_risk = round(((final_totals_list[2] + final_totals_list[4]) / final_totals_list[1])*100)
 		else:
 			doc.total_margin_risk = 0
 
