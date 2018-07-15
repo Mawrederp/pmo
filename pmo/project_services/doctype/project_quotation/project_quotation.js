@@ -1142,14 +1142,14 @@ frappe.ui.form.on('Items Details', {
 	},
 	profit: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
-		if (d.profit && d.final_selling_price && !(d.final_selling_price == 0 ||  isNan(d.final_selling_price))) {
+		if (d.profit && d.final_selling_price && !(d.final_selling_price == 0 ||  isNaN(d.final_selling_price))) {
 			var total = Math.round((d.profit / d.final_selling_price) * 100)
 			frappe.model.set_value(cdt, cdn, "margin", total);
 		}
 	},
 	final_selling_price: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
-		if (d.profit && d.final_selling_price && !(d.final_selling_price == 0 ||  isNan(d.final_selling_price))) {
+		if (d.profit && d.final_selling_price && !(d.final_selling_price == 0 ||  isNaN(d.final_selling_price))) {
 			var total = Math.round((d.profit / d.final_selling_price) * 100)
 			frappe.model.set_value(cdt, cdn, "margin", total);
 		}
