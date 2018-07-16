@@ -19,7 +19,36 @@ class ProjectInitiation(Document):
             if "Rejected" in self.workflow_state:
                 self.docstatus = 1
                 self.docstatus = 2
+            
+        field_array = ["cost","selling_price","risk_contingency", "total_selling_price"]
+        final_totals_list = [0] * 4
+        self.project_financial_detail = []
+        
+        for i in range(0,15):
+            if (((getattr(self, field_array[0]+"_"+str(i) ) == 0) 
+            and (getattr(self, field_array[1]+"_"+str(i))== 0)
+            and (getattr(self, field_array[3]+"_"+str(i))== 0))):
+                pass 
+            else:
+                for j in range(len(final_totals_list)):
+                        if (getattr(self, field_array[j]+"_"+str(i))):
+                            final_totals_list[j] += float(
+                                str(getattr(self, field_array[j]+"_"+str(i))))
+                self.append("project_financial_detail", {"scope_item": getattr(self, "section_name"+"_"+str(i)),
+                                                    "cost_price": getattr(self, field_array[0]+"_"+str(i)),
+                                                    "selling_price": getattr(self, field_array[1]+"_"+str(i)),
+                                                    "additions_value": getattr(self, field_array[2]+"_"+str(i)),
+                                                    "final_selling_price": getattr(self, field_array[3]+"_"+str(i))
+                                                    })
+        
+        self.total_cost_price = final_totals_list[0]
+        self.selling_price = final_totals_list[1]
+        self.additions_value = final_totals_list[2]
+        self.total_selling_price = final_totals_list[3]
+        
 
+
+            
         # doc = frappe.db.sql("select data from `tabVersion` where ref_doctype='Project Initiation' and docname='{0}' order by creation desc limit 1".format(self.name))
         # if doc:
         #     for i in range(len(json.loads(doc[0][0])['changed'])):
