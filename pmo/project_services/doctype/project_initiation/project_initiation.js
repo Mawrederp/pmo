@@ -8,7 +8,7 @@ frappe.ui.form.on('Project Initiation', {
         frappe.model.with_doc("Project Quotation", frm.doc.project_quotation, function () {
             var table_quotation = frappe.model.get_doc("Project Quotation", frm.doc.project_quotation);
             for (let i = 0; i <= 15; i++) {
-
+                table_quotation["resources_details_" + i] = []
                 $.each(table_quotation["resources_details_" + i], function (index, row) {
                     var d = frm.add_child("resources_details_" + i);
                     d.group_code = row.group_code;
@@ -20,11 +20,16 @@ frappe.ui.form.on('Project Initiation', {
                     d.overhead_expenses = row.overhead_expenses;
                     frm.refresh_field("resources_details_" + i);
                 });
+                table_quotation["items_details_" + i] = []
                 $.each(table_quotation["items_details_" + i], function (index, row) {
                     var d = frm.add_child("items_details_" + i);
 
                     var items_table_values = ["group_code", "cost_price", "items", "quantity", "sar_cost_price", "cost_price_unit", "selling_price_unit", "total_cost_price", "total_selling_price", "currency", "tawaris_services", "cost_price_ts", "selling_price_ts", "total_cost", "profit", "risk", "contingency", "selling_price", "markup_follow", "margin", "final_selling_price", "markup", "time_unit", "time_unit_services"];
 
+                    for (let index = 0; index < items_table_values.length; index++) {
+                        d[items_table_values[index]] = 0;
+
+                    }
                     for (let index = 0; index < items_table_values.length; index++) {
                         d[items_table_values[index]] = row[items_table_values[index]];
 
@@ -33,7 +38,10 @@ frappe.ui.form.on('Project Initiation', {
                 });
                 var section_outer_values = ["section_name", "total_overhead_expenses", "cost", "selling_price", "risk_contingency", "total_selling_price", "profit", "markup", "margin"]
                 for (let index = 0; index < section_outer_values.length; index++) {
-                    console.log(table_quotation[section_outer_values[index] + "_" + i])
+                    frm.doc[section_outer_values[index] + "_" + i] = 0;
+                }
+
+                for (let index = 0; index < section_outer_values.length; index++) {
                     frm.doc[section_outer_values[index] + "_" + i] = table_quotation[section_outer_values[index] + "_" + i];
                     if (frm.doc[section_outer_values[index] + "_" + i] != "") {
                         frm.refresh_field(section_outer_values[index] + "_" + i)
