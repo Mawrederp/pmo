@@ -2760,6 +2760,8 @@ frappe.ui.form.on("Project Initiation", "general_pricing", function(frm) {
     cur_frm.doc.project_financial_detail = []
     frappe.model.with_doc("General Pricing", frm.doc.general_pricing, function() {
         var tabletransfer= frappe.model.get_doc("General Pricing", frm.doc.general_pricing)
+        frm.doc.project_financial_detail = []
+        frm.refresh_field("project_financial_detail");
         $.each(tabletransfer.project_quotation, function(index, row){
             d = frm.add_child("project_financial_detail");
             d.scope_item = row.items;
@@ -2769,6 +2771,26 @@ frappe.ui.form.on("Project Initiation", "general_pricing", function(frm) {
             d.final_selling_price = row.total_selling_price;
             frm.refresh_field("project_financial_detail");
         });
+
+        table_quotation = frappe.model.get_doc("Project Quotation", tabletransfer.project_qname);
+        for (let index = 0; index <= 15; index++) {
+            if (table_quotation["section_name_" + index] || table_quotation["resources_details_" + index] ){
+                $.each(tabletransfer["resources_details_" + index], function(index, row){
+                    d = frm.add_child("resources_details_" + index);
+                    d.group_code = row.group_code;
+                    d.resources = row.resources;
+                    d.cost_price = row.cost_price;
+                    d.months = row.months;
+                    d.resources_name = row.resources_name;
+                    d.quantity = row.quantity;
+                    d.overhead_expenses = row.overhead_expenses;
+                    frm.refresh_field("resources_details_" + index);
+                });
+            }
+
+            
+        }
     })
 });
+
 
