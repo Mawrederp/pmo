@@ -21,12 +21,12 @@ class ProjectInitiation(Document):
                 self.docstatus = 2
 
         doc = frappe.db.sql("select data from `tabVersion` where ref_doctype='Project Initiation' and docname='{0}' order by creation desc limit 1".format(self.name))
-        for i in range(len(json.loads(doc[0][0])['changed'])):
-            edit_property = json.loads(doc[0][0])['changed'][i][0]
-            if edit_property=='workflow_state' or edit_property=='overall_project_markup' or edit_property=='overall_project_margin':
-                pass
-            else:
-                self.cur_validate_emp()
+        # for i in range(len(json.loads(doc[0][0])['changed'])):
+        #     edit_property = json.loads(doc[0][0])['changed'][i][0]
+        #     if edit_property=='workflow_state' or edit_property=='overall_project_markup' or edit_property=='overall_project_margin':
+        #         pass
+        #     else:
+        #         self.cur_validate_emp()
 
 
     def cur_validate_emp(self):
