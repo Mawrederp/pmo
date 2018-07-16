@@ -20,13 +20,14 @@ class ProjectInitiation(Document):
                 self.docstatus = 1
                 self.docstatus = 2
 
-        doc = frappe.db.sql("select data from `tabVersion` where ref_doctype='Project Initiation' and docname='{0}' order by creation desc limit 1".format(self.name))
-        # for i in range(len(json.loads(doc[0][0])['changed'])):
-        #     edit_property = json.loads(doc[0][0])['changed'][i][0]
-        #     if edit_property=='workflow_state' or edit_property=='overall_project_markup' or edit_property=='overall_project_margin':
-        #         pass
-        #     else:
-        #         self.cur_validate_emp()
+        # doc = frappe.db.sql("select data from `tabVersion` where ref_doctype='Project Initiation' and docname='{0}' order by creation desc limit 1".format(self.name))
+        # if doc:
+        #     for i in range(len(json.loads(doc[0][0])['changed'])):
+        #         edit_property = json.loads(doc[0][0])['changed'][i][0]
+        #         if edit_property=='workflow_state' or edit_property=='overall_project_markup' or edit_property=='overall_project_margin':
+        #             pass
+        #         else:
+        #             self.cur_validate_emp()
 
 
     def cur_validate_emp(self):
@@ -188,26 +189,19 @@ class ProjectInitiation(Document):
     #     frappe.msgprint(_("""Project Planning have been created: <b><a href="#Form/Project Planning/{pp}">{pp}</a></b>""".format(pp = pp)))
 
     def make_project_planning(self):
-        try:
-            frappe.get_doc({
-                "doctype": "Project Planning",
-                "project_name": self.project_name,
-                "project": self.project_name,
-                "projects_list": self.projects_list
-            }).save(ignore_permissions = True)
+        frappe.get_doc({
+            "doctype": "Project Planning",
+            "project_name": self.project_name,
+            "project": self.project_name,
+            "projects_list": self.projects_list
+        }).save(ignore_permissions = True)
 
-            frappe.db.commit()
+        frappe.db.commit()
 
-            pp = frappe.get_value("Project Planning", filters = {"project_name": self.project_name}, fieldname = "name")
+        pp = frappe.get_value("Project Planning", filters = {"project_name": self.project_name}, fieldname = "name")
 
-            frappe.msgprint(_("""Project Planning have been created: <b><a href="#Form/Project Planning/{pp}">{pp}</a></b>""".format(pp = pp)))
-        except:
-            frappe.db.set_value("Project Planning", self.project_name, "project", self.project_name)
-            frappe.db.set_value("Project Planning", self.project_name, "projects_list", self.projects_list)
-            frappe.db.commit()
-            pp = frappe.get_value("Project Planning", filters = {"project_name": self.project_name}, fieldname = "name")            
-            frappe.msgprint(_("""Project Planning have been updated: <b><a href="#Form/Project Planning/{pp}">{pp}</a></b>""".format(pp = pp)))
-
+        frappe.msgprint(_("""Project Planning have been created: <b><a href="#Form/Project Planning/{pp}">{pp}</a></b>""".format(pp = pp)))
+    
 
 
     def existing_project_planning(self):
