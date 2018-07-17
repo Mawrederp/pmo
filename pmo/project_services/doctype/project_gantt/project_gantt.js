@@ -262,22 +262,52 @@ function grid_table(project_gantt){
 
 	project_gantt.form_blocks["my_editor"] = {
 	    render:function(sns) {
-	        return "<div class='dhx_cal_ltext' style='height:60px;'>" 
-	        
-	        +"</div>";
+	        return `<div class='dhx_cal_ltext' style='height:120px;'>
+					<table id="myTable" class=" table order-list">
+					    <thead>
+					        <tr>
+					            <td>Name</td>
+					            <td>Phone</td>
+					        </tr>
+					    </thead>
+					    <tbody>
+					        <tr>
+					            <td class="col-sm-6">
+					                <input type="text" name="name" class="form-control" />
+					            </td>
+					            <td class="col-sm-4">
+					                <input type="text" name="phone"  class="form-control"/>
+					            </td>
+					            <td class="col-sm-2"><a class="deleteRow"></a>
+
+					            </td>
+					        </tr>
+					    </tbody>
+					    <tfoot>
+					        <tr>
+					            <td colspan="2" style="text-align: left;">
+					                <input type="button" class="btn btn-primary" id="addrow" value="Add Row" />
+					            </td>
+					        </tr>
+					        <tr>
+					        </tr>
+					    </tfoot>
+					</table>
+	        </div>`;
 	    },
 	    set_value:function(node, value, task,section) {
-	        node.childNodes[1].value = value || "";
-	        node.childNodes[4].value = task.users || "";
+	    	console.log(node.childNodes);
+	        // node.childNodes[1].value = value || "";
+	        // node.childNodes[4].value = task.users || "";
 	    },
 	    get_value:function(node, task,section) {
-	        task.users = node.childNodes[4].value;
-	        return node.childNodes[1].value;
+	        // task.users = node.childNodes[4].value;
+	        // return node.childNodes[1].value;
 	    },
 	    focus:function(node) {
-	        var a = node.childNodes[1];
-	        a.select();
-	        a.focus();
+	        // var a = node.childNodes[1];
+	        // a.select();
+	        // a.focus();
 	    }
 	};
 }
