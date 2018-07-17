@@ -4,11 +4,10 @@
 
 frappe.ui.form.on('Project Initiation', {
     project_quotation: function (frm, cdt, cdn) {
-        console.log("Yes !!!!!!!!!");
         frappe.model.with_doc("Project Quotation", frm.doc.project_quotation, function () {
             var table_quotation = frappe.model.get_doc("Project Quotation", frm.doc.project_quotation);
             for (let i = 0; i <= 15; i++) {
-                table_quotation["resources_details_" + i] = []
+                frm.clear_table("resources_details_" + i);
                 $.each(table_quotation["resources_details_" + i], function (index, row) {
                     var d = frm.add_child("resources_details_" + i);
                     d.group_code = row.group_code;
@@ -20,7 +19,7 @@ frappe.ui.form.on('Project Initiation', {
                     d.overhead_expenses = row.overhead_expenses;
                     frm.refresh_field("resources_details_" + i);
                 });
-                table_quotation["items_details_" + i] = []
+                frm.clear_table("items_details_" + i);
                 $.each(table_quotation["items_details_" + i], function (index, row) {
                     var d = frm.add_child("items_details_" + i);
 
