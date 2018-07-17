@@ -10,11 +10,11 @@ import json
 
 class ProjectInitiation(Document):
     def validate(self):
-        
         if self.workflow_state == 'Approved by PMO Director':
-            self.make_project_planning()
-            self.validate_emp()
-    
+            if not frappe.db.exists("Project Planning", {"project_name": self.project_name}):
+                self.make_project_planning()
+                self.validate_emp()
+        
         if self.workflow_state:
             if "Rejected" in self.workflow_state:
                 self.docstatus = 1
