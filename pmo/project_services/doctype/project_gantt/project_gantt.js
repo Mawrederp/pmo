@@ -107,6 +107,7 @@ frappe.ui.form.on('Project Gantt', {
 				project_gantt.config.open_tree_initially = true;
 
 				project_gantt.locale.labels.section_priority = "Priority";
+				// project_gantt.locale.labels.section_party = "Party";
 				project_gantt.locale.labels.section_type = "Type"
 
 				var p_opts = [
@@ -120,7 +121,15 @@ frappe.ui.form.on('Project Gantt', {
 				    { key: 'milestone', label: 'Milestone' },
 
 				];
+				// var party_opts = [
+				// 	{ key: 'Client', label: 'Client' },
+				//     { key: 'Tawari', label: 'Tawari' },
+				//     { key: 'Partner/Supplier', label: 'Partner/Supplier' }
+				// ];
+				grid_table(project_gantt);
+
 				project_gantt.config.lightbox.sections = [
+					{name:"test", height:200, map_to:"text", type:"my_editor"},
 					{name:"description", height:70, map_to:"text", type:"textarea", focus:true},
 			    	{name:"priority", height:30, map_to:"priority", type:"select", options:p_opts},
 			    	{name:"type", height:30, type:"select", map_to:"type", options:t_opts, onchange: function(){
@@ -131,8 +140,10 @@ frappe.ui.form.on('Project Gantt', {
 			    		}
 			    	},
 			    	{name:"time", height:40, map_to:"auto", type:"time", single_date: false}
+			    	// {name:"party", height:30, width:200, map_to:"party", type:"select", options:party_opts, button:"add"}
 		    	];
 
+		    	project_gantt.locale.labels.button_add="Add";
 		   //  	project_gantt.config.lightbox.milestone_sections = [
 					// {name:"description", height:70, map_to:"text", type:"textarea", focus:true},
 			  //   	{name:"type", height:30, type:"select", map_to:"type", options:t_opts, single_date: true}
@@ -247,6 +258,29 @@ frappe.ui.form.on('Project Gantt', {
 function single_date(e){
 	console.log(e);
 }
+function grid_table(project_gantt){
+	console.log("heyyyyyyyyyyyyyyyyyy");
+	project_gantt.form_blocks["my_editor"] = {
+	    render:function(sns) {
+	        return "<div class='dhx_cal_ltext' style='height:60px;'>Text&nbsp;"
+	        +"<input type='text'><br/>Holders&nbsp;<input type='text'></div>";
+	    },
+	    set_value:function(node, value, task,section) {
+	        node.childNodes[1].value = value || "";
+	        node.childNodes[4].value = task.users || "";
+	    },
+	    get_value:function(node, task,section) {
+	        task.users = node.childNodes[4].value;
+	        return node.childNodes[1].value;
+	    },
+	    focus:function(node) {
+	        var a = node.childNodes[1];
+	        a.select();
+	        a.focus();
+	    }
+	};
+}
+
 
 function add_additional_data(project_gantt, task, project_name){
 	if(task){
@@ -302,6 +336,21 @@ function add_additional_data(project_gantt, task, project_name){
 }
 
 function event_handlers(project_gantt){
+
+	project_gantt.form_blocks.select.button_click = function(index,button,shead,sbody){
+
+		// var idx = x++;`
+		// project_gantt.config.lightbox.sections.push();
+		// var opened_task = project_gantt.getState().lightbox;
+		// project_gantt.resetLightbox(); 
+		// project_gantt.hideLightbox();
+		// project_gantt.showLightbox(opened_task);
+		// console.log(project_gantt.getLightboxSection('test').getValue());
+    	// project_gantt.getLightboxSection("test").test();
+    	// console.log(opened_task);
+  //   	return true;
+    	// project_gantt.showLightbox();
+	}
 	// var types = project_gantt.config.links;
 	// project_gantt.attachEvent("onAfterTaskUpdate", function(id,item){
 		
