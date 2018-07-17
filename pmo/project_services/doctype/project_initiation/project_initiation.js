@@ -1,13 +1,34 @@
 // Copyright (c) 2018, s and contributors
 // For license information, please see license.txt
 
+function refresh_general_pricing(frm) {
+    frm.clear_table("project_financial_detail");
+    for (let i = 0; i <= 15; i++) {
+        if ((frm.doc["section_name_" + i] != undefined || frm.doc["cost_" + i] != 0 ||
+                frm.doc["selling_price_" + i] != 0 || frm.doc["risk_contingency_" + i] != 0)) {
+
+            var d = frm.add_child("project_financial_detail");
+            d.scope_item = frm.doc["section_name_" + i];
+            d.cost_price = frm.doc["cost_" + i];
+            d.selling_price = frm.doc["selling_price_" + i];
+            d.additions_value = frm.doc["risk_contingency_" + i];
+            d.final_selling_price = frm.doc["total_selling_price_" + i];
+
+            frm.script_manager.trigger("final_selling_price", d.doctype, d.name);
+            frm.refresh_field("project_financial_detail");
+
+        }
+
+    }
+}
 
 frappe.ui.form.on('Project Initiation', {
     onload: function (frm, cdt, cdn) {
         if (frm.doc.project_quotation === undefined || !frm.doc.project_quotation) {
             frm.set_value("project_quotation", frm.doc.name);
-            frm.set_value("general_pricing", frm.doc.name);
-
+            if (frm.doc.general_pricing === undefined || !frm.doc.general_pricing) {
+                frm.set_value("general_pricing", frm.doc.name);
+            }
             frappe.model.with_doc("Project Quotation", frm.doc.project_quotation, function () {
                 var table_quotation = frappe.model.get_doc("Project Quotation", frm.doc.project_quotation);
                 // frm.doc.general_pricing = table_quotation;
@@ -178,28 +199,7 @@ frappe.ui.form.on('Project Initiation', {
 
 
     validate: function (frm) {
-        frm.clear_table("project_financial_detail");
-        for (let i = 0; i <= 15; i++) {
-
-
-            if ((frm.doc["section_name_" + i] != undefined || frm.doc["cost_" + i] != 0 ||
-                    frm.doc["selling_price_" + i] != 0 || frm.doc["risk_contingency_" + i] != 0)) {
-                console.log(frm.doc["section_name_" + i]);
-                console.log(frm.doc["cost_" + i]);
-                console.log(frm.doc["selling_price_" + i]);
-                console.log(frm.doc["risk_contingency_" + i]);
-
-                var d = frm.add_child("project_financial_detail");
-                d.scope_item = frm.doc["section_name_" + i];
-                d.cost_price = frm.doc["cost_" + i];
-                d.selling_price = frm.doc["selling_price_" + i];
-                d.additions_value = frm.doc["risk_contingency_" + i];
-                cur_frm.script_manager.trigger("selling_price", d.doctype, d.name);
-
-                frm.refresh_field("project_financial_detail");
-            }
-
-        }
+        refresh_general_pricing(frm);
         $.each(cur_frm.doc.items_details_0 || [], function (i, d) {
             frappe.model.set_value("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_0);
         });
@@ -1267,6 +1267,7 @@ frappe.ui.form.on("Items Details", "total_cost", function (frm, cdt, cdn) {
         grand_total += flt(d.total_cost);
     });
     frm.set_value("cost_0", grand_total);
+
 });
 
 frappe.ui.form.on("Items Details", "selling_price", function (frm, cdt, cdn) {
@@ -1296,6 +1297,7 @@ frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cd
         grand_total += flt(d.final_selling_price);
     });
     frm.set_value("total_selling_price_0", grand_total);
+    refresh_general_pricing(frm);
 });
 
 
@@ -1377,6 +1379,8 @@ frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cd
         grand_total += flt(d.final_selling_price);
     });
     frm.set_value("total_selling_price_1", grand_total);
+    refresh_general_pricing(frm);
+
 });
 frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
@@ -1453,6 +1457,8 @@ frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cd
         grand_total += flt(d.final_selling_price);
     });
     frm.set_value("total_selling_price_2", grand_total);
+    refresh_general_pricing(frm);
+
 });
 frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
@@ -1529,6 +1535,8 @@ frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cd
         grand_total += flt(d.final_selling_price);
     });
     frm.set_value("total_selling_price_3", grand_total);
+    refresh_general_pricing(frm);
+
 });
 frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
@@ -1605,6 +1613,8 @@ frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cd
         grand_total += flt(d.final_selling_price);
     });
     frm.set_value("total_selling_price_4", grand_total);
+    refresh_general_pricing(frm);
+
 });
 frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
@@ -1682,6 +1692,8 @@ frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cd
         grand_total += flt(d.final_selling_price);
     });
     frm.set_value("total_selling_price_5", grand_total);
+    refresh_general_pricing(frm);
+
 });
 frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
@@ -1758,6 +1770,8 @@ frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cd
         grand_total += flt(d.final_selling_price);
     });
     frm.set_value("total_selling_price_6", grand_total);
+    refresh_general_pricing(frm);
+
 });
 frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
@@ -1834,6 +1848,8 @@ frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cd
         grand_total += flt(d.final_selling_price);
     });
     frm.set_value("total_selling_price_7", grand_total);
+    refresh_general_pricing(frm);
+
 });
 frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
@@ -1910,6 +1926,8 @@ frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cd
         grand_total += flt(d.final_selling_price);
     });
     frm.set_value("total_selling_price_8", grand_total);
+    refresh_general_pricing(frm);
+
 });
 frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
@@ -1986,6 +2004,8 @@ frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cd
         grand_total += flt(d.final_selling_price);
     });
     frm.set_value("total_selling_price_9", grand_total);
+    refresh_general_pricing(frm);
+
 });
 frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
@@ -2062,6 +2082,8 @@ frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cd
         grand_total += flt(d.final_selling_price);
     });
     frm.set_value("total_selling_price_10", grand_total);
+    refresh_general_pricing(frm);
+
 });
 frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
@@ -2138,6 +2160,8 @@ frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cd
         grand_total += flt(d.final_selling_price);
     });
     frm.set_value("total_selling_price_11", grand_total);
+    refresh_general_pricing(frm);
+
 });
 frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
@@ -2214,6 +2238,8 @@ frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cd
         grand_total += flt(d.final_selling_price);
     });
     frm.set_value("total_selling_price_12", grand_total);
+    refresh_general_pricing(frm);
+
 });
 frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
@@ -2290,6 +2316,8 @@ frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cd
         grand_total += flt(d.final_selling_price);
     });
     frm.set_value("total_selling_price_13", grand_total);
+    refresh_general_pricing(frm);
+
 });
 frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
@@ -2366,6 +2394,8 @@ frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cd
         grand_total += flt(d.final_selling_price);
     });
     frm.set_value("total_selling_price_14", grand_total);
+    refresh_general_pricing(frm);
+
 });
 frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
@@ -2442,6 +2472,8 @@ frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cd
         grand_total += flt(d.final_selling_price);
     });
     frm.set_value("total_selling_price_15", grand_total);
+    refresh_general_pricing(frm);
+
 });
 frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
@@ -2454,6 +2486,54 @@ frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
 
 
 frappe.ui.form.on('Project Initiation', {
+    section_name_0: function (frm) {
+        refresh_general_pricing(frm);
+    },
+    section_name_1: function (frm) {
+        refresh_general_pricing(frm);
+    },
+    section_name_2: function (frm) {
+        refresh_general_pricing(frm);
+    },
+    section_name_3: function (frm) {
+        refresh_general_pricing(frm);
+    },
+    section_name_4: function (frm) {
+        refresh_general_pricing(frm);
+    },
+    section_name_5: function (frm) {
+        refresh_general_pricing(frm);
+    },
+    section_name_6: function (frm) {
+        refresh_general_pricing(frm);
+    },
+    section_name_7: function (frm) {
+        refresh_general_pricing(frm);
+    },
+    section_name_8: function (frm) {
+        refresh_general_pricing(frm);
+    },
+    section_name_9: function (frm) {
+        refresh_general_pricing(frm);
+    },
+    section_name_10: function (frm) {
+        refresh_general_pricing(frm);
+    },
+    section_name_11: function (frm) {
+        refresh_general_pricing(frm);
+    },
+    section_name_12: function (frm) {
+        refresh_general_pricing(frm);
+    },
+    section_name_13: function (frm) {
+        refresh_general_pricing(frm);
+    },
+    section_name_14: function (frm) {
+        refresh_general_pricing(frm);
+    },
+    section_name_15: function (frm) {
+        refresh_general_pricing(frm);
+    },
     refresh: function (frm) {
 
         frm.add_custom_button(__("Project Initiation"), function () {
