@@ -259,11 +259,12 @@ function single_date(e){
 	console.log(e);
 }
 function grid_table(project_gantt){
-	console.log("heyyyyyyyyyyyyyyyyyy");
+
 	project_gantt.form_blocks["my_editor"] = {
 	    render:function(sns) {
-	        return "<div class='dhx_cal_ltext' style='height:60px;'>Text&nbsp;"
-	        +"<input type='text'><br/>Holders&nbsp;<input type='text'></div>";
+	        return "<div class='dhx_cal_ltext' style='height:60px;'>" 
+	        
+	        +"</div>";
 	    },
 	    set_value:function(node, value, task,section) {
 	        node.childNodes[1].value = value || "";
