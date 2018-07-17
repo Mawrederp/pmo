@@ -11,8 +11,9 @@ import json
 class ProjectImplementationMonitoringandControlling(Document):
     def validate(self):
         if self.workflow_state == 'Approved by PMO Director':
-            self.make_project_closure()
-            self.validate_emp()
+            if not frappe.db.exists("Project Closure", {"project_name": self.project_name}):
+                self.make_project_closure()
+                self.validate_emp()
     
         if self.workflow_state:
             if "Rejected" in self.workflow_state:
