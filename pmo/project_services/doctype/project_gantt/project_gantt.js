@@ -22,7 +22,7 @@ frappe.ui.form.on('Project Gantt', {
 		            // async: false,
 		            callback: function(r) {
 		            	if(!r.exc){
-		            		console.log(r.message);
+		            		// console.log(r.message);
 		            		var links = frm.project_gantt.getLinks();
 
 		            		if(links){
@@ -129,7 +129,7 @@ frappe.ui.form.on('Project Gantt', {
 				grid_table(project_gantt);
 
 				project_gantt.config.lightbox.sections = [
-					{name:"test", height:200, map_to:"text", type:"my_editor"},
+					{name:"test", height:200, map_to:"resources", type:"my_editor"},
 					{name:"description", height:70, map_to:"text", type:"textarea", focus:true},
 			    	{name:"priority", height:30, map_to:"priority", type:"select", options:p_opts},
 			    	{name:"type", height:30, type:"select", map_to:"type", options:t_opts, onchange: function(){
@@ -180,11 +180,20 @@ frappe.ui.form.on('Project Gantt', {
 		            	
 		                if (r.message) {							
 							var tasks = r.message;
+							// console.log(tasks);
 							var links = [];
 							for (var i in tasks){
+
+								
+								// var tsk = frappe.model.get_doc("Task", tasks[i].name);
+								// console.log(tsk);
+								
+								// console.log(tasks[i].name);
+								add_additional_data(project_gantt, tasks[i], selected_project);
+								
 								// rs = frappe.model.get_value('Task', {'name': tasks[i].name}, 'exp_end_date');
 								// console.log("////////////",rs);
-								add_additional_data(project_gantt, tasks[i], selected_project);
+								
 								// console.log(tasks[i]);
 								// console.log(project_gantt.getTask(tasks[i].id));
 							}
@@ -256,27 +265,28 @@ frappe.ui.form.on('Project Gantt', {
 });
 
 function single_date(e){
-	console.log(e);
+	// console.log(e);
 }
 function grid_table(project_gantt){
 
 	project_gantt.form_blocks["my_editor"] = {
 	    render:function(sns) {
+	    	console.log(sns);
 	        return `<div class='dhx_cal_ltext' style='height:120px;'>
 					<table id="myTable" class=" table order-list">
 					    <thead>
 					        <tr>
-					            <td>Name</td>
-					            <td>Phone</td>
+					            <td>Resource Name</td>
+					            <td>Percentage</td>
 					        </tr>
 					    </thead>
 					    <tbody>
 					        <tr>
 					            <td class="col-sm-6">
-					                <input type="text" name="name" class="form-control" />
+					                <input type="text" name="resource_name" class="form-control" />
 					            </td>
 					            <td class="col-sm-4">
-					                <input type="text" name="phone"  class="form-control"/>
+					                <input type="text" name="percentage"  class="form-control"/>
 					            </td>
 					            <td class="col-sm-2"><a class="deleteRow"></a>
 
@@ -296,7 +306,7 @@ function grid_table(project_gantt){
 	        </div>`;
 	    },
 	    set_value:function(node, value, task,section) {
-	    	console.log(node.childNodes);
+	    	// console.log(node.childNodes);
 	        // node.childNodes[1].value = value || "";
 	        // node.childNodes[4].value = task.users || "";
 	    },
@@ -429,14 +439,14 @@ function event_handlers(project_gantt){
 	            freeze_message: "Deleting Link..",
 	            // async: false,
 	            callback: function(r) {
-	            	console.log(r.message);
+	            	// console.log(r.message);
 	            }
 		    });
     	}
 	});
 
 	project_gantt.attachEvent("onAfterLinkAdd", function(id,item){
-    	console.log(item);
+    	// console.log(item);
 	});
 
 	project_gantt.attachEvent("onAfterTaskAdd", function(id,task){
