@@ -3,54 +3,81 @@
 
 
 frappe.ui.form.on('Project Initiation', {
-    project_quotation: function (frm, cdt, cdn) {
-        frappe.model.with_doc("Project Quotation", frm.doc.project_quotation, function () {
-            var table_quotation = frappe.model.get_doc("Project Quotation", frm.doc.project_quotation);
-            for (let i = 0; i <= 15; i++) {
-                frm.clear_table("resources_details_" + i);
-                $.each(table_quotation["resources_details_" + i], function (index, row) {
-                    var d = frm.add_child("resources_details_" + i);
-                    d.group_code = row.group_code;
-                    d.resources = row.resources;
-                    d.cost_price = row.cost_price;
-                    d.months = row.months;
-                    d.resources_name = row.resources_name;
-                    d.quantity = row.quantity;
-                    d.overhead_expenses = row.overhead_expenses;
-                    frm.refresh_field("resources_details_" + i);
-                });
-                frm.clear_table("items_details_" + i);
-                $.each(table_quotation["items_details_" + i], function (index, row) {
-                    var d = frm.add_child("items_details_" + i);
+    onload: function (frm, cdt, cdn) {
+        if (frm.doc.project_quotation === undefined || !frm.doc.project_quotation) {
+            frm.set_value("project_quotation", frm.doc.name);
+            frm.set_value("general_pricing", frm.doc.name);
 
-                    var items_table_values = ["group_code", "cost_price", "items", "quantity", "sar_cost_price", "cost_price_unit", "selling_price_unit", "total_cost_price", "total_selling_price", "currency", "tawaris_services", "cost_price_ts", "selling_price_ts", "total_cost", "profit", "risk", "contingency", "selling_price", "markup_follow", "margin", "final_selling_price", "markup", "time_unit", "time_unit_services"];
+            frappe.model.with_doc("Project Quotation", frm.doc.project_quotation, function () {
+                var table_quotation = frappe.model.get_doc("Project Quotation", frm.doc.project_quotation);
+                // frm.doc.general_pricing = table_quotation;
 
-                    for (let index = 0; index < items_table_values.length; index++) {
-                        d[items_table_values[index]] = 0;
+                // frm.refresh_field("general_pricing");
+                for (let i = 0; i <= 15; i++) {
+                    frm.clear_table("resources_details_" + i);
+                    $.each(table_quotation["resources_details_" + i], function (index, row) {
+                        var d = frm.add_child("resources_details_" + i);
+                        d.group_code = row.group_code;
+                        d.resources = row.resources;
+                        d.cost_price = row.cost_price;
+                        d.months = row.months;
+                        d.resources_name = row.resources_name;
+                        d.quantity = row.quantity;
+                        d.overhead_expenses = row.overhead_expenses;
+                        frm.refresh_field("resources_details_" + i);
+                    });
+                    frm.clear_table("items_details_" + i);
+                    $.each(table_quotation["items_details_" + i], function (index, row) {
+                        var d = frm.add_child("items_details_" + i);
 
+                        var items_table_values = ["group_code", "cost_price", "items", "quantity", "sar_cost_price", "cost_price_unit", "selling_price_unit", "total_cost_price", "total_selling_price", "currency", "tawaris_services", "cost_price_ts", "selling_price_ts", "total_cost", "profit", "risk", "contingency", "selling_price", "markup_follow", "margin", "final_selling_price", "markup", "time_unit", "time_unit_services"];
+
+                        for (let index = 0; index < items_table_values.length; index++) {
+                            d[items_table_values[index]] = 0;
+
+                        }
+                        for (let index = 0; index < items_table_values.length; index++) {
+                            d[items_table_values[index]] = row[items_table_values[index]];
+
+                        }
+                        frm.refresh_field("items_details_" + i);
+                    });
+                    var section_outer_values = ["section_name", "total_overhead_expenses", "cost", "selling_price", "risk_contingency", "total_selling_price", "profit", "markup", "margin"]
+                    for (let index = 0; index < section_outer_values.length; index++) {
+                        frm.doc[section_outer_values[index] + "_" + i] = 0;
                     }
-                    for (let index = 0; index < items_table_values.length; index++) {
-                        d[items_table_values[index]] = row[items_table_values[index]];
 
+                    for (let index = 0; index < section_outer_values.length; index++) {
+                        frm.doc[section_outer_values[index] + "_" + i] = table_quotation[section_outer_values[index] + "_" + i];
+                        if (frm.doc[section_outer_values[index] + "_" + i] != "") {
+                            frm.refresh_field(section_outer_values[index] + "_" + i)
+                        }
                     }
-                    frm.refresh_field("items_details_" + i);
-                });
-                var section_outer_values = ["section_name", "total_overhead_expenses", "cost", "selling_price", "risk_contingency", "total_selling_price", "profit", "markup", "margin"]
-                for (let index = 0; index < section_outer_values.length; index++) {
-                    frm.doc[section_outer_values[index] + "_" + i] = 0;
+
+
+
                 }
+            })
+            cur_frm.doc.project_financial_detail = []
+            frappe.model.with_doc("General Pricing", frm.doc.general_pricing, function () {
+                var tabletransfer = frappe.model.get_doc("General Pricing", frm.doc.general_pricing)
+                // frm.set_value("project_quotation", tabletransfer.project_q)
+                frm.doc.project_financial_detail = []
+                frm.refresh_field("project_financial_detail");
+                $.each(tabletransfer.project_quotation, function (index, row) {
+                    var d = frm.add_child("project_financial_detail");
+                    d.scope_item = row.items;
+                    d.selling_price = row.selling_price;
+                    d.cost_price = row.total_cost_price;
+                    d.additions_value = row.risk_contingency;
+                    d.final_selling_price = row.total_selling_price;
+                    frm.refresh_field("project_financial_detail");
+                });
 
-                for (let index = 0; index < section_outer_values.length; index++) {
-                    frm.doc[section_outer_values[index] + "_" + i] = table_quotation[section_outer_values[index] + "_" + i];
-                    if (frm.doc[section_outer_values[index] + "_" + i] != "") {
-                        frm.refresh_field(section_outer_values[index] + "_" + i)
-                    }
-                }
 
-
-
-            }
-        })
+            })
+            cur_frm.save();
+        }
     },
     profit_0: function (frm) {
         var markup_0 = cur_frm.doc.profit_0 / (cur_frm.doc.cost_0 + cur_frm.doc.risk_contingency_0)
@@ -151,6 +178,28 @@ frappe.ui.form.on('Project Initiation', {
 
 
     validate: function (frm) {
+        frm.clear_table("project_financial_detail");
+        for (let i = 0; i <= 15; i++) {
+
+
+            if ((frm.doc["section_name_" + i] != undefined || frm.doc["cost_" + i] != 0 ||
+                    frm.doc["selling_price_" + i] != 0 || frm.doc["risk_contingency_" + i] != 0)) {
+                console.log(frm.doc["section_name_" + i]);
+                console.log(frm.doc["cost_" + i]);
+                console.log(frm.doc["selling_price_" + i]);
+                console.log(frm.doc["risk_contingency_" + i]);
+
+                var d = frm.add_child("project_financial_detail");
+                d.scope_item = frm.doc["section_name_" + i];
+                d.cost_price = frm.doc["cost_" + i];
+                d.selling_price = frm.doc["selling_price_" + i];
+                d.additions_value = frm.doc["risk_contingency_" + i];
+                cur_frm.script_manager.trigger("selling_price", d.doctype, d.name);
+
+                frm.refresh_field("project_financial_detail");
+            }
+
+        }
         $.each(cur_frm.doc.items_details_0 || [], function (i, d) {
             frappe.model.set_value("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_0);
         });
@@ -2806,23 +2855,6 @@ frappe.ui.form.on('Project Costing Schedule', {
 
 //Including General Pricing items on the Project Initiation.
 frappe.ui.form.on("Project Initiation", "general_pricing", function (frm) {
-    cur_frm.doc.project_financial_detail = []
-    frappe.model.with_doc("General Pricing", frm.doc.general_pricing, function () {
-        var tabletransfer = frappe.model.get_doc("General Pricing", frm.doc.general_pricing)
-        frm.set_value("project_quotation", tabletransfer.project_q)
-        frm.doc.project_financial_detail = []
-        frm.refresh_field("project_financial_detail");
-        $.each(tabletransfer.project_quotation, function (index, row) {
-            var d = frm.add_child("project_financial_detail");
-            d.scope_item = row.items;
-            d.selling_price = row.selling_price;
-            d.cost_price = row.total_cost_price;
-            d.additions_value = row.risk_contingency;
-            d.final_selling_price = row.total_selling_price;
-            frm.refresh_field("project_financial_detail");
-        });
 
-
-    })
 
 });
