@@ -3,16 +3,13 @@
 
 function refresh_general_pricing(frm) {
     frm.clear_table("project_financial_detail");
-    frm.clear_table("project_payment_schedule");
     for (let i = 0; i <= 15; i++) {
         if ((frm.doc["section_name_" + i] != undefined || "" || frm.doc["cost_" + i] != 0 ||
                 frm.doc["selling_price_" + i] != 0 || frm.doc["risk_contingency_" + i] != 0)) {
 
             var d = frm.add_child("project_financial_detail");
-            var d2 = frm.add_child("project_payment_schedule");
 
             d.scope_item = frm.doc["section_name_" + i];
-            d2.scope_item = frm.doc["section_name_" + i];
 
             d.cost_price = frm.doc["cost_" + i];
             d.selling_price = frm.doc["selling_price_" + i];
@@ -24,10 +21,19 @@ function refresh_general_pricing(frm) {
     }
     frm.script_manager.trigger("final_selling_price", d.doctype, d.name);
     frm.refresh_field("project_financial_detail");
-    frm.refresh_field("project_payment_schedule");
 }
 
 frappe.ui.form.on('Project Initiation', {
+    refresh_button: function (frm) {
+        for (let index = 0; index <= 15; index++) {
+            frm.refresh_field("section_name_" + index);
+        }
+        frm.script_manager.trigger("cost_", d.doctype, d.name);
+
+        refresh_general_pricing(frm);
+
+
+    },
     onload: function (frm, cdt, cdn) {
         if (frm.doc.project_quotation === undefined || !frm.doc.project_quotation) {
             frm.set_value("project_quotation", frm.doc.name);
@@ -56,7 +62,16 @@ frappe.ui.form.on('Project Initiation', {
                     $.each(table_quotation["items_details_" + i], function (index, row) {
                         var d = frm.add_child("items_details_" + i);
 
-                        var items_table_values = ["group_code", "cost_price", "items", "quantity", "sar_cost_price", "cost_price_unit", "selling_price_unit", "total_cost_price", "total_selling_price", "currency", "tawaris_services", "cost_price_ts", "selling_price_ts", "total_cost", "profit", "risk", "contingency", "selling_price", "markup_follow", "margin", "final_selling_price", "markup", "time_unit", "time_unit_services"];
+                        var items_table_values = ["group_code", "cost_price", "items",
+                            "quantity", "sar_cost_price", "cost_price_unit",
+                            "selling_price_unit", "total_cost_price",
+                            "total_selling_price", "currency", "tawaris_services",
+                            "cost_price_ts", "selling_price_ts", "total_cost",
+                            "profit", "risk", "contingency",
+                            "selling_price", "markup_follow", "margin",
+                            "final_selling_price", "markup", "time_unit",
+                            "time_unit_services"
+                        ];
 
                         for (let index = 0; index < items_table_values.length; index++) {
                             d[items_table_values[index]] = 0;
@@ -106,8 +121,17 @@ frappe.ui.form.on('Project Initiation', {
         }
     },
     profit_0: function (frm) {
-        var markup_0 = cur_frm.doc.profit_0 / (cur_frm.doc.cost_0 + cur_frm.doc.risk_contingency_0)
-        var margin_0 = cur_frm.doc.profit_0 / cur_frm.doc.total_selling_price_0
+        var markup_0 = 0;
+        var margin_0 = 0
+        if (cur_frm.doc.profit_0 && cur_frm.doc.profit_0 != 0) {
+            if (cur_frm.doc.cost_0 && cur_frm.doc.risk_contingency_0) {
+                markup_0 = cur_frm.doc.profit_0 / (cur_frm.doc.cost_0 + cur_frm.doc.risk_contingency_0)
+            }
+            if (cur_frm.doc.total_selling_price_0) {
+                margin_0 = cur_frm.doc.profit_0 / cur_frm.doc.total_selling_price_0
+            }
+
+        }
         cur_frm.set_value("markup_0", Math.round(markup_0 * 100));
         cur_frm.set_value("margin_0", Math.round(margin_0 * 100));
     },
@@ -282,6 +306,8 @@ cur_frm.cscript.total_overhead_expenses_0 = function (frm, cdt, cdn) {
 frappe.ui.form.on('Resources Details', {
     cost_price: function (frm, cdt, cdn) {
         var d = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "overhead_expenses", 0);
+
         if (d.cost_price && d.quantity && d.months) {
             var total = ((d.cost_price * 1.45) * d.months) * d.quantity
             frappe.model.set_value(cdt, cdn, "overhead_expenses", total);
@@ -289,6 +315,8 @@ frappe.ui.form.on('Resources Details', {
     },
     quantity: function (frm, cdt, cdn) {
         var d = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "overhead_expenses", 0);
+
         if (d.cost_price && d.quantity && d.months) {
             var total = ((d.cost_price * 1.45) * d.months) * d.quantity
             frappe.model.set_value(cdt, cdn, "overhead_expenses", total);
@@ -296,6 +324,8 @@ frappe.ui.form.on('Resources Details', {
     },
     months: function (frm, cdt, cdn) {
         var d = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "overhead_expenses", 0);
+
         if (d.cost_price && d.quantity && d.months) {
             var total = ((d.cost_price * 1.45) * d.months) * d.quantity
             frappe.model.set_value(cdt, cdn, "overhead_expenses", total);
@@ -326,6 +356,9 @@ frappe.ui.form.on('Items Details', {
             if (frm.selected_doc.parentfield == "items_details_" + index) {
                 if (cur_frm.doc["total_overhead_expenses_" + index]) {
                     frappe.model.set_value(cdt, cdn, "tawaris_services", cur_frm.doc["total_overhead_expenses_" + index]);
+                } else {
+                    frappe.model.set_value(cdt, cdn, "tawaris_services", 0);
+
                 }
             }
 
@@ -355,6 +388,8 @@ frappe.ui.form.on('Items Details', {
     },
     sar_cost_price: function (frm, cdt, cdn) {
         var d = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "cost_price_unit", 0);
+
         if (d.sar_cost_price && d.quantity) {
             var total = d.sar_cost_price * d.quantity
             frappe.model.set_value(cdt, cdn, "cost_price_unit", total);
@@ -362,6 +397,8 @@ frappe.ui.form.on('Items Details', {
     },
     quantity: function (frm, cdt, cdn) {
         var d = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "cost_price_unit", 0);
+
         if (d.sar_cost_price && d.quantity) {
             var total = d.sar_cost_price * d.quantity
             frappe.model.set_value(cdt, cdn, "cost_price_unit", total);
@@ -372,6 +409,8 @@ frappe.ui.form.on('Items Details', {
     },
     markup: function (frm, cdt, cdn) {
         var d = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "markup_follow", 0);
+
         if (d.markup) {
             frappe.model.set_value(cdt, cdn, "markup_follow", d.markup);
         }
@@ -382,6 +421,9 @@ frappe.ui.form.on('Items Details', {
     },
     cost_price_unit: function (frm, cdt, cdn) {
         var d = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "selling_price_unit", 0);
+        frappe.model.set_value(cdt, cdn, "total_cost_price", 0);
+
         if (d.cost_price_unit && d.markup_follow) {
             var total = d.cost_price_unit + (d.cost_price_unit * (d.markup_follow / 100))
             frappe.model.set_value(cdt, cdn, "selling_price_unit", total);
@@ -394,6 +436,9 @@ frappe.ui.form.on('Items Details', {
     },
     markup_follow: function (frm, cdt, cdn) {
         var d = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "selling_price_unit", 0);
+        frappe.model.set_value(cdt, cdn, "selling_price_ts", 0);
+
         if (d.cost_price_unit && d.markup_follow) {
             var total = d.cost_price_unit + (d.cost_price_unit * (d.markup_follow / 100))
             frappe.model.set_value(cdt, cdn, "selling_price_unit", total);
@@ -409,6 +454,9 @@ frappe.ui.form.on('Items Details', {
     },
     time_unit: function (frm, cdt, cdn) {
         var d = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "total_cost_price", 0);
+        frappe.model.set_value(cdt, cdn, "total_selling_price", 0);
+
         if (d.cost_price_unit && d.time_unit) {
             var total = d.cost_price_unit * d.time_unit
             frappe.model.set_value(cdt, cdn, "total_cost_price", total);
@@ -424,6 +472,8 @@ frappe.ui.form.on('Items Details', {
     },
     selling_price_unit: function (frm, cdt, cdn) {
         var d = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "total_selling_price", 0);
+
         if (d.selling_price_unit && d.time_unit) {
             var total = d.selling_price_unit * d.time_unit
             frappe.model.set_value(cdt, cdn, "total_selling_price", total);
@@ -432,6 +482,7 @@ frappe.ui.form.on('Items Details', {
     },
     tawaris_services: function (frm, cdt, cdn) {
         var d = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "cost_price_ts", 0);
         if (d.tawaris_services && d.time_unit_services) {
             var total = d.tawaris_services * d.time_unit_services
             frappe.model.set_value(cdt, cdn, "cost_price_ts", total);
@@ -452,6 +503,9 @@ frappe.ui.form.on('Items Details', {
     },
     cost_price_ts: function (frm, cdt, cdn) {
         var d = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "selling_price_ts", 0);
+        frappe.model.set_value(cdt, cdn, "total_cost", 0);
+
         if (d.cost_price_ts && d.markup_follow) {
             var total = d.cost_price_ts + (d.cost_price_ts * (d.markup_follow / 100))
             frappe.model.set_value(cdt, cdn, "selling_price_ts", total);
@@ -468,6 +522,7 @@ frappe.ui.form.on('Items Details', {
     },
     total_cost_price: function (frm, cdt, cdn) {
         var d = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "total_cost", 0);
         if (d.total_cost_price && d.cost_price_ts) {
             var total = d.total_cost_price + d.cost_price_ts
             frappe.model.set_value(cdt, cdn, "total_cost", total);
@@ -477,6 +532,7 @@ frappe.ui.form.on('Items Details', {
     },
     total_selling_price: function (frm, cdt, cdn) {
         var d = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "selling_price", 0);
         if (d.total_selling_price && d.selling_price_ts) {
             var total = d.total_selling_price + d.selling_price_ts
             frappe.model.set_value(cdt, cdn, "selling_price", total);
@@ -486,6 +542,7 @@ frappe.ui.form.on('Items Details', {
     },
     selling_price_ts: function (frm, cdt, cdn) {
         var d = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "selling_price", 0);
         if (d.total_selling_price && d.selling_price_ts) {
             var total = d.total_selling_price + d.selling_price_ts
             frappe.model.set_value(cdt, cdn, "selling_price", total);
@@ -494,6 +551,9 @@ frappe.ui.form.on('Items Details', {
     },
     total_cost: function (frm, cdt, cdn) {
         var d = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "profit", 0);
+        frappe.model.set_value(cdt, cdn, "contingency", 0);
+
         if (d.total_cost && d.selling_price) {
             var total = d.selling_price - d.total_cost
             frappe.model.set_value(cdt, cdn, "profit", total);
@@ -505,6 +565,9 @@ frappe.ui.form.on('Items Details', {
     },
     selling_price: function (frm, cdt, cdn) {
         var d = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "profit", 0);
+        frappe.model.set_value(cdt, cdn, "final_selling_price", 0);
+
         if (d.total_cost && d.selling_price) {
             var total = d.selling_price - d.total_cost
             frappe.model.set_value(cdt, cdn, "profit", total);
@@ -530,6 +593,8 @@ frappe.ui.form.on('Items Details', {
     },
     contingency: function (frm, cdt, cdn) {
         var d = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "final_selling_price", 0);
+
         if (d.contingency && d.selling_price) {
             var total = d.contingency + d.selling_price
             frappe.model.set_value(cdt, cdn, "final_selling_price", total);
@@ -538,6 +603,7 @@ frappe.ui.form.on('Items Details', {
     },
     profit: function (frm, cdt, cdn) {
         var d = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "margin", 0);
         if (d.profit && d.final_selling_price && !(d.final_selling_price == 0 || isNaN(d.final_selling_price))) {
             var total = Math.round((d.profit / d.final_selling_price) * 100)
             frappe.model.set_value(cdt, cdn, "margin", total);
@@ -545,6 +611,7 @@ frappe.ui.form.on('Items Details', {
     },
     final_selling_price: function (frm, cdt, cdn) {
         var d = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "margin", 0);
         if (d.profit && d.final_selling_price && !(d.final_selling_price == 0 || isNaN(d.final_selling_price))) {
             var total = Math.round((d.profit / d.final_selling_price) * 100)
             frappe.model.set_value(cdt, cdn, "margin", total);
@@ -662,6 +729,9 @@ cur_frm.set_query("group_code", "resources_details_1", function (doc, cdt, cdn) 
 });
 
 cur_frm.cscript.total_overhead_expenses_1 = function (frm, cdt, cdn) {
+    frappe.model.set_value("Items Details", "items_details_1", 'tawaris_services', 0);
+
+
     $.each(cur_frm.doc.items_details_1 || [], function (i, d) {
         frappe.model.set_value("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_1);
     });
@@ -1344,6 +1414,8 @@ frappe.ui.form.on("Project Costing Schedule", "cost_value", function (frm, cdt, 
 frappe.ui.form.on('Project Financial Details', {
     selling_price: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "final_selling_price", 0);
+
         if (row.selling_price || row.additions_value) {
             frappe.model.set_value(cdt, cdn, "final_selling_price", row.selling_price + row.additions_value);
 
@@ -1352,6 +1424,8 @@ frappe.ui.form.on('Project Financial Details', {
     },
     additions_value: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "final_selling_price", 0);
+
         if (row.selling_price || row.additions_value) {
             frappe.model.set_value(cdt, cdn, "final_selling_price", row.selling_price + row.additions_value);
 
@@ -1400,6 +1474,8 @@ frappe.ui.form.on('Project Payment Schedule', {
     },
     items_value: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "billing_value", 0);
+
         if (row.items_value && row.billing_percentage) {
             frappe.model.set_value(cdt, cdn, "billing_value", row.billing_percentage / 100 * row.items_value);
 
@@ -1408,6 +1484,8 @@ frappe.ui.form.on('Project Payment Schedule', {
     },
     billing_percentage: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "billing_value", 0);
+
         if (row.items_value && row.billing_percentage) {
             frappe.model.set_value(cdt, cdn, "billing_value", row.billing_percentage / 100 * row.items_value);
 
@@ -1456,6 +1534,8 @@ frappe.ui.form.on('Project Costing Schedule', {
     },
     items_cost_price: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "cost_value", 0);
+
         if (row.items_cost_price && row.cost_value_percentage) {
             frappe.model.set_value(cdt, cdn, "cost_value", row.cost_value_percentage / 100 * row.items_cost_price);
 
@@ -1464,6 +1544,8 @@ frappe.ui.form.on('Project Costing Schedule', {
     },
     cost_value_percentage: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "cost_value", 0);
+
         if (row.items_cost_price && row.cost_value_percentage) {
             frappe.model.set_value(cdt, cdn, "cost_value", row.cost_value_percentage / 100 * row.items_cost_price);
 
