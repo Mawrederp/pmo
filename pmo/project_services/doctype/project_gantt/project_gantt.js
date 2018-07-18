@@ -308,6 +308,14 @@ function grid_table(project_gantt){
 	    set_value:function(node, value, task,section) {
 	    	// var _children = node.getElementsByClassName('form-control');
 	    	var g_table = node.getElementsByClassName('g_table');
+	    	if (task["resources"].length > 0){
+	    		var newRow = $("<tr>");
+	     		var cols = "";
+	     		for (var i in task["resources"]){
+	     			console.log(task["resources"][i]);
+	     		}
+
+	    	}
 	    	console.log(g_table);
 	    	// var newRow = $("<tr>");
 	     //    var cols = "";
