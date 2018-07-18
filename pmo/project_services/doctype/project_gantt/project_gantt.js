@@ -107,7 +107,7 @@ frappe.ui.form.on('Project Gantt', {
 				project_gantt.config.open_tree_initially = true;
 
 				project_gantt.locale.labels.section_priority = "Priority";
-				// project_gantt.locale.labels.section_party = "Party";
+				project_gantt.locale.labels.section_test = "Test";
 				project_gantt.locale.labels.section_type = "Type"
 
 				var p_opts = [
@@ -306,6 +306,9 @@ function grid_table(project_gantt){
 	        </div>`;
 	    },
 	    set_value:function(node, value, task,section) {
+	    	var _children = node.getElementsByClassName('form-control');
+	    	// console.log(task);
+	    	// console.log(_children)
 	    	// console.log(node.childNodes);
 	        // node.childNodes[1].value = value || "";
 	        // node.childNodes[4].value = task.users || "";
@@ -354,6 +357,25 @@ function add_additional_data(project_gantt, task, project_name){
 				
 			}
 			
+			frappe.call({
+	            method: 'frappe.client.get_list',
+	            args: {
+	                'doctype': 'Task Resource',
+	                'filters': { 'parent': task["name"] },
+	                'fields': ['resource_name', 'percentage']
+		        },
+	            freeze: true,
+	            freeze_message: "Loading Gantt..",
+	            // async: false,
+	            callback: function(r) {
+	            	if(r.message){
+	            		task["resources"] = r.message;
+	            	}
+	            	else{
+	            		task["resources"] = [];
+	            	}
+	            }
+		    });
 
 			// var task_duration = moment(task.exp_end_date).diff(task.exp_start_date, "days");
 
