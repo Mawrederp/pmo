@@ -281,17 +281,6 @@ function grid_table(project_gantt){
 						        </tr>
 						    </thead>
 						    <tbody>
-						        <tr>
-						            <td class="col-sm-6">
-						                <input type="text" name="resource_name" class="form-control" />
-						            </td>
-						            <td class="col-sm-4">
-						                <input type="text" name="percentage"  class="form-control"/>
-						            </td>
-						            <td class="col-sm-2"><a class="deleteRow"></a>
-
-						            </td>
-						        </tr>
 						    </tbody>
 						    <tfoot>
 						        <tr>
@@ -307,12 +296,18 @@ function grid_table(project_gantt){
 	    },
 	    set_value:function(node, value, task,section) {
 	    	// var _children = node.getElementsByClassName('form-control');
-	    	var g_table = node.getElementsByClassName('g_table');
+	    	// var g_table = node.getElementsByClassName('g_table');
 	    	if (task["resources"].length > 0){
-	    		var newRow = $("<tr>");
-	     		var cols = "";
+	    		
 	     		for (var i in task["resources"]){
 	     			console.log(task["resources"][i]);
+	     			var newRow = $("<tr>");
+	     			
+	     			var cols = "";
+	     			cols += '<td class="col-sm-6"><input type="text" name="resource_name" class="form-control" />'+task["resources"][i].resource_name+'</td>';
+	     			cols += '<td class="col-sm-6"><input type="text" name="resource_name" class="form-control" />'+task["resources"][i].percentage+'</td>';
+	     			cols += '<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Delete"></td>';
+	     			$("table.g_table").append(newRow);
 	     		}
 
 	    	}
