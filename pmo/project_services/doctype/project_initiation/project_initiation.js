@@ -1372,12 +1372,12 @@ cur_frm.set_query("scope_item", "project_payment_schedule", function (doc, cdt, 
         item.push(cur_frm.doc.project_financial_detail[i].scope_item)
         cost.push(cur_frm.doc.project_financial_detail[i].final_selling_price)
     }
-    // console.log(item)
-    // console.log(cost)
+    console.log(item)
+    console.log(cost)
     var d = locals[cdt][cdn];
     return {
         filters: [
-            ['Item', 'name', 'in', item]
+            ['Project Items', 'name', 'in', item]
         ]
     }
 });
@@ -1434,7 +1434,7 @@ cur_frm.set_query("scope_item", "project_costing_schedule", function (doc, cdt, 
     var d = locals[cdt][cdn];
     return {
         filters: [
-            ['Item', 'name', 'in', item]
+            ['Project Items', 'name', 'in', item]
         ]
     }
 });
