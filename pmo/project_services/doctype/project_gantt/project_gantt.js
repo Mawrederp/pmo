@@ -271,42 +271,55 @@ function grid_table(project_gantt){
 
 	project_gantt.form_blocks["my_editor"] = {
 	    render:function(sns) {
-	    	console.log(sns);
+	    	// console.log(sns);
 	        return `<div class='dhx_cal_ltext' style='height:120px;'>
-					<table id="myTable" class=" table order-list">
-					    <thead>
-					        <tr>
-					            <td>Resource Name</td>
-					            <td>Percentage</td>
-					        </tr>
-					    </thead>
-					    <tbody>
-					        <tr>
-					            <td class="col-sm-6">
-					                <input type="text" name="resource_name" class="form-control" />
-					            </td>
-					            <td class="col-sm-4">
-					                <input type="text" name="percentage"  class="form-control"/>
-					            </td>
-					            <td class="col-sm-2"><a class="deleteRow"></a>
+						<table id="g_table" class="g_table table order-list">
+						    <thead>
+						        <tr>
+						            <td>Resource Name</td>
+						            <td>Percentage</td>
+						        </tr>
+						    </thead>
+						    <tbody>
+						        <tr>
+						            <td class="col-sm-6">
+						                <input type="text" name="resource_name" class="form-control" />
+						            </td>
+						            <td class="col-sm-4">
+						                <input type="text" name="percentage"  class="form-control"/>
+						            </td>
+						            <td class="col-sm-2"><a class="deleteRow"></a>
 
-					            </td>
-					        </tr>
-					    </tbody>
-					    <tfoot>
-					        <tr>
-					            <td colspan="2" style="text-align: left;">
-					                <input type="button" class="btn btn-primary" id="addrow" value="Add Row" />
-					            </td>
-					        </tr>
-					        <tr>
-					        </tr>
-					    </tfoot>
-					</table>
-	        </div>`;
+						            </td>
+						        </tr>
+						    </tbody>
+						    <tfoot>
+						        <tr>
+						            <td colspan="2" style="text-align: left;">
+						                <input type="button" class="btn btn-primary" id="addrow" value="Add Row" />
+						            </td>
+						        </tr>
+						        <tr>
+						        </tr>
+						    </tfoot>
+						</table>
+	       			</div>`;
 	    },
 	    set_value:function(node, value, task,section) {
-	    	var _children = node.getElementsByClassName('form-control');
+	    	// var _children = node.getElementsByClassName('form-control');
+	    	var g_table = node.getElementsByClassName('g_table');
+	    	console.log(g_table);
+	    	// var newRow = $("<tr>");
+	     //    var cols = "";
+
+	     //    cols += '<td><input type="text" class="form-control" name="name' + counter + '"/></td>';
+	     //    cols += '<td><input type="text" class="form-control" name="mail' + counter + '"/></td>';
+	     //    cols += '<td><input type="text" class="form-control" name="phone' + counter + '"/></td>';
+
+	     //    cols += '<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Delete"></td>';
+	     //    newRow.append(cols);
+	     //    $("table.order-list").append(newRow);
+	        // counter++;
 	    	// console.log(task);
 	    	// console.log(_children)
 	    	// console.log(node.childNodes);
