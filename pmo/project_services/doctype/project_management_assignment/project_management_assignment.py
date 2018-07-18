@@ -33,7 +33,8 @@ class ProjectManagementAssignment(Document):
             doc_initiation.program_manager = self.program_manager
             doc_initiation.save(ignore_permissions=True)
             
-            frappe.msgprint("Success Assigned to Project : "+self.project_name)
+            frappe.msgprint("""Success Assigned to Project : <b><a href="#Form/Project Initiation/{pp}">{pp}</a></b>""".format(pp = self.project_name))
+
 
             if self.program_manager and prefered_email_program_manager:
                 try:
