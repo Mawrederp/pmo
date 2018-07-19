@@ -1478,7 +1478,9 @@ frappe.ui.form.on('Project Payment Schedule', {
 
         if (row.items_value && row.billing_percentage) {
             frappe.model.set_value(cdt, cdn, "billing_value", row.billing_percentage / 100 * row.items_value);
-
+        }
+        if (row.billing_value && row.items_value) {
+            frappe.model.set_value(cdt, cdn, "number_of_invoices", row.items_value/row.billing_value);
         }
 
     },
@@ -1488,7 +1490,36 @@ frappe.ui.form.on('Project Payment Schedule', {
 
         if (row.items_value && row.billing_percentage) {
             frappe.model.set_value(cdt, cdn, "billing_value", row.billing_percentage / 100 * row.items_value);
+        }
 
+    },
+    billing_value: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+
+        if (row.billing_value && row.items_value) {
+            frappe.model.set_value(cdt, cdn, "number_of_invoices", row.items_value/row.billing_value);
+        }
+        if (row.vat && row.billing_value) {
+            frappe.model.set_value(cdt, cdn, "vat_value", (row.vat/100)*row.billing_value);
+        }
+        if (row.vat_value && row.billing_value) {
+            frappe.model.set_value(cdt, cdn, "total_billing_value", row.vat_value+row.billing_value);
+        }
+
+    },
+    vat: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+
+        if (row.vat && row.billing_value) {
+            frappe.model.set_value(cdt, cdn, "vat_value", (row.vat/100)*row.billing_value);
+        }
+
+    },
+    vat_value: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+
+        if (row.vat_value && row.billing_value) {
+            frappe.model.set_value(cdt, cdn, "total_billing_value", row.vat_value+row.billing_value);
         }
 
     }
