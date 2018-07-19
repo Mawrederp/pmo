@@ -24,11 +24,12 @@ function refresh_general_pricing(frm) {
 }
 
 frappe.ui.form.on('Project Initiation', {
-    refresh_button: function (frm) {
+    refresh_button: function (frm, cdt, cdn) {
         for (let index = 0; index <= 15; index++) {
             frm.refresh_field("section_name_" + index);
+            frm.script_manager.trigger("cost_", cdt, cdn);
         }
-        frm.script_manager.trigger("cost_", d.doctype, d.name);
+
 
         refresh_general_pricing(frm);
 
@@ -303,7 +304,7 @@ cur_frm.cscript.total_overhead_expenses_0 = function (frm, cdt, cdn) {
     });
 }
 
-frappe.ui.form.on('Resources Details', {
+var resources_details_properties = {
     cost_price: function (frm, cdt, cdn) {
         var d = locals[cdt][cdn];
         frappe.model.set_value(cdt, cdn, "overhead_expenses", 0);
@@ -324,7 +325,7 @@ frappe.ui.form.on('Resources Details', {
     },
     months: function (frm, cdt, cdn) {
         var d = locals[cdt][cdn];
-        frappe.model.set_value(cdt, cdn, "overhead_expenses", 0);
+        // frappe.model.set_value(cdt, cdn, "overhead_expenses", 0);
 
         if (d.cost_price && d.quantity && d.months) {
             var total = ((d.cost_price * 1.45) * d.months) * d.quantity
@@ -335,7 +336,18 @@ frappe.ui.form.on('Resources Details', {
         frappe.model.set_value(cdt, cdn, "resources", "");
     }
 
-});
+}
+for (let index = 0; index <= 15; index++) {
+    resources_details_properties["resources_details_" + index + "_remove"] = function (frm) {
+        console.log(frm.doc["resources_details_" + index].length);
+        if (frm.doc["resources_details_" + index].length == 0) {
+            frm.set_value("total_overhead_expenses_" + index, 0);
+
+        }
+    }
+
+}
+frappe.ui.form.on('Resources Details', resources_details_properties);
 
 
 
@@ -628,6 +640,7 @@ frappe.ui.form.on('Items Details', {
 
 frappe.ui.form.on("Resources Details", "overhead_expenses", function (frm, cdt, cdn) {
 
+
     for (let index = 0; index <= 15; index++) {
         var grand_total = 0;
         $.each(frm.doc["resources_details_" + index] || [], function (i, d) {
@@ -682,13 +695,16 @@ frappe.ui.form.on("Items Details", "contingency", function (frm, cdt, cdn) {
 
 frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
-    for (let index = 0; index <= 15; index++) {
-        var grand_total = 0;
-        $.each(frm.doc["items_details_" + index] || [], function (i, d) {
-            grand_total += flt(d.final_selling_price);
-        });
-        frm.set_value("total_selling_price_" + index, grand_total);
-    }
+    var parentfield = locals[cdt][cdn].parentfield;
+    var parentfield_id = parentfield[parentfield.length - 1]
+
+    var grand_total = 0;
+    $.each(frm.doc["items_details_" + parentfield_id] || [], function (i, d) {
+        grand_total += flt(d.final_selling_price);
+    });
+    frm.set_value("total_selling_price_" + parentfield_id, grand_total);
+
+    console.log("///*/*/")
     refresh_general_pricing(frm);
 
 });
@@ -729,6 +745,7 @@ cur_frm.set_query("group_code", "resources_details_1", function (doc, cdt, cdn) 
 });
 
 cur_frm.cscript.total_overhead_expenses_1 = function (frm, cdt, cdn) {
+
     frappe.model.set_value("Items Details", "items_details_1", 'tawaris_services', 0);
 
 
