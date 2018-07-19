@@ -20,8 +20,8 @@ class ProjectInitiation(Document):
                 self.docstatus = 1
                 self.docstatus = 2
             
-        field_array = ["cost","selling_price","risk_contingency", "total_selling_price"]
-        final_totals_list = [0] * 4
+        field_array = ["cost","selling_price","risk_contingency", "total_selling_price","profit","markup","margin"]
+        final_totals_list = [0] * 7
         self.project_financial_detail = []
         
         for i in range(0,15):
@@ -38,13 +38,19 @@ class ProjectInitiation(Document):
                                                     "cost_price": getattr(self, field_array[0]+"_"+str(i)),
                                                     "selling_price": getattr(self, field_array[1]+"_"+str(i)),
                                                     "additions_value": getattr(self, field_array[2]+"_"+str(i)),
-                                                    "final_selling_price": getattr(self, field_array[3]+"_"+str(i))
+                                                    "final_selling_price": getattr(self, field_array[3]+"_"+str(i)),
+                                                    "profit": getattr(self, field_array[4]+"_"+str(i)),
+                                                    "markup": getattr(self, field_array[5]+"_"+str(i)),
+                                                    "margin": getattr(self, field_array[6]+"_"+str(i))
                                                     })
         
         self.total_cost_price = final_totals_list[0]
         self.selling_price = final_totals_list[1]
         self.additions_value = final_totals_list[2]
         self.total_selling_price = final_totals_list[3]
+        self.profit = final_totals_list[4]
+        self.markup = final_totals_list[5]
+        self.margin = final_totals_list[6]
         
 
 
