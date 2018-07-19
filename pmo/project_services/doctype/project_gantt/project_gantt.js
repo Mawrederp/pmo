@@ -107,7 +107,6 @@ frappe.ui.form.on('Project Gantt', {
 				project_gantt.config.open_tree_initially = true;
 
 				project_gantt.locale.labels.section_priority = "Priority";
-				project_gantt.locale.labels.section_test = "Test";
 				project_gantt.locale.labels.section_type = "Type"
 
 				var p_opts = [
@@ -126,10 +125,8 @@ frappe.ui.form.on('Project Gantt', {
 				//     { key: 'Tawari', label: 'Tawari' },
 				//     { key: 'Partner/Supplier', label: 'Partner/Supplier' }
 				// ];
-				grid_table(project_gantt);
 
 				project_gantt.config.lightbox.sections = [
-					{name:"test", map_to:"resources", type:"my_editor"},
 					{name:"description", map_to:"text", type:"textarea", focus:true},
 			    	{name:"priority", map_to:"priority", type:"select", options:p_opts},
 			    	{name:"type", type:"select", map_to:"type", options:t_opts, onchange: function(){
@@ -267,83 +264,6 @@ frappe.ui.form.on('Project Gantt', {
 function single_date(e){
 	// console.log(e);
 }
-function grid_table(project_gantt){
-
-	project_gantt.form_blocks["my_editor"] = {
-	    render:function(sns) {
-	    	// console.log(sns);
-	        return `<div class='dhx_cal_ltext'>
-						<table id="g_table" class="g_table table order-list">
-						    <thead>
-						        <tr>
-						            <td>Resource Name</td>
-						            <td>Percentage</td>
-						        </tr>
-						    </thead>
-						    <tbody>
-						    </tbody>
-						    <tfoot>
-						        <tr>
-						            <td colspan="2" style="text-align: left;">
-						                <input type="button" class="btn btn-primary" id="addrow" value="Add Row" />
-						            </td>
-						        </tr>
-						        <tr>
-						        </tr>
-						    </tfoot>
-						</table>
-	       			</div>`;
-	    },
-	    set_value:function(node, value, task,section) {
-	    	// var lit = project_gantt.getLightboxType();
-	    	// console.log(lit)
-	    	// var _children = node.getElementsByTagName('tbody');
-	    	// console.log(_children);
-	    	var g_table = $('#g_table');
-	    	if (task["resources"].length > 0){
-	    		
-	     		for (var i in task["resources"]){
-	     			// console.log(task["resources"][i]);
-	     			var newRow = $("<tr>");
-	     			
-	     			var cols = "";
-	     			cols += '<td class="col-sm-6"><input type="text" name="resource_name" value = ' +task["resources"][i].resource_name+ ' class="form-control" /></td>';
-	     			cols += '<td class="col-sm-6"><input type="text" name="resource_name" value = ' +task["resources"][i].percentage+ ' class="form-control" /></td>';
-	     			cols += '<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Delete"></td>';
-	     			newRow.append(cols);
-	     			g_table.append(newRow);
-	     		}
-
-	    	}
-	    	// console.log($("table.g_table"));
-	    	// var newRow = $("<tr>");
-	     //    var cols = "";
-
-	     //    cols += '<td><input type="text" class="form-control" name="name' + counter + '"/></td>';
-	     //    cols += '<td><input type="text" class="form-control" name="mail' + counter + '"/></td>';
-	     //    cols += '<td><input type="text" class="form-control" name="phone' + counter + '"/></td>';
-
-	     //    cols += '<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Delete"></td>';
-	     //    newRow.append(cols);
-	     //    $("table.order-list").append(newRow);
-	        // counter++;
-	    	// console.log(task);
-	    	// console.log(_children)
-	    	// console.log(node.childNodes);
-	        // node.childNodes[1].value = value || "";
-	        // node.childNodes[4].value = task.users || "";
-	    },
-	    get_value:function(node, task,section) {
-	        // task.users = node.childNodes[4].value;
-	        // return node.childNodes[1].value;
-	    },
-	    focus:function(node) {
-	        // var a = node.childNodes[1];
-	        // a.select();
-	        // a.focus();
-	    }
-	};
-}
 
 
 function add_additional_data(project_gantt, task, project_name){
@@ -377,25 +297,25 @@ function add_additional_data(project_gantt, task, project_name){
 				
 			}
 			
-			frappe.call({
-	            method: 'frappe.client.get_list',
-	            args: {
-	                'doctype': 'Task Resource',
-	                'filters': { 'parent': task["name"] },
-	                'fields': ['resource_name', 'percentage']
-		        },
-	            freeze: true,
-	            freeze_message: "Loading Gantt..",
-	            // async: false,
-	            callback: function(r) {
-	            	if(r.message){
-	            		task["resources"] = r.message;
-	            	}
-	            	else{
-	            		task["resources"] = [];
-	            	}
-	            }
-		    });
+			// frappe.call({
+	  //           method: 'frappe.client.get_list',
+	  //           args: {
+	  //               'doctype': 'Task Resource',
+	  //               'filters': { 'parent': task["name"] },
+	  //               'fields': ['resource_name', 'percentage']
+		 //        },
+	  //           freeze: true,
+	  //           freeze_message: "Loading Gantt..",
+	  //           // async: false,
+	  //           callback: function(r) {
+	  //           	if(r.message){
+	  //           		task["resources"] = r.message;
+	  //           	}
+	  //           	else{
+	  //           		task["resources"] = [];
+	  //           	}
+	  //           }
+		 //    });
 
 			// var task_duration = moment(task.exp_end_date).diff(task.exp_start_date, "days");
 
