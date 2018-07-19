@@ -1094,6 +1094,7 @@ div.dhx_modal_cover {
   border-right: none;
   background-color: #fff;
   overflow: hidden;
+  overflow-y: scroll;
   height: 1px;
 }
 .gantt_btn_set {

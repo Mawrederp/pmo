@@ -129,21 +129,21 @@ frappe.ui.form.on('Project Gantt', {
 				grid_table(project_gantt);
 
 				project_gantt.config.lightbox.sections = [
-					{name:"test", height:200, map_to:"resources", type:"my_editor"},
-					{name:"description", height:70, map_to:"text", type:"textarea", focus:true},
-			    	{name:"priority", height:30, map_to:"priority", type:"select", options:p_opts},
-			    	{name:"type", height:30, type:"select", map_to:"type", options:t_opts, onchange: function(){
+					{name:"test", map_to:"resources", type:"my_editor"},
+					{name:"description", map_to:"text", type:"textarea", focus:true},
+			    	{name:"priority", map_to:"priority", type:"select", options:p_opts},
+			    	{name:"type", type:"select", map_to:"type", options:t_opts, onchange: function(){
 			    		// project_gantt.getLightboxSection("time").section.single_date = true;
 			    		// project_gantt.getLightboxSection("time").section.single_date=true;
 			    		// console.log(project_gantt.getLightboxSection("time").section);
 
 			    		}
 			    	},
-			    	{name:"time", height:40, map_to:"auto", type:"time", single_date: false}
+			    	{name:"time", map_to:"auto", type:"time", single_date: false}
 			    	// {name:"party", height:30, width:200, map_to:"party", type:"select", options:party_opts, button:"add"}
 		    	];
 
-		    	project_gantt.locale.labels.button_add="Add";
+		    	// project_gantt.locale.labels.button_add="Add";
 		   //  	project_gantt.config.lightbox.milestone_sections = [
 					// {name:"description", height:70, map_to:"text", type:"textarea", focus:true},
 			  //   	{name:"type", height:30, type:"select", map_to:"type", options:t_opts, single_date: true}
@@ -272,7 +272,7 @@ function grid_table(project_gantt){
 	project_gantt.form_blocks["my_editor"] = {
 	    render:function(sns) {
 	    	// console.log(sns);
-	        return `<div class='dhx_cal_ltext' style='height:120px;'>
+	        return `<div class='dhx_cal_ltext'>
 						<table id="g_table" class="g_table table order-list">
 						    <thead>
 						        <tr>
@@ -295,23 +295,27 @@ function grid_table(project_gantt){
 	       			</div>`;
 	    },
 	    set_value:function(node, value, task,section) {
-	    	// var _children = node.getElementsByClassName('form-control');
-	    	// var g_table = node.getElementsByClassName('g_table');
+	    	// var lit = project_gantt.getLightboxType();
+	    	// console.log(lit)
+	    	// var _children = node.getElementsByTagName('tbody');
+	    	// console.log(_children);
+	    	var g_table = $('#g_table');
 	    	if (task["resources"].length > 0){
 	    		
 	     		for (var i in task["resources"]){
-	     			console.log(task["resources"][i]);
+	     			// console.log(task["resources"][i]);
 	     			var newRow = $("<tr>");
 	     			
 	     			var cols = "";
-	     			cols += '<td class="col-sm-6"><input type="text" name="resource_name" class="form-control" />'+task["resources"][i].resource_name+'</td>';
-	     			cols += '<td class="col-sm-6"><input type="text" name="resource_name" class="form-control" />'+task["resources"][i].percentage+'</td>';
+	     			cols += '<td class="col-sm-6"><input type="text" name="resource_name" value = ' +task["resources"][i].resource_name+ ' class="form-control" /></td>';
+	     			cols += '<td class="col-sm-6"><input type="text" name="resource_name" value = ' +task["resources"][i].percentage+ ' class="form-control" /></td>';
 	     			cols += '<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Delete"></td>';
-	     			$("table.g_table").append(newRow);
+	     			newRow.append(cols);
+	     			g_table.append(newRow);
 	     		}
 
 	    	}
-	    	console.log(g_table);
+	    	// console.log($("table.g_table"));
 	    	// var newRow = $("<tr>");
 	     //    var cols = "";
 
