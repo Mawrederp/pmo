@@ -472,7 +472,11 @@ frappe.ui.form.on('Items Details', {
 		defult_tawaris_services = cur_frm.doc["total_overhead_expenses_" + section_caracter]
 
 		if (d.tawaris_services_check && d.tawaris_services_percent) {
-			var total = defult_tawaris_services - (defult_tawaris_services*d.tawaris_services_percent/100)
+			// var total = defult_tawaris_services - (defult_tawaris_services*d.tawaris_services_percent/100)
+			var total = defult_tawaris_services*d.tawaris_services_percent/100
+			frappe.model.set_value(cdt, cdn, "tawaris_services", total);
+		}else if (d.tawaris_services_check && d.tawaris_services_percent==0) {
+			var total = "0"
 			frappe.model.set_value(cdt, cdn, "tawaris_services", total);
 		}
 	},
