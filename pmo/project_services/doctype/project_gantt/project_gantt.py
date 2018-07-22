@@ -80,7 +80,8 @@ def save_tasks(tasks, project_name):
 				"id": task["id"],
 				"parent_task": parent_task,
 				"subject": task["text"],
-				"priority": task["priority"]
+				"priority": task["priority"],
+				"assignee":  task["assignee"]
 				# "expected_end_date": add_days(getdate(task["start_date"]), task["duration"])
 				}
 			if "name" in task:

@@ -107,6 +107,7 @@ frappe.ui.form.on('Project Gantt', {
 				project_gantt.config.open_tree_initially = true;
 
 				project_gantt.locale.labels.section_priority = "Priority";
+				project_gantt.locale.labels.section_assignee = "Assignee";
 				project_gantt.locale.labels.section_type = "Type"
 
 				var p_opts = [
@@ -136,20 +137,23 @@ frappe.ui.form.on('Project Gantt', {
 
 			    		}
 			    	},
+			    	{name: "assignee", height: 22, map_to: "assignee", type: "select", options: project_gantt.serverList("assignees")},
 			    	{name:"time", map_to:"auto", type:"time", single_date: false}
 			    	// {name:"party", height:30, width:200, map_to:"party", type:"select", options:party_opts, button:"add"}
 		    	];
 
+		    	
 		    	// project_gantt.locale.labels.button_add="Add";
 		   //  	project_gantt.config.lightbox.milestone_sections = [
 					// {name:"description", height:70, map_to:"text", type:"textarea", focus:true},
 			  //   	{name:"type", height:30, type:"select", map_to:"type", options:t_opts, single_date: true}
 			  //   ];
 				project_gantt.config.columns=[
-					{name:"text",       label:"Task name",  tree:true, width:'*' },
-					{name:"start_date", label:"Start time", align: "center" },
-					{name:"end_date",   label:"End time",   align: "center" },
-					{name:"add",        label:"" }
+					{name:"text",       label:"Task name",  tree:true, width:'*', min_width: 200, max_width:300},
+					{name:"start_date", label:"Start time", align: "center", width:120 },
+					{name:"end_date",   label:"End time",   align: "center", width:120 },
+					{name:"progress",   label:"Progress",   align: "center", width:50 },
+					{name:"add",        label:"" , width:44}
 				];
 
 				// project_gantt.templates.grid_header_class = function(columnName, column){
@@ -194,6 +198,34 @@ frappe.ui.form.on('Project Gantt', {
 								// console.log(tasks[i]);
 								// console.log(project_gantt.getTask(tasks[i].id));
 							}
+
+							frappe.call({
+					            method: 'frappe.client.get_list',
+					            args: {
+					                'doctype': 'Roles And Responsibilities',
+					                'filters': { 'parent': project_doc.name, ParentType: "Project Planning" },
+					                'fields': ['name1']
+						        },
+					            freeze: true,
+					            freeze_message: "Loading Gantt..",
+					            // async: false,
+					            callback: function(r) {
+					            	if(r.message){
+					            		var resources = r.message;
+					            		// console.log(resources);
+					            		for(var i in resources){
+					            			resources[i]["key"] = resources[i].name1;
+					            			resources[i]["label"] = resources[i].name1;
+					            		}
+					            		// console.log(resources);
+					            		project_gantt.updateCollection("assignees", resources);
+					            		project_gantt.templates.rightside_text = function(start, end, task){
+											return byId(project_gantt.serverList('assignees'), task.assignee);
+										};
+					            	}
+					            	
+					            }
+						    });
 
 							frappe.call({
 					            method: 'pmo.project_services.doctype.project_gantt.project_gantt.get_links',
@@ -296,26 +328,7 @@ function add_additional_data(project_gantt, task, project_name){
 
 				
 			}
-			
-			// frappe.call({
-	  //           method: 'frappe.client.get_list',
-	  //           args: {
-	  //               'doctype': 'Task Resource',
-	  //               'filters': { 'parent': task["name"] },
-	  //               'fields': ['resource_name', 'percentage']
-		 //        },
-	  //           freeze: true,
-	  //           freeze_message: "Loading Gantt..",
-	  //           // async: false,
-	  //           callback: function(r) {
-	  //           	if(r.message){
-	  //           		task["resources"] = r.message;
-	  //           	}
-	  //           	else{
-	  //           		task["resources"] = [];
-	  //           	}
-	  //           }
-		 //    });
+		
 
 			// var task_duration = moment(task.exp_end_date).diff(task.exp_start_date, "days");
 
@@ -336,6 +349,14 @@ function add_additional_data(project_gantt, task, project_name){
 		// }
 		
 	}
+}
+
+function byId(list, id) {
+	for (var i = 0; i < list.length; i++) {
+		if (list[i].key == id)
+			return list[i].label || "";
+	}
+	return "";
 }
 
 function event_handlers(project_gantt){
