@@ -269,6 +269,12 @@ frappe.ui.form.on('Project Initiation', {
                 grand_total += flt(d.profit);
             });
             frm.set_value("profit_" + index, grand_total);
+
+            var grand_total = 0;
+            $.each(frm.doc.project_financial_detail || [], function (i, d) {
+                grand_total += flt(d.additions_value);
+            });
+            frm.set_value("total_risk", grand_total);
         }
 
 
@@ -1312,6 +1318,11 @@ frappe.ui.form.on('Project Initiation', {
         var total_overall_margin = flt(cur_frm.doc.overall_project_profit) / flt(cur_frm.doc.total_final_selling_price) * 100;
         frm.set_value("overall_project_margin", total_overall_margin);
 
+        var total = 0;
+        $.each(frm.doc.project_financial_detail || [], function (i, d) {
+            total += flt(d.additions_value);
+        });
+        frm.set_value("total_risk", total);
 
     },
     total_final_selling_price: function (frm) {
@@ -1326,7 +1337,11 @@ frappe.ui.form.on('Project Initiation', {
         var total_overall_margin = flt(cur_frm.doc.overall_project_profit) / flt(cur_frm.doc.total_final_selling_price) * 100;
         frm.set_value("overall_project_margin", total_overall_margin);
 
-
+        var total = 0;
+        $.each(frm.doc.project_financial_detail || [], function (i, d) {
+            total += flt(d.additions_value);
+        });
+        frm.set_value("total_risk", total);
     },
     validate: function (frm) {
 
@@ -1350,6 +1365,12 @@ frappe.ui.form.on('Project Initiation', {
         });
         frm.set_value("total_final_selling_price", total);
 
+        var total = 0;
+        $.each(frm.doc.project_financial_detail || [], function (i, d) {
+            total += flt(d.additions_value);
+        });
+        frm.set_value("total_risk", total);
+
         var total_overall_profit = flt(cur_frm.doc.total_final_selling_price) - flt(cur_frm.doc.total_cost_price);
         frm.set_value("overall_project_profit", total_overall_profit);
         frm.set_value("overall_project_budget", total_overall_profit);
@@ -1371,6 +1392,12 @@ frappe.ui.form.on('Project Initiation', {
             cost_value_total += flt(d.items_cost_price);
         });
         frm.set_value("total_cost_value", cost_value_total);
+
+        var total = 0;
+        $.each(frm.doc.project_financial_detail || [], function (i, d) {
+            total += flt(d.additions_value);
+        });
+        frm.set_value("total_risk", total);
     }
 
 });
@@ -1378,12 +1405,16 @@ frappe.ui.form.on('Project Initiation', {
 cur_frm.cscript.custom_general_pricing = function (frm) {
     var total_cost_price = 0;
     var final_selling_price = 0;
+    var additions_value = 0;
     $.each(cur_frm.doc.project_financial_detail || [], function (i, d) {
         total_cost_price += flt(d.cost_price);
         final_selling_price += flt(d.final_selling_price);
+        additions_value += flt(d.additions_value);
     });
+    console.log(additions_value)
     cur_frm.set_value("total_cost_price", total_cost_price);
     cur_frm.set_value("total_final_selling_price", final_selling_price);
+    cur_frm.set_value("total_risk", additions_value);
 
 }
 
@@ -1405,6 +1436,16 @@ frappe.ui.form.on("Project Financial Details", "final_selling_price", function (
         total += flt(d.final_selling_price);
     });
     frm.set_value("total_final_selling_price", total);
+});
+
+
+frappe.ui.form.on("Project Financial Details", "additions_value", function (frm, cdt, cdn) {
+    // code for calculate total and set on parent field.
+    var total = 0;
+    $.each(frm.doc.project_financial_detail || [], function (i, d) {
+        total += flt(d.additions_value);
+    });
+    frm.set_value("total_risk", total);
 });
 
 
