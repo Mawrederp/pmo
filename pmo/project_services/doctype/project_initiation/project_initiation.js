@@ -120,6 +120,14 @@ frappe.ui.form.on('Project Initiation', {
             })
             cur_frm.save();
         }
+
+        if((cur_frm.doc.total_cost_price+cur_frm.doc.total_risk)!=0){
+            frm.set_value("project_markup_percent", (cur_frm.doc.total_profit/(cur_frm.doc.total_cost_price+cur_frm.doc.total_risk))*100);
+        }
+        if(cur_frm.doc.total_final_selling_price!=0){
+            frm.set_value("project_margin_percent", (cur_frm.doc.total_profit/cur_frm.doc.total_final_selling_price)*100);
+        }
+
     },
     profit_0: function (frm) {
         var markup_0 = 0;
@@ -226,6 +234,15 @@ frappe.ui.form.on('Project Initiation', {
         cur_frm.set_value("markup_15", Math.round(markup_15 * 100));
         cur_frm.set_value("margin_15", Math.round(margin_15 * 100));
     },
+    vat: function (frm) {
+        cur_frm.set_value("vat_value", cur_frm.doc.total_final_selling_price*(cur_frm.doc.vat/100));
+    },
+    vat_value: function (frm) {
+        cur_frm.set_value("total_final_selling_price_with_vat", cur_frm.doc.total_final_selling_price+cur_frm.doc.vat_value);
+    },
+    total_final_selling_price: function (frm) {
+        cur_frm.set_value("total_final_selling_price_with_vat", cur_frm.doc.total_final_selling_price+cur_frm.doc.vat_value);
+    },
 
 
     validate: function (frm) {
@@ -270,15 +287,34 @@ frappe.ui.form.on('Project Initiation', {
             });
             frm.set_value("profit_" + index, grand_total);
 
-            var grand_total = 0;
-            $.each(frm.doc.project_financial_detail || [], function (i, d) {
-                grand_total += flt(d.additions_value);
-            });
-            frm.set_value("total_risk", grand_total);
         }
 
 
         refresh_general_pricing(frm);
+
+
+        var grand_total = 0;
+        $.each(frm.doc.project_financial_detail || [], function (i, d) {
+            grand_total += flt(d.additions_value);
+        });
+        frm.set_value("total_risk", grand_total);
+
+        var total = 0;
+        $.each(frm.doc.project_financial_detail || [], function (i, d) {
+            total += flt(d.selling_price);
+        });
+        frm.set_value("general_total_selling_price", total);
+
+        var total = 0;
+        $.each(frm.doc.project_financial_detail || [], function (i, d) {
+            total += flt(d.profit);
+        });
+        frm.set_value("total_profit", total);
+
+        cur_frm.set_value("vat_value", cur_frm.doc.total_final_selling_price*(cur_frm.doc.vat/100));
+
+        cur_frm.set_value("total_final_selling_price_with_vat", cur_frm.doc.total_final_selling_price+cur_frm.doc.vat_value);
+
 
     }
 
@@ -345,7 +381,7 @@ var resources_details_properties = {
 }
 for (let index = 0; index <= 15; index++) {
     resources_details_properties["resources_details_" + index + "_remove"] = function (frm) {
-        console.log(frm.doc["resources_details_" + index].length);
+        // console.log(frm.doc["resources_details_" + index].length);
         if (frm.doc["resources_details_" + index].length == 0) {
             frm.set_value("total_overhead_expenses_" + index, 0);
 
@@ -732,7 +768,7 @@ frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cd
     });
     frm.set_value("total_selling_price_" + parentfield_id, grand_total);
 
-    console.log("///*/*/")
+    // console.log("///*/*/")
     refresh_general_pricing(frm);
 
 });
@@ -1337,7 +1373,7 @@ frappe.ui.form.on('Project Initiation', {
         var total_overall_markup = flt(cur_frm.doc.overall_project_profit) / flt(cur_frm.doc.total_cost_price) * 100;
         frm.set_value("overall_project_markup", total_overall_markup);
 
-        var total_overall_margin = flt(cur_frm.doc.overall_project_profit) / flt(cur_frm.doc.total_final_selling_price) * 100;
+        var total_overall_margin = flt(cur_frm.doc.overall_project_profit) / flt(cur_frm.doc.general_total_selling_price) * 100;
         frm.set_value("overall_project_margin", total_overall_margin);
 
         var total = 0;
@@ -1345,6 +1381,23 @@ frappe.ui.form.on('Project Initiation', {
             total += flt(d.additions_value);
         });
         frm.set_value("total_risk", total);
+
+        var total = 0;
+        $.each(frm.doc.project_financial_detail || [], function (i, d) {
+            total += flt(d.selling_price);
+        });
+        frm.set_value("general_total_selling_price", total);
+
+
+        var total = 0;
+        $.each(frm.doc.project_financial_detail || [], function (i, d) {
+            total += flt(d.profit);
+        });
+        frm.set_value("total_profit", total);
+
+        if((cur_frm.doc.total_cost_price+cur_frm.doc.total_risk)!=0){
+            frm.set_value("project_markup_percent", (cur_frm.doc.total_profit/(cur_frm.doc.total_cost_price+cur_frm.doc.total_risk))*100);
+        }
 
     },
     total_final_selling_price: function (frm) {
@@ -1356,14 +1409,52 @@ frappe.ui.form.on('Project Initiation', {
         var total_overall_markup = flt(cur_frm.doc.overall_project_profit) / flt(cur_frm.doc.total_cost_price) * 100;
         frm.set_value("overall_project_markup", total_overall_markup);
 
-        var total_overall_margin = flt(cur_frm.doc.overall_project_profit) / flt(cur_frm.doc.total_final_selling_price) * 100;
+        var total_overall_margin = flt(cur_frm.doc.overall_project_profit) / flt(cur_frm.doc.general_total_selling_price) * 100;
         frm.set_value("overall_project_margin", total_overall_margin);
+
+        if(cur_frm.doc.total_final_selling_price && cur_frm.doc.total_final_selling_price!=0){
+            frm.set_value("risk_contingency_percent", (cur_frm.doc.total_risk/cur_frm.doc.total_final_selling_price)*100);
+        }
 
         var total = 0;
         $.each(frm.doc.project_financial_detail || [], function (i, d) {
             total += flt(d.additions_value);
         });
         frm.set_value("total_risk", total);
+
+        var total = 0;
+        $.each(frm.doc.project_financial_detail || [], function (i, d) {
+            total += flt(d.selling_price);
+        });
+        frm.set_value("general_total_selling_price", total);
+
+        var total = 0;
+        $.each(frm.doc.project_financial_detail || [], function (i, d) {
+            total += flt(d.profit);
+        });
+        frm.set_value("total_profit", total);
+
+        if(cur_frm.doc.total_final_selling_price!=0){
+            frm.set_value("project_margin_percent", (cur_frm.doc.total_profit/cur_frm.doc.total_final_selling_price)*100);
+        }
+    },
+    total_risk: function(frm){
+        if(cur_frm.doc.total_final_selling_price && cur_frm.doc.total_final_selling_price!=0){
+            frm.set_value("risk_contingency_percent", (cur_frm.doc.total_risk/cur_frm.doc.total_final_selling_price)*100);
+        }
+
+        if((cur_frm.doc.total_cost_price+cur_frm.doc.total_risk)!=0){
+            frm.set_value("project_markup_percent", (cur_frm.doc.total_profit/(cur_frm.doc.total_cost_price+cur_frm.doc.total_risk))*100);
+        }
+    },
+    total_profit: function(frm){
+        if((cur_frm.doc.total_cost_price+cur_frm.doc.total_risk)!=0){
+            frm.set_value("project_markup_percent", (cur_frm.doc.total_profit/(cur_frm.doc.total_cost_price+cur_frm.doc.total_risk))*100);
+        }
+
+        if(cur_frm.doc.total_final_selling_price!=0){
+            frm.set_value("project_margin_percent", (cur_frm.doc.total_profit/cur_frm.doc.total_final_selling_price)*100);
+        }
     },
     validate: function (frm) {
 
@@ -1393,6 +1484,18 @@ frappe.ui.form.on('Project Initiation', {
         });
         frm.set_value("total_risk", total);
 
+        var total = 0;
+        $.each(frm.doc.project_financial_detail || [], function (i, d) {
+            total += flt(d.selling_price);
+        });
+        frm.set_value("general_total_selling_price", total);
+
+        var total = 0;
+        $.each(frm.doc.project_financial_detail || [], function (i, d) {
+            total += flt(d.profit);
+        });
+        frm.set_value("total_profit", total);
+
         var total_overall_profit = flt(cur_frm.doc.total_final_selling_price) - flt(cur_frm.doc.total_cost_price);
         frm.set_value("overall_project_profit", total_overall_profit);
         frm.set_value("overall_project_budget", total_overall_profit);
@@ -1400,8 +1503,12 @@ frappe.ui.form.on('Project Initiation', {
         var total_overall_markup = flt(cur_frm.doc.overall_project_profit) / flt(cur_frm.doc.total_cost_price) * 100;
         frm.set_value("overall_project_markup", total_overall_markup);
 
-        var total_overall_margin = flt(cur_frm.doc.overall_project_profit) / flt(cur_frm.doc.total_final_selling_price) * 100;
+        var total_overall_margin = flt(cur_frm.doc.overall_project_profit) / flt(cur_frm.doc.general_total_selling_price) * 100;
         frm.set_value("overall_project_margin", total_overall_margin);
+
+        if(cur_frm.doc.total_final_selling_price && cur_frm.doc.total_final_selling_price!=0){
+            frm.set_value("risk_contingency_percent", (cur_frm.doc.total_risk/cur_frm.doc.total_final_selling_price)*100);
+        }
 
         var billing_total = 0;
         $.each(frm.doc.project_payment_schedule || [], function (i, d) {
@@ -1420,6 +1527,27 @@ frappe.ui.form.on('Project Initiation', {
             total += flt(d.additions_value);
         });
         frm.set_value("total_risk", total);
+
+        var total = 0;
+        $.each(frm.doc.project_financial_detail || [], function (i, d) {
+            total += flt(d.selling_price);
+        });
+        frm.set_value("general_total_selling_price", total);
+
+        var total = 0;
+        $.each(frm.doc.project_financial_detail || [], function (i, d) {
+            total += flt(d.profit);
+        });
+        frm.set_value("total_profit", total);
+
+        if((cur_frm.doc.total_cost_price+cur_frm.doc.total_risk)!=0){
+            frm.set_value("project_markup_percent", (cur_frm.doc.total_profit/(cur_frm.doc.total_cost_price+cur_frm.doc.total_risk))*100);
+        }
+
+        if(cur_frm.doc.total_final_selling_price!=0){
+            frm.set_value("project_margin_percent", (cur_frm.doc.total_profit/cur_frm.doc.total_final_selling_price)*100);
+        }
+
     }
 
 });
@@ -1432,13 +1560,19 @@ cur_frm.cscript.custom_general_pricing = function (frm) {
         total_cost_price += flt(d.cost_price);
         final_selling_price += flt(d.final_selling_price);
         additions_value += flt(d.additions_value);
+        selling_price += flt(d.selling_price);
+        profit += flt(d.profit);
     });
     console.log(additions_value)
     cur_frm.set_value("total_cost_price", total_cost_price);
     cur_frm.set_value("total_final_selling_price", final_selling_price);
     cur_frm.set_value("total_risk", additions_value);
+    cur_frm.set_value("general_total_selling_price", selling_price);
+    cur_frm.set_value("total_profit", profit);
 
 }
+
+
 
 
 frappe.ui.form.on("Project Financial Details", "cost_price", function (frm, cdt, cdn) {
@@ -1471,6 +1605,26 @@ frappe.ui.form.on("Project Financial Details", "additions_value", function (frm,
 });
 
 
+frappe.ui.form.on("Project Financial Details", "selling_price", function (frm, cdt, cdn) {
+    // code for calculate total and set on parent field.
+    var total = 0;
+    $.each(frm.doc.project_financial_detail || [], function (i, d) {
+        total += flt(d.selling_price);
+    });
+    frm.set_value("general_total_selling_price", total);
+});
+
+
+frappe.ui.form.on("Project Financial Details", "profit", function (frm, cdt, cdn) {
+    // code for calculate total and set on parent field.
+    var total = 0;
+    $.each(frm.doc.project_financial_detail || [], function (i, d) {
+        total += flt(d.profit);
+    });
+    frm.set_value("total_profit", total);
+});
+
+
 frappe.ui.form.on("Project Payment Schedule", "items_value", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
     var billing_total = 0;
@@ -1498,7 +1652,6 @@ frappe.ui.form.on('Project Financial Details', {
 
         if (row.selling_price || row.additions_value) {
             frappe.model.set_value(cdt, cdn, "final_selling_price", row.selling_price + row.additions_value);
-
         }
 
     },
@@ -1508,9 +1661,40 @@ frappe.ui.form.on('Project Financial Details', {
 
         if (row.selling_price || row.additions_value) {
             frappe.model.set_value(cdt, cdn, "final_selling_price", row.selling_price + row.additions_value);
-
         }
 
+        frappe.model.set_value(cdt, cdn, "profit", row.final_selling_price-(row.cost_price+row.additions_value));
+
+        if((row.cost_price+row.additions_value)!=0){
+            frappe.model.set_value(cdt, cdn, "markup", (row.profit/(row.cost_price+row.additions_value))*100);
+        }
+
+    },
+    final_selling_price: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "profit", row.final_selling_price-(row.cost_price+row.additions_value));
+
+        if(row.final_selling_price!=0){
+            frappe.model.set_value(cdt, cdn, "margin", (row.profit/row.final_selling_price)*100);
+        }
+    },
+    cost_price: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "profit", row.final_selling_price-(row.cost_price+row.additions_value));
+
+        if((row.cost_price+row.additions_value)!=0){
+            frappe.model.set_value(cdt, cdn, "markup", (row.profit/(row.cost_price+row.additions_value))*100);
+        }
+    },
+    profit: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        if((row.cost_price+row.additions_value)!=0){
+            frappe.model.set_value(cdt, cdn, "markup", (row.profit/(row.cost_price+row.additions_value))*100);
+        }
+
+        if(row.final_selling_price!=0){
+            frappe.model.set_value(cdt, cdn, "margin", (row.profit/row.final_selling_price)*100);
+        }
     }
 
 
@@ -1526,8 +1710,8 @@ cur_frm.set_query("scope_item", "project_payment_schedule", function (doc, cdt, 
         item.push(cur_frm.doc.project_financial_detail[i].scope_item)
         cost.push(cur_frm.doc.project_financial_detail[i].final_selling_price)
     }
-    console.log(item)
-    console.log(cost)
+    // console.log(item)
+    // console.log(cost)
     var d = locals[cdt][cdn];
     return {
         filters: [
@@ -1618,8 +1802,7 @@ cur_frm.set_query("scope_item", "project_costing_schedule", function (doc, cdt, 
         item.push(cur_frm.doc.project_financial_detail[i].scope_item)
         cost.push(cur_frm.doc.project_financial_detail[i].final_selling_price)
     }
-    // console.log(item)
-    // console.log(cost)
+    
     var d = locals[cdt][cdn];
     return {
         filters: [
