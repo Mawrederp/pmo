@@ -1383,7 +1383,7 @@ frappe.ui.form.on('Project Initiation', {
 
         var total_overall_profit = flt(cur_frm.doc.total_final_selling_price) - flt(cur_frm.doc.total_cost_price);
         frm.set_value("overall_project_profit", total_overall_profit);
-        frm.set_value("overall_project_budget", total_overall_profit);
+        frm.set_value("overall_project_budget", cur_frm.doc.total_final_selling_price_with_vat);
 
         var total_overall_markup = flt(cur_frm.doc.overall_project_profit) / flt(cur_frm.doc.total_cost_price) * 100;
         frm.set_value("overall_project_markup", total_overall_markup);
@@ -1419,7 +1419,6 @@ frappe.ui.form.on('Project Initiation', {
 
         var total_overall_profit = flt(cur_frm.doc.total_final_selling_price) - flt(cur_frm.doc.total_cost_price);
         frm.set_value("overall_project_profit", total_overall_profit);
-        frm.set_value("overall_project_budget", total_overall_profit);
 
         var total_overall_markup = flt(cur_frm.doc.overall_project_profit) / flt(cur_frm.doc.total_cost_price) * 100;
         frm.set_value("overall_project_markup", total_overall_markup);
@@ -1461,6 +1460,9 @@ frappe.ui.form.on('Project Initiation', {
         if((cur_frm.doc.total_cost_price+cur_frm.doc.total_risk)!=0){
             frm.set_value("project_markup_percent", (cur_frm.doc.total_profit/(cur_frm.doc.total_cost_price+cur_frm.doc.total_risk))*100);
         }
+    },
+    total_final_selling_price_with_vat: function(frm){
+        frm.set_value("overall_project_budget", cur_frm.doc.total_final_selling_price_with_vat);
     },
     total_profit: function(frm){
         if((cur_frm.doc.total_cost_price+cur_frm.doc.total_risk)!=0){
@@ -1509,7 +1511,7 @@ frappe.ui.form.on('Project Initiation', {
 
         var total_overall_profit = flt(cur_frm.doc.total_final_selling_price) - flt(cur_frm.doc.total_cost_price);
         frm.set_value("overall_project_profit", total_overall_profit);
-        frm.set_value("overall_project_budget", total_overall_profit);
+        frm.set_value("overall_project_budget", cur_frm.doc.total_final_selling_price_with_vat);
 
         var total_overall_markup = flt(cur_frm.doc.overall_project_profit) / flt(cur_frm.doc.total_cost_price) * 100;
         frm.set_value("overall_project_markup", total_overall_markup);
@@ -1570,6 +1572,8 @@ frappe.ui.form.on('Project Initiation', {
         if(cur_frm.doc.total_final_selling_price!=0){
             frm.set_value("project_margin_percent", (cur_frm.doc.total_profit/cur_frm.doc.total_final_selling_price)*100);
         }
+
+        frm.set_value("overall_project_budget", cur_frm.doc.total_final_selling_price_with_vat);
 
     }
 
