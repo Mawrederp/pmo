@@ -15,6 +15,7 @@ function refresh_general_pricing(frm) {
             d.selling_price = frm.doc["selling_price_" + i];
             d.additions_value = frm.doc["risk_contingency_" + i];
             d.final_selling_price = frm.doc["total_selling_price_" + i];
+            d.profit = frm.doc["profit_" + i];
 
         }
 
@@ -113,6 +114,7 @@ frappe.ui.form.on('Project Initiation', {
                     d.cost_price = row.total_cost_price;
                     d.additions_value = row.risk_contingency;
                     d.final_selling_price = row.total_selling_price;
+                    d.profit = row.profit;
                     frm.refresh_field("project_financial_detail");
                 });
 
@@ -121,12 +123,18 @@ frappe.ui.form.on('Project Initiation', {
             cur_frm.save();
         }
 
-        if((cur_frm.doc.total_cost_price+cur_frm.doc.total_risk)!=0){
-            frm.set_value("project_markup_percent", (cur_frm.doc.total_profit/(cur_frm.doc.total_cost_price+cur_frm.doc.total_risk))*100);
-        }
-        if(cur_frm.doc.total_final_selling_price!=0){
-            frm.set_value("project_margin_percent", (cur_frm.doc.total_profit/cur_frm.doc.total_final_selling_price)*100);
-        }
+        // var total = 0;
+        // $.each(frm.doc.project_financial_detail || [], function (i, d) {
+        //     total += flt(d.profit);
+        // });
+        // frm.set_value("total_profit", total);
+
+        // if((cur_frm.doc.total_cost_price+cur_frm.doc.total_risk)!=0){
+        //     frm.set_value("project_markup_percent", (cur_frm.doc.total_profit/(cur_frm.doc.total_cost_price+cur_frm.doc.total_risk))*100);
+        // }
+        // if(cur_frm.doc.total_final_selling_price!=0){
+        //     frm.set_value("project_margin_percent", (cur_frm.doc.total_profit/cur_frm.doc.total_final_selling_price)*100);
+        // }
 
     },
     total_billing_vat: function (frm) {
@@ -314,11 +322,11 @@ frappe.ui.form.on('Project Initiation', {
         });
         frm.set_value("general_total_selling_price", total);
 
-        var total = 0;
-        $.each(frm.doc.project_financial_detail || [], function (i, d) {
-            total += flt(d.profit);
-        });
-        frm.set_value("total_profit", total);
+        // var total = 0;
+        // $.each(frm.doc.project_financial_detail || [], function (i, d) {
+        //     total += flt(d.profit);
+        // });
+        // frm.set_value("total_profit", total);
 
         cur_frm.set_value("vat_value", cur_frm.doc.total_final_selling_price*(cur_frm.doc.vat/100));
 
@@ -390,7 +398,6 @@ var resources_details_properties = {
 }
 for (let index = 0; index <= 15; index++) {
     resources_details_properties["resources_details_" + index + "_remove"] = function (frm) {
-        // console.log(frm.doc["resources_details_" + index].length);
         if (frm.doc["resources_details_" + index].length == 0) {
             frm.set_value("total_overhead_expenses_" + index, 0);
 
@@ -777,7 +784,6 @@ frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cd
     });
     frm.set_value("total_selling_price_" + parentfield_id, grand_total);
 
-    // console.log("///*/*/")
     refresh_general_pricing(frm);
 
 });
@@ -1467,11 +1473,7 @@ frappe.ui.form.on('Project Initiation', {
     },
     validate: function (frm) {
 
-        // $("div.btn-group.actions-btn-group.open").find("a.grey-link").each(function() {
-        // 	// if($(this).html())
-        // 	console.log( $(this).html() );
-        // });
-
+      
 
         cur_frm.refresh_fields(["workflow_state"]);
 
@@ -1573,10 +1575,12 @@ frappe.ui.form.on('Project Initiation', {
 
 });
 
-cur_frm.cscript.custom_general_pricing = function (frm) {
+cur_frm.cscript.custom_validate = function (frm) {
     var total_cost_price = 0;
     var final_selling_price = 0;
     var additions_value = 0;
+    var selling_price = 0;
+    var profit = 0;
     $.each(cur_frm.doc.project_financial_detail || [], function (i, d) {
         total_cost_price += flt(d.cost_price);
         final_selling_price += flt(d.final_selling_price);
@@ -1584,7 +1588,6 @@ cur_frm.cscript.custom_general_pricing = function (frm) {
         selling_price += flt(d.selling_price);
         profit += flt(d.profit);
     });
-    console.log(additions_value)
     cur_frm.set_value("total_cost_price", total_cost_price);
     cur_frm.set_value("total_final_selling_price", final_selling_price);
     cur_frm.set_value("total_risk", additions_value);
