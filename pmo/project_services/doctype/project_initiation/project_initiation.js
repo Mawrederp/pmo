@@ -1300,12 +1300,14 @@ frappe.ui.form.on('Project Initiation', {
         if (cur_frm.doc.project_sponsor) {
             frm.set_value("project_sponsor_ch", cur_frm.doc.project_sponsor);
             frm.set_value("project_sponsor_name_ch", cur_frm.doc.project_sponsor_name);
+            frm.set_value("employee_tawari_sponsor", cur_frm.doc.project_sponsor_name);
         }
     },
     project_owner: function (frm) {
         if (cur_frm.doc.project_owner) {
             frm.set_value("project_owner_ch", cur_frm.doc.project_owner);
             frm.set_value("project_owner_name_ch", cur_frm.doc.project_owner_name);
+            frm.set_value("employee_tawari_owner", cur_frm.doc.project_owner_name);
         }
     },
     project_manager: function (frm) {
@@ -1332,6 +1334,7 @@ frappe.ui.form.on('Project Initiation', {
     customer_project_sponsor: function (frm) {
         if (cur_frm.doc.customer_project_sponsor) {
             frm.set_value("customer_project_sponsor_ch", cur_frm.doc.customer_project_sponsor);
+            frm.set_value("employee_client_sponsor", cur_frm.doc.customer_project_sponsor);
         }
     },
     customer_project_owner: function (frm) {
@@ -1574,6 +1577,16 @@ frappe.ui.form.on('Project Initiation', {
         }
 
         frm.set_value("overall_project_budget", cur_frm.doc.total_final_selling_price_with_vat);
+
+        if(cur_frm.doc.project_owner_name){
+            frm.set_value("employee_tawari_owner", cur_frm.doc.project_owner_name);
+        }
+        if(cur_frm.doc.project_sponsor_name){
+            frm.set_value("employee_tawari_sponsor", cur_frm.doc.project_sponsor_name);
+        }
+        if(cur_frm.doc.customer_project_sponsor){
+            frm.set_value("employee_client_sponsor", cur_frm.doc.customer_project_sponsor);
+        }
 
     }
 
