@@ -238,13 +238,17 @@ class ProjectInitiation(Document):
         frappe.msgprint(_("""Project Planning have been created: <b><a href="#Form/Project Planning/{pp}">{pp}</a></b>""".format(pp = pp)))
     
 
-
     def existing_project_planning(self):
         project_name = frappe.get_value("Project Planning", filters = {"project_name": self.project_name}, fieldname = "name")
         if project_name:
             return project_name
         else:
             frappe.throw("Project Planning not exist for this project")
+
+
+    def remaining_billing_percent_msg(self,remaining_percent):
+    	if(remaining_percent):
+        	frappe.msgprint("It is not allowed to enter a billing percentage that is higher than {0}".format(remaining_percent))
 
 
     def existing_project_controlling(self):
