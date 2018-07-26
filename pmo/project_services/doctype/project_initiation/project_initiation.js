@@ -138,8 +138,8 @@ frappe.ui.form.on('Project Initiation', {
 
     },
     total_billing_vat: function (frm) {
-    	if(cur_frm.doc.total_final_selling_price && cur_frm.doc.total_final_selling_price!=0){
-        	cur_frm.set_value("overall_project_billing_percent", (cur_frm.doc.total_billing_vat/cur_frm.doc.total_final_selling_price)*100);
+    	if(cur_frm.doc.total_final_selling_price && cur_frm.doc.total_final_selling_price_with_vat!=0){
+        	cur_frm.set_value("overall_project_billing_percent", (cur_frm.doc.total_billing_vat/cur_frm.doc.total_final_selling_price_with_vat)*100);
     	}
     },
     profit_0: function (frm) {
@@ -253,11 +253,11 @@ frappe.ui.form.on('Project Initiation', {
     vat_value: function (frm) {
         cur_frm.set_value("total_final_selling_price_with_vat", cur_frm.doc.total_final_selling_price+cur_frm.doc.vat_value);
     },
-    total_final_selling_price: function (frm) {
+    total_final_selling_price_with_vat: function (frm) {
         cur_frm.set_value("total_final_selling_price_with_vat", cur_frm.doc.total_final_selling_price+cur_frm.doc.vat_value);
 
-        if(cur_frm.doc.total_final_selling_price && cur_frm.doc.total_final_selling_price!=0){
-        	cur_frm.set_value("overall_project_billing_percent", (cur_frm.doc.total_billing_vat/cur_frm.doc.total_final_selling_price)*100);
+        if(cur_frm.doc.total_final_selling_price && cur_frm.doc.total_final_selling_price_with_vat!=0){
+        	cur_frm.set_value("overall_project_billing_percent", (cur_frm.doc.total_billing_vat/cur_frm.doc.total_final_selling_price_with_vat)*100);
     	}
     },
 
