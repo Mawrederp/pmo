@@ -7,6 +7,8 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 import json
+import datetime
+from datetime import date
 
 class ProjectInitiation(Document):
     def validate(self):
@@ -247,8 +249,8 @@ class ProjectInitiation(Document):
 
 
     def remaining_billing_percent_msg(self,remaining_percent):
-    	if(remaining_percent):
-        	frappe.msgprint("It is not allowed to enter a billing percentage that is higher than {0}".format(remaining_percent))
+        if(remaining_percent):
+            frappe.msgprint("It is not allowed to enter a billing percentage that is higher than {0}".format(remaining_percent))
 
 
     def existing_project_controlling(self):
@@ -265,6 +267,56 @@ class ProjectInitiation(Document):
             return project_name
         else:
             frappe.throw("Project Closure not exist for this project")
+
+
+def payment_schedule_notification():
+    from frappe.core.doctype.communication.email import make
+    frappe.flags.sent_mail = None
+
+    projects = frappe.db.sql("select name from `tabProject Initiation`")
+    for project_initiation in projects:
+        doc = frappe.get_doc('Project Initiation', project_initiation[0] )
+
+        for row in doc.project_payment_schedule:
+            content_msg="""
+                 Please be advised that the project {0} has a legitimate invoice as the following, please initiate the invoice request:
+
+                    Scope Item: {1}
+
+                    Item’s Value: {2}
+
+                    Billing Percentage (%): {3}
+
+                    Description/When: {4}
+
+                    Total Billing Value: {5}
+
+                    Remaining Billing %: {6}
+
+                    Remaining Billing Value: {7}
+
+                        """.format(row.parent,row.scope_item,row.items_value,row.billing_percentage,row.description_when,row.total_billing_value,row.remaining_billing_percent,row.remaining_billing_value)
+
+            if row.date_period=='Date':
+                if row.when==date.today():
+                    try:
+                        make(subject = "Project Invoice Notification", content=content_msg, recipients='omar.ja93@gmail.com',
+                            send_email=True, sender="erp@tawari.sa")
+
+
+                        print 'send email done '
+                    except:
+                        frappe.msgprint("could not send")
+
+            elif row.date_period=='Period':
+                if str(row.from_date) <= str(date.today()) and str(date.today()) <= str(row.to_date):
+                    try:
+                        make(subject = "Project Invoice Notification", content=content_msg, recipients='omar.ja93@gmail.com',
+                            send_email=True, sender="erp@tawari.sa")
+
+                        print 'send email done'
+                    except:
+                        frappe.msgprint("could not send")
 
 
 

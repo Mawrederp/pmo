@@ -90,23 +90,11 @@ doctype_js = {"Project Gantt" : "public/js/dhtmlxgantt.js"}
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"pmo.tasks.all"
-# 	],
-# 	"daily": [
-# 		"pmo.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"pmo.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"pmo.tasks.weekly"
-# 	]
-# 	"monthly": [
-# 		"pmo.tasks.monthly"
-# 	]
-# }
+scheduler_events = {
+	"daily": [
+		"pmo.project_services.doctype.project_initiation.project_initiation.payment_schedule_notification"
+	]
+}
 
 # Testing
 # -------
