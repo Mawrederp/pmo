@@ -281,28 +281,34 @@ def payment_schedule_notification():
             content_msg="""
                  Please be advised that the project {0} has a legitimate invoice as the following, please initiate the invoice request:
 
-                    Scope Item: {1}
+                    <br>Scope Item: {1}
 
-                    Item’s Value: {2}
+                    <br>Item’s Value: {2}
 
-                    Billing Percentage (%): {3}
+                    <br>Billing Percentage (%): {3}
 
-                    Description/When: {4}
+                    <br>Description/When: {4}
 
-                    Total Billing Value: {5}
+                    <br>Total Billing Value: {5}
 
-                    Remaining Billing %: {6}
+                    <br>Remaining Billing %: {6}
 
-                    Remaining Billing Value: {7}
+                    <br>Remaining Billing Value: {7}
 
                         """.format(row.parent,row.scope_item,row.items_value,row.billing_percentage,row.description_when,row.total_billing_value,row.remaining_billing_percent,row.remaining_billing_value)
 
             if row.date_period=='Date':
                 if row.when==date.today():
                     try:
-                        make(subject = "Project Invoice Notification", content=content_msg, recipients='omar.ja93@gmail.com',
+                        make(subject = "Project Invoice Notification", content=content_msg, recipients='ai.alamri@tawari.sa',
                             send_email=True, sender="erp@tawari.sa")
 
+                        make(subject = "Project Invoice Notification", content=content_msg, recipients='fm.alqarni@tawari.sa',
+                            send_email=True, sender="erp@tawari.sa")
+
+                        if doc.project_manager_role:
+	                        make(subject = "Project Invoice Notification", content=content_msg, recipients=doc.project_manager_role,
+	                            send_email=True, sender="erp@tawari.sa")
 
                         print 'send email done '
                     except:
@@ -310,13 +316,20 @@ def payment_schedule_notification():
 
             elif row.date_period=='Period':
                 if str(row.from_date) <= str(date.today()) and str(date.today()) <= str(row.to_date):
-                    # try:
-                    make(subject = "Project Invoice Notification", content=content_msg, recipients='omar.ja93@gmail.com',
-                        send_email=True, sender="erp@tawari.sa")
+                    try:
+                        make(subject = "Project Invoice Notification", content=content_msg, recipients='ai.alamri@tawari.sa',
+                            send_email=True, sender="erp@tawari.sa")
 
-                    print 'send email done'
-                    # except:
-                    #     frappe.msgprint("could not send")
+                        make(subject = "Project Invoice Notification", content=content_msg, recipients='fm.alqarni@tawari.sa',
+                            send_email=True, sender="erp@tawari.sa")
+
+                        if doc.project_manager_role:
+	                        make(subject = "Project Invoice Notification", content=content_msg, recipients=doc.project_manager_role,
+	                            send_email=True, sender="erp@tawari.sa")
+
+                        print 'send email done '
+                    except:
+                        frappe.msgprint("could not send")
 
 
 
