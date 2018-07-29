@@ -310,13 +310,13 @@ def payment_schedule_notification():
 
             elif row.date_period=='Period':
                 if str(row.from_date) <= str(date.today()) and str(date.today()) <= str(row.to_date):
-                    try:
-                        make(subject = "Project Invoice Notification", content=content_msg, recipients='omar.ja93@gmail.com',
-                            send_email=True, sender="erp@tawari.sa")
+                    # try:
+                    make(subject = "Project Invoice Notification", content=content_msg, recipients='omar.ja93@gmail.com',
+                        send_email=True, sender="erp@tawari.sa")
 
-                        print 'send email done'
-                    except:
-                        frappe.msgprint("could not send")
+                    print 'send email done'
+                    # except:
+                    #     frappe.msgprint("could not send")
 
 
 
