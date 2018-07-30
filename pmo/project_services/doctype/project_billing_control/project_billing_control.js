@@ -3,7 +3,28 @@
 
 frappe.ui.form.on('Project Billing Control', {
 	refresh: function(frm) {
+		frm.add_custom_button(__("Make Invoice"), function () {
+			// items = []
+			for(row= 0;row<cur_frm.doc.project_payment_schedule_control.length;row++){
+				if(cur_frm.doc.project_payment_schedule_control[row].invoice == 1){
+					// items.push(cur_frm.doc.project_payment_schedule_control[row].scope_item)
+					var scope_item = cur_frm.doc.project_payment_schedule_control[row].scope_item
+					var project_name = cur_frm.doc.project_name
+					var items_value = cur_frm.doc.project_payment_schedule_control[row].items_value
+					var billing_percentage = cur_frm.doc.project_payment_schedule_control[row].billing_percentage
+				
+					frappe.call({
+			            "method": "make_invoice",
+			            doc: cur_frm.doc,
+			            args: { "scope_item": scope_item,"project_name": project_name,
+			            		"items_value": items_value,"billing_percentage": billing_percentage, }
+			        });
 
+				}
+			}
+
+
+    	});
 	},
 	project_name: function(frm) {
 		if(cur_frm.doc.project_name){
