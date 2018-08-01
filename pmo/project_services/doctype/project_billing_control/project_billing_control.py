@@ -4,11 +4,14 @@
 
 from __future__ import unicode_literals
 import frappe
+from frappe import _
 from frappe.model.document import Document
+from frappe.utils import cint, cstr, date_diff, flt, formatdate, getdate, get_link_to_form, \
+	comma_or, get_fullname
 
 class ProjectBillingControl(Document):
 	# def validate(self):
-	# 	self.get_total_so_fat()
+		# self.get_total_so_fat()
 
 
 	# def get_total_so_fat(self):
@@ -31,52 +34,63 @@ class ProjectBillingControl(Document):
 
 
 
-	def make_invoice(self,project_name,scope_item,items_value,billing_percentage):
-		# if not frappe.db.exists("Item", {"item_name": scope_item }):
-		# 	doc = frappe.new_doc("Item")
-		# 	doc.item_group = 'Project'
-		# 	doc.item_code = scope_item
-		# 	doc.item_name = scope_item
-		# 	doc.is_stock_item = 0
-		# 	doc.flags.ignore_mandatory = True
-		# 	doc.insert(ignore_permissions=True)
+	def make_invoice(self,project_name,scope_item,items_value,billing_percentage,due_date,description_when,vat_value):
+		arr=[]
+		for row in self.project_payment_schedule_control:
+			if row.invoice==1:
+				arr.append(row.name)
+
+		if arr and len(arr)==1:
+			if not frappe.db.exists("Item", {"item_name": scope_item }):
+				doc = frappe.new_doc("Item")
+				doc.item_group = 'Project'
+				doc.item_code = scope_item
+				doc.item_name = scope_item
+				doc.is_stock_item = 0
+				doc.flags.ignore_mandatory = True
+				doc.insert(ignore_permissions=True)
 
 
-		item_name = frappe.get_value("Item", filters = {"item_name": scope_item}, fieldname = "name")    
+			item_name = frappe.get_value("Item", filters = {"item_name": scope_item}, fieldname = "name")    
 
-		customer = frappe.db.sql("select customer from `tabProject Initiation` where name='{0}' ".format(self.project_name))
+			customer = frappe.db.sql("select customer from `tabProject Initiation` where name='{0}' ".format(self.project_name))
 
-		if customer:
-			# sinv=frappe.get_doc({
-			# 	"doctype":"Sales Invoice",
-			# 	"customer": customer[0][0],
-			# 	"project": project_name,
-			# 	"naming_series": 'SINV-',
-			# 	"items": [
-			# 		  {
-			# 			"doctype": "Sales Invoice Item",
-			# 			"item_code": item_name,
-			# 			"rate": items_value,
-			# 			"qty": billing_percentage/100
-			# 		  }
-			# 		]
-			# })
-			# sinv.flags.ignore_mandatory = True
-			# sinv.insert(ignore_permissions=True)
+			if customer:
+				sinv=frappe.get_doc({
+					"doctype":"Sales Invoice",
+					"customer": customer[0][0],
+					"project": project_name,
+					"naming_series": 'SINV-',
+					"due_date": due_date,
+					# "debit_to": 'Debtors - O',
+					"items": [
+						  {
+							"doctype": "Sales Invoice Item",
+							"item_code": item_name,
+							"description": description_when,
+							"qty": flt(flt(billing_percentage)/100),
+							"rate": items_value
+						  }
+						],
+					"taxes": [
+						  {
+							"doctype": "Sales Taxes and Charges",
+							"charge_type": 'Actual',
+							"description": description_when,
+							"tax_amount": vat_value
+						  }
+						]
+				})
+				# sinv.flags.ignore_validate = True
+				sinv.flags.ignore_mandatory = True
+				sinv.insert(ignore_permissions=True)
 
-			sinv = frappe.new_doc("Sales Invoice")
-			sinv.customer = customer[0][0]
-			sinv.project = project_name
-			sinv.naming_series = 'SINV-'
-			sinv.append("items",{"item_code":item_name,"rate":items_value,"qty":billing_percentage/100})
-			sinv.flags.ignore_mandatory = True
-			sinv.flags.ignore_validate = True
-			sinv.insert(ignore_permissions=True)
 
-
-			frappe.msgprint("Sales invoice is created")
+				frappe.msgprint("Sales invoice is created")
+			else:
+				frappe.throw('You sould select customer for this project before issue invoice')
 		else:
-			frappe.throw('You sould select customer for this project before issue invoice')
+			frappe.throw("You should check one invoice")
 
-
+		return scope_item
 		
