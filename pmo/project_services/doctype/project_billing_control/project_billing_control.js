@@ -12,12 +12,14 @@ frappe.ui.form.on('Project Billing Control', {
 					var project_name = cur_frm.doc.project_name
 					var items_value = cur_frm.doc.project_payment_schedule_control[row].items_value
 					var billing_percentage = cur_frm.doc.project_payment_schedule_control[row].billing_percentage
-				
 					frappe.call({
 			            "method": "make_invoice",
 			            doc: cur_frm.doc,
 			            args: { "scope_item": scope_item,"project_name": project_name,
-			            		"items_value": items_value,"billing_percentage": billing_percentage, }
+			            		"items_value": items_value,"billing_percentage": billing_percentage },
+			            callback: function (r) {
+		                    console.log(r.message)
+		                }
 			        });
 
 				}

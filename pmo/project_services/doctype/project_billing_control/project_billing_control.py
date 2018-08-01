@@ -32,31 +32,51 @@ class ProjectBillingControl(Document):
 
 
 	def make_invoice(self,project_name,scope_item,items_value,billing_percentage):
-		if not frappe.db.exists("Item", {"item_name": scope_item }):
-			frappe.get_doc({
-					"doctype":"Item",
-					"item_group": 'Project',
-					"item_code": scope_item,
-					"item_name": scope_item,
-					"is_stock_item": 0
-				}).insert(ignore_permissions=True)
+		# if not frappe.db.exists("Item", {"item_name": scope_item }):
+		# 	doc = frappe.new_doc("Item")
+		# 	doc.item_group = 'Project'
+		# 	doc.item_code = scope_item
+		# 	doc.item_name = scope_item
+		# 	doc.is_stock_item = 0
+		# 	doc.flags.ignore_mandatory = True
+		# 	doc.insert(ignore_permissions=True)
 
-		customer = frappe.db.sql("select customer from `tabProject Initiation` where name='{0}' ".format(project_name))
+
+		item_name = frappe.get_value("Item", filters = {"item_name": scope_item}, fieldname = "name")    
+
+		customer = frappe.db.sql("select customer from `tabProject Initiation` where name='{0}' ".format(self.project_name))
 
 		if customer:
-			frappe.get_doc({
-				"doctype":"Sales Invoice",
-				"customer": customer[0][0],
-				"project": project_name,
-				"items": [
-					  {
-						"doctype": "Sales Invoice Item",
-						"item_code": scope_item,
-						"rate": items_value,
-						"qty": billing_percentage/100
-					  }
-					]
-				
-			}).insert(ignore_permissions=True)
+			# sinv=frappe.get_doc({
+			# 	"doctype":"Sales Invoice",
+			# 	"customer": customer[0][0],
+			# 	"project": project_name,
+			# 	"naming_series": 'SINV-',
+			# 	"items": [
+			# 		  {
+			# 			"doctype": "Sales Invoice Item",
+			# 			"item_code": item_name,
+			# 			"rate": items_value,
+			# 			"qty": billing_percentage/100
+			# 		  }
+			# 		]
+			# })
+			# sinv.flags.ignore_mandatory = True
+			# sinv.insert(ignore_permissions=True)
+
+			sinv = frappe.new_doc("Sales Invoice")
+			sinv.customer = customer[0][0]
+			sinv.project = project_name
+			sinv.naming_series = 'SINV-'
+			sinv.append("items",{"item_code":item_name,"rate":items_value,"qty":billing_percentage/100})
+			sinv.flags.ignore_mandatory = True
+			sinv.flags.ignore_validate = True
+			sinv.insert(ignore_permissions=True)
+
+
+			frappe.msgprint("Sales invoice is created")
 		else:
 			frappe.throw('You sould select customer for this project before issue invoice')
+
+
+		
