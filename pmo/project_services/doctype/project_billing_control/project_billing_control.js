@@ -79,7 +79,7 @@ frappe.ui.form.on('Project Billing Control', {
 			            doc: cur_frm.doc,
 			            args: { "scope_item": scope_item,"project_name": project_name,
 			            		"items_value": items_value,"billing_percentage": billing_percentage,
-			            		"due_date": due_date,"description_when":description_when,"vat_value":vat_value,"billing_status":billing_status},
+			            		"due_date": due_date,"description_when":description_when,"vat_value":vat_value,"billing_state":billing_status},
 			            callback: function (r) {
 		                    console.log(r.message)
 		                }
