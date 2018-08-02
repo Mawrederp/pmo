@@ -34,13 +34,81 @@ class ProjectBillingControl(Document):
 
 
 
-	def make_invoice(self,project_name,scope_item,items_value,billing_percentage,due_date,description_when,vat_value):
+	def make_invoice(self,project_name,scope_item,items_value,billing_percentage,due_date,description_when,vat_value,billing_status):
 		arr=[]
 		for row in self.project_payment_schedule_control:
 			if row.invoice==1:
 				arr.append(row.name)
 
-		if arr and len(arr)==1:
+		if billing_status==0:
+			frappe.throw("You should make delivery note first")
+		else:
+			if arr and len(arr)==1:
+				if not frappe.db.exists("Item", {"item_name": scope_item }):
+					doc = frappe.new_doc("Item")
+					doc.item_group = 'Project'
+					doc.item_code = scope_item
+					doc.item_name = scope_item
+					doc.is_stock_item = 0
+					doc.flags.ignore_mandatory = True
+					doc.insert(ignore_permissions=True)
+
+
+				item_name = frappe.get_value("Item", filters = {"item_name": scope_item}, fieldname = "name")    
+
+				customer = frappe.db.sql("select customer from `tabProject Initiation` where name='{0}' ".format(self.project_name))
+
+				if customer:
+					sinv=frappe.get_doc({
+						"doctype":"Sales Invoice",
+						"customer": customer[0][0],
+						"project": project_name,
+						"naming_series": 'SINV-',
+						"due_date": due_date,
+						# "debit_to": 'Debtors - O',
+						"items": [
+							  {
+								"doctype": "Sales Invoice Item",
+								"item_code": item_name,
+								"description": description_when,
+								"qty": flt(flt(billing_percentage)/100),
+								"rate": items_value
+							  }
+							],
+						"taxes": [
+							  {
+								"doctype": "Sales Taxes and Charges",
+								"charge_type": 'Actual',
+								"description": description_when,
+								"tax_amount": vat_value
+							  }
+							]
+					})
+					# sinv.flags.ignore_validate = True
+					sinv.flags.ignore_mandatory = True
+					sinv.insert(ignore_permissions=True)
+
+
+					frappe.msgprint("Sales invoice is created")
+				else:
+					frappe.throw('You sould select customer for this project before issue invoice')
+			else:
+				frappe.throw("You should check one invoice")
+
+		return scope_item
+		
+
+
+
+
+
+	def make_delivery_note(self,project_name,scope_item,items_value,billing_percentage,description_when,vat_value,billing_status):
+		arr=[]
+		for row in self.project_payment_schedule_control:
+			if row.invoice==1:
+				arr.append(row.name)
+
+		if arr and len(arr)==1 and billing_status!=1:
 			if not frappe.db.exists("Item", {"item_name": scope_item }):
 				doc = frappe.new_doc("Item")
 				doc.item_group = 'Project'
@@ -57,15 +125,15 @@ class ProjectBillingControl(Document):
 
 			if customer:
 				sinv=frappe.get_doc({
-					"doctype":"Sales Invoice",
+					"doctype":"Delivery Note",
 					"customer": customer[0][0],
-					"project": project_name,
-					"naming_series": 'SINV-',
-					"due_date": due_date,
+					# "project": project_name,
+					"naming_series": 'DN-',
+					# "due_date": due_date,
 					# "debit_to": 'Debtors - O',
 					"items": [
 						  {
-							"doctype": "Sales Invoice Item",
+							"doctype": "Delivery Note Item",
 							"item_code": item_name,
 							"description": description_when,
 							"qty": flt(flt(billing_percentage)/100),
@@ -85,12 +153,41 @@ class ProjectBillingControl(Document):
 				sinv.flags.ignore_mandatory = True
 				sinv.insert(ignore_permissions=True)
 
-
-				frappe.msgprint("Sales invoice is created")
+				frappe.msgprint("Delivery Note is created")
 			else:
-				frappe.throw('You sould select customer for this project before issue invoice')
+				frappe.throw('You sould select customer for this project before issue Delivery Note')
 		else:
-			frappe.throw("You should check one invoice")
+			frappe.throw("You should check one invoice to make Delivery Note, or this item may have delivery note")
 
-		return scope_item
+		# init_payment_name = frappe.db.sql("""
+		# 	select payment.name from `tabProject Payment Schedule` payment join `tabProject Initiation` init on payment.parent=init.name
+		# 	where payment.parenttype='Project Initiation' and init.project_name='{0}' and payment.scope_item='data23'
+		# 	and payment.idx='2'
+		# 	""".format(self.project_name,)) 
+
+		return sinv.name
 		
+
+
+
+	def get_init_payment_name(self,delivery_note,itm,idx):
+		init_payment_name = ''
+		init_payment_name = frappe.db.sql("""
+	 	select payment.name from `tabProject Payment Schedule` payment join `tabProject Initiation` init on payment.parent=init.name
+	 	where payment.parenttype='Project Initiation' and init.name='{0}' and payment.scope_item='{1}'
+	 	and payment.idx='{2}'
+	 	""".format(self.project_name,itm,idx)) 
+	 	if init_payment_name:
+	 		init_payment_name=init_payment_name[0][0]
+
+	 	update_payment =frappe.db.sql("""
+	 	update `tabProject Payment Schedule` payment join `tabProject Initiation` init on payment.parent=init.name
+	 	set payment.billing_status=1,payment.delivery_note='{0}' where payment.parenttype='Project Initiation' and init.name='{1}' and payment.scope_item='{2}'
+	 	and payment.idx='{3}'
+	 	""".format(delivery_note,self.project_name,itm,idx))
+
+ 		return init_payment_name
+
+
+
+
