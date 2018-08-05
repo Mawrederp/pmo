@@ -132,6 +132,8 @@ class ProjectBillingControl(Document):
 					"customer": customer[0][0],
 					# "project": project_name,
 					"naming_series": 'DN-',
+					"workflow_state": 'Pending',
+					"project": project_name,
 					# "due_date": due_date,
 					# "debit_to": 'Debtors - O',
 					"items": [
