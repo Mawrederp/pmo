@@ -74,14 +74,54 @@ frappe.ui.form.on('Project Billing Control', {
 						billing_status=0
 					}
 
+					var sales_invoice = cur_frm.doc.project_payment_schedule_control[row].sales_invoice
+					if(sales_invoice){
+						sales_invoice=sales_invoice
+					}else{
+						sales_invoice=0
+					}
+
+
 					frappe.call({
 			            "method": "make_invoice",
 			            doc: cur_frm.doc,
 			            args: { "scope_item": scope_item,"project_name": project_name,
 			            		"items_value": items_value,"billing_percentage": billing_percentage,
-			            		"due_date": due_date,"description_when":description_when,"vat_value":vat_value,"billing_state":billing_status},
+			            		"due_date": due_date,"description_when":description_when,"vat_value":vat_value,
+			            		"billing_state":billing_status,"sales_invoice":sales_invoice},
 			            callback: function (r) {
 		                    console.log(r.message)
+
+		                    invoice_name = r.message
+     						$.each(frm.doc.project_payment_schedule_control || [], function(i, v) {
+     							if(v.invoice){
+	     							frappe.model.set_value(v.doctype, v.name, "sales_invoice", invoice_name)
+	     						
+
+
+	     							frappe.call({
+							            "method": "updat_init_payment_table_invoice",
+							            doc: cur_frm.doc,
+							            args: {"itm": v.scope_item,"idx": v.idx,"sales_invoice":invoice_name},
+							            callback: function (r) {
+							            	if(r.message){
+							            		console.log(r.message)
+		     								}
+
+						                }
+							        });
+
+
+
+								}		
+							})
+
+
+
+		                    
+
+
+
 		                }
 			        });
 
@@ -152,27 +192,42 @@ frappe.ui.form.on('Project Billing Control', {
 			            doc: cur_frm.doc,
 			            args: { "scope_item": scope_item,"project_name": project_name,
 			            		"items_value": items_value,"billing_percentage": billing_percentage,
-			            		"description_when":description_when,"vat_value":vat_value,"billing_status":billing_status},
+			            		"description_when":description_when,"vat_value":vat_value,"billing_state":billing_status},
 			            callback: function (r) {
 			            	delivery_note_name = r.message
      						$.each(frm.doc.project_payment_schedule_control || [], function(i, v) {
      							if(v.invoice){
      								frappe.model.set_value(v.doctype, v.name, "billing_status", 1)
 	     							frappe.model.set_value(v.doctype, v.name, "delivery_note", delivery_note_name)
+	     						
 
 
 	     							frappe.call({
-							            "method": "get_init_payment_name",
+							            "method": "updat_init_payment_table",
 							            doc: cur_frm.doc,
 							            args: {"itm": v.scope_item,"idx": v.idx,"delivery_note":delivery_note_name},
 							            callback: function (r) {
 							            	if(r.message){
-								            	frappe.model.set_value('Project Payment Schedule', r.message, "billing_status", 1)
-		     									frappe.model.set_value('Project Payment Schedule', r.message, "delivery_note", delivery_note_name)
+							            		console.log(r.message)
 		     								}
 
 						                }
 							        });
+
+
+	     							// frappe.call({
+							      //       "method": "get_init_payment_name",
+							      //       doc: cur_frm.doc,
+							      //       args: {"itm": v.scope_item,"idx": v.idx,"delivery_note":delivery_note_name},
+							      //       callback: function (r) {
+							      //       	if(r.message){
+
+								     //        	frappe.model.set_value('Project Payment Schedule', r.message, "billing_status", 1)
+		     						// 			frappe.model.set_value('Project Payment Schedule', r.message, "delivery_note", delivery_note_name)
+		     						// 		}
+
+						       //          }
+							      //   });
 
 
 								}		
