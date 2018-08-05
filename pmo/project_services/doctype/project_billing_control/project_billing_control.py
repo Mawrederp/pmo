@@ -66,7 +66,7 @@ class ProjectBillingControl(Document):
 						"customer": customer[0][0],
 						"project": project_name,
 						"naming_series": 'SINV-',
-						"due_date": due_date,
+						# "due_date": due_date,
 						# "debit_to": 'Debtors - O',
 						"items": [
 							  {
@@ -117,6 +117,7 @@ class ProjectBillingControl(Document):
 				doc.item_code = scope_item
 				doc.item_name = scope_item
 				doc.is_stock_item = 0
+				doc.flags.ignore_validate = True
 				doc.flags.ignore_mandatory = True
 				doc.insert(ignore_permissions=True)
 
