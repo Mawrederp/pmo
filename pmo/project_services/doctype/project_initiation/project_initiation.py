@@ -269,6 +269,26 @@ class ProjectInitiation(Document):
             frappe.throw("Project Closure not exist for this project")
 
 
+    def get_project_cost_value(self,type_of_cost):
+        total_cost=0
+        if type_of_cost=='Tawari Services':
+            total_cost = frappe.db.sql("select sum(cost_price_ts) from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' ".format(self.name))
+        elif type_of_cost=='External Expenses':
+            total_cost = frappe.db.sql("select sum(total_cost_price) from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' ".format(self.name))            
+
+        if total_cost:
+            return total_cost[0][0]
+
+
+    def get_project_cost_value_item(self,type_of_cost,section_number):
+        total_cost=0
+        total_cost = frappe.db.sql("select sum(total_cost_price) from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and parentfield='items_details_{1}' ".format(self.name,section_number))
+
+        if total_cost:
+            return total_cost[0][0]
+
+
+
 def payment_schedule_notification():
     from frappe.core.doctype.communication.email import make
     frappe.flags.sent_mail = None

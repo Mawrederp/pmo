@@ -1546,12 +1546,6 @@ frappe.ui.form.on('Project Initiation', {
         });
         frm.set_value("total_billing_vat", billing_total_vat);
 
-        var cost_value_total = 0;
-        $.each(frm.doc.project_costing_schedule || [], function (i, d) {
-            cost_value_total += flt(d.items_cost_price);
-        });
-        frm.set_value("total_cost_value", cost_value_total);
-
         var total = 0;
         $.each(frm.doc.project_financial_detail || [], function (i, d) {
             total += flt(d.additions_value);
@@ -1694,16 +1688,6 @@ frappe.ui.form.on("Project Payment Schedule", "total_billing_value", function (f
     });
     frm.set_value("total_billing_vat", billing_total_vat);
 });
-
-frappe.ui.form.on("Project Costing Schedule", "cost_value", function (frm, cdt, cdn) {
-    // code for calculate total and set on parent field.
-    var cost_value_total = 0;
-    $.each(frm.doc.project_costing_schedule || [], function (i, d) {
-        cost_value_total += flt(d.items_cost_price);
-    });
-    frm.set_value("total_cost_value", cost_value_total);
-});
-
 
 
 frappe.ui.form.on('Project Financial Details', {
@@ -1925,45 +1909,65 @@ cur_frm.set_query("scope_item", "project_costing_schedule", function (doc, cdt, 
 
 
 frappe.ui.form.on('Project Costing Schedule', {
+    type_of_cost: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "scope_item", );
+        frappe.model.set_value(cdt, cdn, "scope_item_cost_value", 0);
+        frappe.model.set_value(cdt, cdn, "no_contracts", );
+        frappe.model.set_value(cdt, cdn, "po_contract_extimated_cost", );
+        frappe.model.set_value(cdt, cdn, "vendor", );
+        frappe.model.set_value(cdt, cdn, "last_date", );        
+
+        frappe.call({
+            "method": "get_project_cost_value",
+            doc: cur_frm.doc,
+            args: {
+                    'type_of_cost': row.type_of_cost,
+                },
+            callback: function (r) {
+                if(r.message){
+                    frappe.model.set_value(cdt, cdn, "project_cost_value", r.message);
+                }
+            }
+        });
+
+
+        if(row.type_of_cost=='External Expenses'){
+            // var df = frappe.meta.get_docfield("Project Costing Schedule", 'vendor' , cur_frm.doc.name);
+            // df.hidden = 0; 
+            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("vendor", true);
+        }else{
+            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("vendor", false);
+        }
+
+    },
     scope_item: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
-
-        item_length = cur_frm.doc.project_financial_detail.length
-        item = []
-        cost = []
-        for (var i = 0; i < item_length; i++) {
-            item.push(cur_frm.doc.project_financial_detail[i].scope_item)
-            cost.push(cur_frm.doc.project_financial_detail[i].cost_price)
-        }
-        frappe.model.set_value(cdt, cdn, "items_cost_price", cost[item.indexOf(row.scope_item)]);
-
-    },
-    items_cost_price: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
-        frappe.model.set_value(cdt, cdn, "cost_value", 0);
-
-        if (row.items_cost_price && row.cost_value_percentage) {
-            frappe.model.set_value(cdt, cdn, "cost_value", row.cost_value_percentage / 100 * row.items_cost_price);
-
+        
+        section_number = 0
+        for(i=0;i<=15;i++){
+            section = frm.doc["section_name_" + i];
+            if(section == row.scope_item){
+                section_number = i
+            }
         }
 
-    },
-    cost_value_percentage: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
-        frappe.model.set_value(cdt, cdn, "cost_value", 0);
 
-        if (row.items_cost_price && row.cost_value_percentage) {
-            frappe.model.set_value(cdt, cdn, "cost_value", row.cost_value_percentage / 100 * row.items_cost_price);
-
-        }
+        frappe.call({
+            "method": "get_project_cost_value_item",
+            doc: cur_frm.doc,
+            args: {
+                    'type_of_cost': row.type_of_cost,'section_number': section_number,
+                },
+            callback: function (r) {
+                if(r.message){
+                    frappe.model.set_value(cdt, cdn, "scope_item_cost_value", r.message);
+                }
+            }
+        });
+        
 
     }
 
 });
 
-
-//Including General Pricing items on the Project Initiation.
-frappe.ui.form.on("Project Initiation", "general_pricing", function (frm) {
-
-
-});
