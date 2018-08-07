@@ -48,6 +48,12 @@ def get_data():
                     "name": "Projects Procurement Control",
                     "label": _("Projects Procurement Control"),
                     "description": _("Projects Procurement Control."),
+                },
+                {
+                    "type": "doctype",
+                    "name": "Project Costing Control",
+                    "label": _("Project Costing Control"),
+                    "description": _("Project Costing Control."),
                 }
             ]
         },

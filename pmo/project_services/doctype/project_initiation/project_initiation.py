@@ -53,7 +53,21 @@ class ProjectInitiation(Document):
         self.profit = final_totals_list[4]
         self.markup = final_totals_list[5]
         self.margin = final_totals_list[6]
-        
+
+
+        for row in self.project_costing_schedule:
+        	if row.type_of_cost=='External Expenses' and row.scope_item:
+	        	count=0
+	        	for i in self.project_costing_schedule:
+	        		if i.scope_item==row.scope_item:
+		        		count += 1
+
+		        print '************************'
+		        print row.no_contracts,count
+		        print '************************'
+	        	# count = frappe.db.sql("select count(scope_item) from `tabProject Costing Schedule` where scope_item='{0}'".format(row.scope_item))[0][0]
+	        	if str(row.no_contracts) != str(count) :
+	        		frappe.throw("No. of POs/Contracts must equal project costing schedule inputs for scope item {0}".format(row.scope_item))
 
 
             
@@ -287,6 +301,9 @@ class ProjectInitiation(Document):
         if total_cost:
             return total_cost[0][0]
 
+
+    def validate_po_contract_extimated_cost(self):
+        frappe.msgprint("The Po/Contract estimated Cost exceeds the scope item cost value")
 
 
 def payment_schedule_notification():

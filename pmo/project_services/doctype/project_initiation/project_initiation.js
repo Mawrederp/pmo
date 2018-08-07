@@ -1967,6 +1967,19 @@ frappe.ui.form.on('Project Costing Schedule', {
         });
         
 
+    },
+    po_contract_extimated_cost: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        if(row.po_contract_extimated_cost>row.scope_item_cost_value){
+        	frappe.model.set_value(cdt, cdn, "po_contract_extimated_cost", );
+        	
+        	frappe.call({
+	            "method": "validate_po_contract_extimated_cost",
+	            doc: cur_frm.doc
+	        });
+
+        }
+
     }
 
 });
