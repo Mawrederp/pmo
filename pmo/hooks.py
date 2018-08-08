@@ -92,7 +92,8 @@ doctype_js = {"Project Gantt" : "public/js/dhtmlxgantt.js"}
 
 scheduler_events = {
 	"daily": [
-		"pmo.project_services.doctype.project_initiation.project_initiation.payment_schedule_notification"
+		"pmo.project_services.doctype.project_initiation.project_initiation.payment_schedule_notification",
+		"pmo.project_services.doctype.project_initiation.project_initiation.costing_schedule_notification"
 	]
 }
 

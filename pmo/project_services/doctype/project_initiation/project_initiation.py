@@ -370,6 +370,50 @@ def payment_schedule_notification():
 
 
 
+def costing_schedule_notification():
+    from frappe.core.doctype.communication.email import make
+    frappe.flags.sent_mail = None
+
+    projects = frappe.db.sql("select name from `tabProject Initiation`")
+    for project_initiation in projects:
+        doc = frappe.get_doc('Project Initiation', project_initiation[0] )
+
+        for row in doc.project_costing_schedule:
+            content_msg="""
+                 Please issue Cost allocation of Tawari Services from the project costing control as follows:
+
+                    <br>Project Name: {0}
+
+                    <br>Project Cost Value: {1}
+
+                    <br>Delivery Date/Period: {2}
+
+                    <br>Description/Comments: {3}
+
+                    <br><br>Please make sure you allocate your resources Cost within the available project cost value.
+
+                        """.format(row.parent,row.project_cost_value,row.delivery_date,row.description_comments)
+
+           
+            if doc.notification and row.type_of_cost=='Tawari Services':
+                if date.today()==frappe.utils.get_last_day(date.today()):
+                    try:
+                        make(subject = "Project Costing Notification", content=content_msg, recipients='ai.alamri@tawari.sa',
+                            send_email=True, sender="erp@tawari.sa")
+
+                        make(subject = "Project Costing Notification", content=content_msg, recipients='fm.alqarni@tawari.sa',
+                            send_email=True, sender="erp@tawari.sa")
+
+                        if doc.project_manager_role:
+                            make(subject = "Project Costing Notification", content=content_msg, recipients=doc.project_manager_role,
+                                send_email=True, sender="erp@tawari.sa")
+
+                        print 'send email done '
+                    except:
+                        frappe.msgprint("could not send")
+
+            
+
 @frappe.whitelist()
 def get_project_detail(project, company=None):
     project_dict = frappe.db.sql("""select * from `tabProject Initiation` where name=%s""", (project), as_dict=1)
