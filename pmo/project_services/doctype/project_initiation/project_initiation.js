@@ -1740,6 +1740,10 @@ frappe.ui.form.on('Project Financial Details', {
         if(row.final_selling_price!=0){
             frappe.model.set_value(cdt, cdn, "margin", (row.profit/row.final_selling_price)*100);
         }
+    },
+    adjustment: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "final_selling_price", row.selling_price+row.additions_value+row.adjustment);       
     }
 
 

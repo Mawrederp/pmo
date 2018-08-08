@@ -20,3 +20,12 @@ frappe.ui.form.on('General Pricing', {
         cur_frm.set_value("total_margin", total)
     }
 });
+
+
+frappe.ui.form.on('General Pricing Table', {
+    adjustment: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        frappe.model.set_value(cdt, cdn, "total_selling_price", row.selling_price+row.risk_contingency+row.adjustment);       
+    }
+});
+
