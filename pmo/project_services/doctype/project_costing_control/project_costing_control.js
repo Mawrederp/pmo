@@ -27,6 +27,21 @@ frappe.ui.form.on('Project Costing Control', {
 		        });
 		    })
 		}
+	},
+	allocation_cost_value: function(frm) {
+		$.each(frm.doc.project_costing_schedule_control || [], function (i, d) {
+
+	        if(d.type_of_cost=='Tawari Services' && cur_frm.doc.allocation_cost_value>d.project_cost_value){
+	        	cur_frm.set_value("allocation_cost_value", );
+	       
+	        	frappe.call({
+		            "method": "validate_allocation_cost_value",
+		            doc: cur_frm.doc
+		        });
+	        }
+
+	    });
+
 	}
 
 });

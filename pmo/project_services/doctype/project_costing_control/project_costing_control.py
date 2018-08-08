@@ -7,4 +7,5 @@ import frappe
 from frappe.model.document import Document
 
 class ProjectCostingControl(Document):
-	pass
+    def validate_allocation_cost_value(self):
+        frappe.msgprint("The amount exceeds the project cost value of Tawari Services")
