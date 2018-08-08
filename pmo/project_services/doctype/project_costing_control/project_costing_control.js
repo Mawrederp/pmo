@@ -3,7 +3,9 @@
 
 frappe.ui.form.on('Project Costing Control', {
 	refresh: function(frm) {
-
+		frm.add_custom_button(__("Make Payment"), function () {
+			console.log('tst')
+    	});
 	},
 	project_name: function(frm) {
 		if(cur_frm.doc.project_name){

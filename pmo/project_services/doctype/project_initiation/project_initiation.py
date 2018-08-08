@@ -392,7 +392,7 @@ def costing_schedule_notification():
 
                     <br><br>Please make sure you allocate your resources Cost within the available project cost value.
 
-                        """.format(row.parent,row.project_cost_value,row.delivery_date,row.description_comments)
+                        """.format(doc.name,row.project_cost_value,row.delivery_date,row.description_comments)
 
            
             if doc.notification and row.type_of_cost=='Tawari Services':
@@ -413,6 +413,57 @@ def costing_schedule_notification():
                         frappe.msgprint("could not send")
 
             
+
+
+def costing_schedule_notification_expenses():
+    from frappe.core.doctype.communication.email import make
+    frappe.flags.sent_mail = None
+
+    projects = frappe.db.sql("select name from `tabProject Initiation`")
+    for project_initiation in projects:
+        doc = frappe.get_doc('Project Initiation', project_initiation[0] )
+
+        for row in doc.project_costing_schedule:
+            content_msg="""
+                 Please issue a purchase request of the {0} project as follows:
+
+                    <br>Type of Cost: {1}
+
+                    <br>Scope Item: {2}
+
+                    <br>Scope Item Cost Value: {3}
+
+                    <br>No. of POs: {4}
+
+                    <br>PO/Contract estimated Cost: {5}
+
+                    <br>Vendore: {6}
+
+                    <br>Delivery Date/Period: {7}
+
+                    <br>Last Date to issue a PR Date/Period: {8}
+
+                        """.format(doc.name,row.type_of_cost,row.scope_item,row.scope_item_cost_value,row.no_contracts,row.po_contract_extimated_cost,row.vendor,row.delivery_date,row.last_date)
+
+           
+            if doc.notification and row.type_of_cost=='External Expenses':
+                if date.today()==row.last_date:
+                    try:
+                        make(subject = "Project Costing Notification", content=content_msg, recipients='ai.alamri@tawari.sa',
+                            send_email=True, sender="erp@tawari.sa")
+
+                        make(subject = "Project Costing Notification", content=content_msg, recipients='fm.alqarni@tawari.sa',
+                            send_email=True, sender="erp@tawari.sa")
+
+                        if doc.project_manager_role:
+                            make(subject = "Project Costing Notification", content=content_msg, recipients=doc.project_manager_role,
+                                send_email=True, sender="erp@tawari.sa")
+
+                        print 'send email done '
+                    except:
+                        frappe.msgprint("could not send")
+
+
 
 @frappe.whitelist()
 def get_project_detail(project, company=None):
