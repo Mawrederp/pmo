@@ -28,10 +28,11 @@ function refresh_general_pricing(frm) {
             // console.log(indexing.indexOf(i))
             // console.log(adj[indexing.indexOf(i)])
         }
+        frm.script_manager.trigger("adjustment", d.doctype, d.name);
 
     }
     frm.script_manager.trigger("final_selling_price", d.doctype, d.name);
-    frm.refresh_field("project_financial_detail");
+        frm.refresh_field("project_financial_detail");
 }
 
 frappe.ui.form.on('Project Initiation', {
