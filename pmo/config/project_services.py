@@ -31,17 +31,17 @@ def get_data():
         {
             "label": _("Projects Control"),
             "items": [
+            	{
+                    "type": "doctype",
+                    "name": "Delivery Note",
+                    "label": _("Delivery Note"),
+                    "description": _("Delivery Note"),
+                },
                 {
                     "type": "doctype",
                     "name": "Project Billing Control",
                     "label": _("Projects Billing Control"),
                     "description": _("Project Billing Control."),
-                },
-                {
-                    "type": "doctype",
-                    "name": "Delivery Note",
-                    "label": _("Delivery Note"),
-                    "description": _("Delivery Note"),
                 },
                 {
                     "type": "doctype",
