@@ -17,10 +17,8 @@ class ProjectBillingControl(Document):
 			if row.invoice==1:
 				arr.append(row.name)
 
-		if billing_state==0:
-			frappe.throw("You should make delivery note first")
-		elif sales_order and billing_state==1:
-			frappe.throw("You make Sales Invoice for this item before")
+		if sales_order and billing_state==1:
+			frappe.throw("You make Sales Order for this item before")
 		else:
 			if arr and len(arr)==1:
 				if not frappe.db.exists("Item", {"item_name": scope_item }):
@@ -37,38 +35,56 @@ class ProjectBillingControl(Document):
 
 				customer = frappe.db.sql("select customer from `tabProject Initiation` where name='{0}' ".format(self.project_name))
 
+				resources_details_name = frappe.db.sql("select name from `tabResources Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,scope_item))
+	
 				if customer:
 					sinv=frappe.get_doc({
 						"doctype":"Sales Order",
 						"customer": customer[0][0],
 						"project": project_name,
 						"naming_series": 'SO-',
-						# "due_date": due_date,
-						# "debit_to": 'Debtors - O',
-						"items": [
-							  {
-								"doctype": "Sales Order Item",
-								"item_code": item_name,
-								"description": description_when,
-								"qty": flt(flt(billing_percentage)/100),
-								"rate": items_value
-							  }
-							],
-						"taxes": [
-							  {
-								"doctype": "Sales Taxes and Charges",
-								"charge_type": 'Actual',
-								"description": description_when,
-								"tax_amount": vat_value
-							  }
-							]
+						"delivery_date": due_date
+						# "items": [
+						# 	  {
+						# 		"doctype": "Sales Order Item",
+						# 		"item_code": item_name,
+						# 		"description": description_when,
+						# 		"qty": flt(flt(billing_percentage)/100),
+						# 		"rate": items_value
+						# 	  }
+						# 	],
+						# "taxes": [
+						# 	  {
+						# 		"doctype": "Sales Taxes and Charges",
+						# 		"charge_type": 'Actual',
+						# 		"description": description_when,
+						# 		"tax_amount": vat_value
+						# 	  }
+						# 	]
 					})
+
+					for resource in resources_details_name:
+						doc = frappe.get_doc("Resources Details",resource[0])
+
+						sinv.append("items", {
+							"item_code": doc.resources,
+							"description": description_when,
+							"qty": flt(flt(billing_percentage)/100),
+							"rate": items_value
+						})
+
+						sinv.append("taxes", {
+							"charge_type": 'Actual',
+							"description": description_when,
+							"tax_amount": vat_value
+						})
+
 					# sinv.flags.ignore_validate = True
 					sinv.flags.ignore_mandatory = True
 					sinv.insert(ignore_permissions=True)
 
 
-					frappe.msgprint("Sales invoice is created")
+					frappe.msgprint("Sales Order is created")
 				else:
 					frappe.throw('You sould select customer for this project before issue invoice')
 			else:
