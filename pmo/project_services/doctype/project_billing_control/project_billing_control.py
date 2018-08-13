@@ -11,7 +11,7 @@ from frappe.utils import cint, cstr, date_diff, flt, formatdate, getdate, get_li
 
 class ProjectBillingControl(Document):
 
-	def make_invoice(self,project_name,scope_item,items_value,billing_percentage,due_date,description_when,vat_value,billing_state,sales_invoice):
+	def make_invoice(self,project_name,scope_item,items_value,billing_percentage,due_date,description_when,vat_value,billing_state,sales_order):
 		arr=[]
 		for row in self.project_payment_schedule_control:
 			if row.invoice==1:
@@ -19,7 +19,7 @@ class ProjectBillingControl(Document):
 
 		if billing_state==0:
 			frappe.throw("You should make delivery note first")
-		elif sales_invoice and billing_state==1:
+		elif sales_order and billing_state==1:
 			frappe.throw("You make Sales Invoice for this item before")
 		else:
 			if arr and len(arr)==1:
@@ -39,15 +39,15 @@ class ProjectBillingControl(Document):
 
 				if customer:
 					sinv=frappe.get_doc({
-						"doctype":"Sales Invoice",
+						"doctype":"Sales Order",
 						"customer": customer[0][0],
 						"project": project_name,
-						"naming_series": 'SINV-',
+						"naming_series": 'SO-',
 						# "due_date": due_date,
 						# "debit_to": 'Debtors - O',
 						"items": [
 							  {
-								"doctype": "Sales Invoice Item",
+								"doctype": "Sales Order Item",
 								"item_code": item_name,
 								"description": description_when,
 								"qty": flt(flt(billing_percentage)/100),
@@ -80,7 +80,7 @@ class ProjectBillingControl(Document):
 
 
 
-	def updat_init_payment_table_invoice(self,sales_invoice,itm,idx):
+	def updat_init_payment_table_invoice(self,sales_order,itm,idx):
 		init_payment_name = ''
 		init_payment_name = frappe.db.sql("""
 	 	select payment.name from `tabProject Payment Schedule` payment join `tabProject Initiation` init on payment.parent=init.name
@@ -91,7 +91,7 @@ class ProjectBillingControl(Document):
 	 		init_payment_name=init_payment_name[0][0]
 
 	 	doc = frappe.get_doc("Project Payment Schedule",init_payment_name)
-		doc.sales_invoice = sales_invoice
+		doc.sales_order = sales_order
 		doc.flags.ignore_mandatory = True
 		doc.save(ignore_permissions=True)
 
@@ -105,7 +105,7 @@ class ProjectBillingControl(Document):
 		for row in self.project_payment_schedule_control:
 			total_project = frappe.db.sql("""select sum(payment.items_value) from `tabProject Payment Schedule` payment
 		 	 			join `tabProject Billing Control` billing on payment.parent=billing.name where payment.parenttype='Project Billing Control' 
-		 	 			and billing.project_name='{0}' and payment.invoice=1 """.format(self.project_name))
+		 	 			and billing.project_name='{0}' and payment.invoice=1 and payment.billing_status=1 """.format(self.project_name))
 			
 			total_project_count = frappe.db.sql("""select count(payment.items_value) from `tabProject Payment Schedule` payment
 		 	 			join `tabProject Billing Control` billing on payment.parent=billing.name where payment.parenttype='Project Billing Control' 

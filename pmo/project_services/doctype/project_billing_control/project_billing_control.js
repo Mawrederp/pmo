@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Project Billing Control', {
-	validate: function(frm) {
+	after_save: function(frm) {
 
 		frappe.call({
             "method": "get_total_billing_so_far",
@@ -11,16 +11,16 @@ frappe.ui.form.on('Project Billing Control', {
 	            if(r){
 	           		cur_frm.set_value("total_project_billing_so_far", r.message[0])
 	           		cur_frm.set_value("total_scope_item_billing_so_far", r.message[1])
-	           		if(r.message[0]){
-	           			cur_frm.set_value("total_project_billing_so_far_percent", r.message[2]/r.message[0])
-	            	}
+	           		// if(r.message[0]){
+	           		// 	cur_frm.set_value("total_project_billing_so_far_percent", r.message[2]/r.message[0])
+	            	// }
 	            }
             }
         });
 
 	},
 	refresh: function(frm,cdt,cdn) {
-		frm.add_custom_button(__("Make Invoice"), function () {
+		frm.add_custom_button(__("Make Sales Order"), function () {
 			// items = []
 			for(row= 0;row<cur_frm.doc.project_payment_schedule_control.length;row++){
 				if(cur_frm.doc.project_payment_schedule_control[row].invoice == 1){
@@ -81,11 +81,11 @@ frappe.ui.form.on('Project Billing Control', {
 						billing_status=0
 					}
 
-					var sales_invoice = cur_frm.doc.project_payment_schedule_control[row].sales_invoice
-					if(sales_invoice){
-						sales_invoice=sales_invoice
+					var sales_order = cur_frm.doc.project_payment_schedule_control[row].sales_order
+					if(sales_order){
+						sales_order=sales_order
 					}else{
-						sales_invoice=0
+						sales_order=0
 					}
 
 
@@ -95,21 +95,21 @@ frappe.ui.form.on('Project Billing Control', {
 			            args: { "scope_item": scope_item,"project_name": project_name,
 			            		"items_value": items_value,"billing_percentage": billing_percentage,
 			            		"due_date": due_date,"description_when":description_when,"vat_value":vat_value,
-			            		"billing_state":billing_status,"sales_invoice":sales_invoice},
+			            		"billing_state":billing_status,"sales_order":sales_order},
 			            callback: function (r) {
 		                    console.log(r.message)
 
 		                    invoice_name = r.message
      						$.each(frm.doc.project_payment_schedule_control || [], function(i, v) {
      							if(v.invoice){
-	     							frappe.model.set_value(v.doctype, v.name, "sales_invoice", invoice_name)
+	     							frappe.model.set_value(v.doctype, v.name, "sales_order", invoice_name)
 	     						
 
 
 	     							frappe.call({
 							            "method": "updat_init_payment_table_invoice",
 							            doc: cur_frm.doc,
-							            args: {"itm": v.scope_item,"idx": v.idx,"sales_invoice":invoice_name},
+							            args: {"itm": v.scope_item,"idx": v.idx,"sales_order":invoice_name},
 							            callback: function (r) {
 							            	if(r.message){
 							            		console.log(r.message)
@@ -161,7 +161,7 @@ frappe.ui.form.on('Project Billing Control', {
 		            d.when = row.when;
 		            d.description_when = row.description_when;
 		            d.billing_status = row.billing_status;
-		            d.sales_invoice = row.sales_invoice;
+		            d.sales_order = row.sales_order;
 		            frm.refresh_field("project_payment_schedule_control");
 		        });
 		    })
