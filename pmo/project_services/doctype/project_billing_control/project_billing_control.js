@@ -53,11 +53,21 @@ frappe.ui.form.on('Project Billing Control', {
 						billing_percentage=0
 					}
 
-					var due_date = ''
+
 					if(cur_frm.doc.project_payment_schedule_control[row].date_period=='Date'){
-						due_date = cur_frm.doc.project_payment_schedule_control[row].when
+						var due_date = cur_frm.doc.project_payment_schedule_control[row].when
+						if(due_date){
+							due_date=due_date
+						}else{
+							due_date=''
+						}
 					}else if(cur_frm.doc.project_payment_schedule_control[row].date_period=='Period'){
-						due_date = cur_frm.doc.project_payment_schedule_control[row].to_date
+						var due_date = cur_frm.doc.project_payment_schedule_control[row].to_date
+						if(due_date){
+							due_date=due_date
+						}else{
+							due_date=''
+						}
 					}
 
 					var description_when = cur_frm.doc.project_payment_schedule_control[row].description_when
@@ -85,12 +95,12 @@ frappe.ui.form.on('Project Billing Control', {
 					if(sales_order){
 						sales_order=sales_order
 					}else{
-						sales_order=0
+						sales_order=''
 					}
 
 
 					frappe.call({
-			            "method": "make_invoice",
+			            "method": "make_sales_order",
 			            doc: cur_frm.doc,
 			            args: { "scope_item": scope_item,"project_name": project_name,
 			            		"items_value": items_value,"billing_percentage": billing_percentage,

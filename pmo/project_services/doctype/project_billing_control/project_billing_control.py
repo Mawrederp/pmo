@@ -11,7 +11,7 @@ from frappe.utils import cint, cstr, date_diff, flt, formatdate, getdate, get_li
 
 class ProjectBillingControl(Document):
 
-	def make_invoice(self,project_name,scope_item,items_value,billing_percentage,due_date,description_when,vat_value,billing_state,sales_order):
+	def make_sales_order(self,project_name,scope_item,items_value,billing_percentage,due_date,description_when,vat_value,billing_state,sales_order):
 		arr=[]
 		for row in self.project_payment_schedule_control:
 			if row.invoice==1:
