@@ -215,6 +215,36 @@ class ProjectBillingControl(Document):
 
 
 
+ 	def get_total_billing_so_far(self):
+ 		total_project = 0
+ 		total_item = 0
+		for row in self.project_payment_schedule_control:
+			total_project = frappe.db.sql("""select sum(payment.items_value) from `tabProject Payment Schedule` payment
+		 	 			join `tabProject Billing Control` billing on payment.parent=billing.name where payment.parenttype='Project Billing Control' 
+		 	 			and billing.project_name='{0}' and payment.invoice=1 """.format(self.project_name))
+			
+			total_project_count = frappe.db.sql("""select count(payment.items_value) from `tabProject Payment Schedule` payment
+		 	 			join `tabProject Billing Control` billing on payment.parent=billing.name where payment.parenttype='Project Billing Control' 
+		 	 			and billing.project_name='{0}' and payment.invoice=1 """.format(self.project_name))
+			
+
+			total_item = frappe.db.sql("""select sum(payment.items_value) from `tabProject Payment Schedule` payment
+		 	 			join `tabProject Billing Control` billing on payment.parent=billing.name where payment.parenttype='Project Billing Control' 
+		 	 			and billing.project_name='{0}' and payment.invoice=1 and payment.scope_item='{1}' """.format(self.project_name,row.scope_item))
+			
+		if total_project:
+			total_project = total_project[0][0]
+		else:
+			total_project = 0
+
+		if total_item:
+			total_item = total_item[0][0]
+		else:
+			total_item = 0
+
+		return total_project,total_item,total_project_count
+
+
 
 	# def get_init_payment_name(self,delivery_note,itm,idx):
 	# 	init_payment_name = ''

@@ -2,16 +2,23 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Project Billing Control', {
-	// validate: function(frm) {
-	// 	arr=[]
-	// 	for(row= 0;row<cur_frm.doc.project_payment_schedule_control.length;row++){
-	// 			if(cur_frm.doc.project_payment_schedule_control[row].invoice == 1){
-	// 				arr.push(cur_frm.doc.project_payment_schedule_control[row].name)
-	// 			}
-	// 	}
-	// 	console.log(arr.length)
+	validate: function(frm) {
 
-	// },
+		frappe.call({
+            "method": "get_total_billing_so_far",
+            doc: cur_frm.doc,
+            callback: function (r) {
+	            if(r){
+	           		cur_frm.set_value("total_project_billing_so_far", r.message[0])
+	           		cur_frm.set_value("total_scope_item_billing_so_far", r.message[1])
+	           		if(r.message[0]){
+	           			cur_frm.set_value("total_project_billing_so_far_percent", r.message[2]/r.message[0])
+	            	}
+	            }
+            }
+        });
+
+	},
 	refresh: function(frm,cdt,cdn) {
 		frm.add_custom_button(__("Make Invoice"), function () {
 			// items = []
