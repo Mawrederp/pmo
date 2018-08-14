@@ -10,6 +10,15 @@ from frappe.utils import cint, cstr, date_diff, flt, formatdate, getdate, get_li
 	comma_or, get_fullname
 
 class ProjectBillingControl(Document):
+	def before_save(self):
+		for row in self.project_payment_schedule_control:
+			if row.date_period=='Date' and not row.when:
+				frappe.throw("Mandatory field: When in table row {0}".format(row.idx))
+			elif row.date_period=='Period' and not row.from_date:
+				frappe.throw("Mandatory field: From Date in table row {0}".format(row.idx))
+			elif row.date_period=='Period' and not row.to_date:
+				frappe.throw("Mandatory field: To Date in table row {0}".format(row.idx))
+
 
 	def make_sales_order(self,project_name,scope_item,items_value,billing_percentage,due_date,description_when,vat_value,billing_state,sales_order):
 		arr=[]
