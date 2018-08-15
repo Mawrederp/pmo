@@ -25,7 +25,8 @@ function refresh_general_pricing(frm) {
             d.profit = frm.doc["profit_" + i];
             d.markup = frm.doc["markup_" + i];
             d.margin = frm.doc["margin_" + i];
-            d.adjustment = adj[indexing.indexOf(i)];
+            // d.adjustment = adj[indexing.indexOf(i)];
+
 
             // console.log(frm.doc["markup_" + i])
             // console.log(frm.doc["markup_" + i])
