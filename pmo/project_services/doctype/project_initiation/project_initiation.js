@@ -23,16 +23,27 @@ function refresh_general_pricing(frm) {
             d.additions_value = frm.doc["risk_contingency_" + i];
             d.final_selling_price = frm.doc["total_selling_price_" + i];
             d.profit = frm.doc["profit_" + i];
+            d.markup = frm.doc["markup_" + i];
+            d.margin = frm.doc["margin_" + i];
             d.adjustment = adj[indexing.indexOf(i)];
+
+            // console.log(frm.doc["markup_" + i])
+            // console.log(frm.doc["markup_" + i])
+            console.log(d.markup)
+            console.log(d.margin)
+
+            console.log(adj[indexing.indexOf(i)])
+            console.log("---------------------------")
             
             // console.log(indexing.indexOf(i))
             // console.log(adj[indexing.indexOf(i)])
         }
+        frm.script_manager.trigger("final_selling_price", d.doctype, d.name);
         frm.script_manager.trigger("adjustment", d.doctype, d.name);
 
     }
     frm.script_manager.trigger("final_selling_price", d.doctype, d.name);
-        frm.refresh_field("project_financial_detail");
+    frm.refresh_field("project_financial_detail");
 }
 
 frappe.ui.form.on('Project Initiation', {
@@ -126,6 +137,8 @@ frappe.ui.form.on('Project Initiation', {
                     d.additions_value = row.risk_contingency;
                     d.final_selling_price = row.total_selling_price;
                     d.profit = row.profit;
+                    d.markup = row.markup;
+                    d.margin = row.margin;
                     frm.refresh_field("project_financial_detail");
                 });
 
