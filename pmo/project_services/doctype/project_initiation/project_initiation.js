@@ -29,14 +29,9 @@ function refresh_general_pricing(frm) {
 
             // console.log(frm.doc["markup_" + i])
             // console.log(frm.doc["markup_" + i])
-            console.log(d.markup)
-            console.log(d.margin)
-
-            console.log(adj[indexing.indexOf(i)])
-            console.log("---------------------------")
-            
-            // console.log(indexing.indexOf(i))
             // console.log(adj[indexing.indexOf(i)])
+            // console.log("---------------------------")
+           
         }
         frm.script_manager.trigger("final_selling_price", d.doctype, d.name);
         frm.script_manager.trigger("adjustment", d.doctype, d.name);
