@@ -52,41 +52,41 @@ class ProjectBillingControl(Document):
 						"customer": customer[0][0],
 						"project": project_name,
 						"naming_series": 'SO-',
-						"delivery_date": due_date
-						# "items": [
-						# 	  {
-						# 		"doctype": "Sales Order Item",
-						# 		"item_code": item_name,
-						# 		"description": description_when,
-						# 		"qty": flt(flt(billing_percentage)/100),
-						# 		"rate": items_value
-						# 	  }
-						# 	],
-						# "taxes": [
-						# 	  {
-						# 		"doctype": "Sales Taxes and Charges",
-						# 		"charge_type": 'Actual',
-						# 		"description": description_when,
-						# 		"tax_amount": vat_value
-						# 	  }
-						# 	]
+						"delivery_date": due_date,
+						"items": [
+							  {
+								"doctype": "Sales Order Item",
+								"item_code": item_name,
+								"description": description_when,
+								"qty": flt(flt(billing_percentage)/100),
+								"rate": items_value
+							  }
+							],
+						"taxes": [
+							  {
+								"doctype": "Sales Taxes and Charges",
+								"charge_type": 'Actual',
+								"description": description_when,
+								"tax_amount": vat_value
+							  }
+							]
 					})
 
-					for resource in resources_details_name:
-						doc = frappe.get_doc("Resources Details",resource[0])
+					# for resource in resources_details_name:
+					# 	doc = frappe.get_doc("Resources Details",resource[0])
 
-						sinv.append("items", {
-							"item_code": doc.resources,
-							"description": description_when,
-							"qty": flt(flt(billing_percentage)/100),
-							"rate": items_value
-						})
+					# 	sinv.append("items", {
+					# 		"item_code": doc.resources,
+					# 		"description": description_when,
+					# 		"qty": flt(flt(billing_percentage)/100),
+					# 		"rate": items_value
+					# 	})
 
-						sinv.append("taxes", {
-							"charge_type": 'Actual',
-							"description": description_when,
-							"tax_amount": vat_value
-						})
+					# 	sinv.append("taxes", {
+					# 		"charge_type": 'Actual',
+					# 		"description": description_when,
+					# 		"tax_amount": vat_value
+					# 	})
 
 					# sinv.flags.ignore_validate = True
 					sinv.flags.ignore_mandatory = True
@@ -117,6 +117,7 @@ class ProjectBillingControl(Document):
 
 	 	doc = frappe.get_doc("Project Payment Schedule",init_payment_name)
 		doc.sales_order = sales_order
+		doc.billing_status = 1
 		doc.flags.ignore_mandatory = True
 		doc.save(ignore_permissions=True)
 
@@ -128,18 +129,19 @@ class ProjectBillingControl(Document):
  		total_project = 0
  		total_item = 0
 		for row in self.project_payment_schedule_control:
-			total_project = frappe.db.sql("""select sum(payment.items_value) from `tabProject Payment Schedule` payment
-		 	 			join `tabProject Billing Control` billing on payment.parent=billing.name where payment.parenttype='Project Billing Control' 
-		 	 			and billing.project_name='{0}' and payment.invoice=1 and payment.billing_status=1 """.format(self.project_name))
-			
-			total_project_count = frappe.db.sql("""select count(payment.items_value) from `tabProject Payment Schedule` payment
-		 	 			join `tabProject Billing Control` billing on payment.parent=billing.name where payment.parenttype='Project Billing Control' 
-		 	 			and billing.project_name='{0}' and payment.invoice=1 """.format(self.project_name))
-			
+			if row.invoice==1:
+				total_project = frappe.db.sql("""select sum(payment.items_value) from `tabProject Payment Schedule` payment
+			 	 			join `tabProject Billing Control` billing on payment.parent=billing.name where payment.parenttype='Project Billing Control' 
+			 	 			and billing.project_name='{0}' and payment.invoice=1 and payment.billing_status=1 """.format(self.project_name))
+				
+				total_project_count = frappe.db.sql("""select count(payment.items_value) from `tabProject Payment Schedule` payment
+			 	 			join `tabProject Billing Control` billing on payment.parent=billing.name where payment.parenttype='Project Billing Control' 
+			 	 			and billing.project_name='{0}' and payment.invoice=1 """.format(self.project_name))
+				
 
-			total_item = frappe.db.sql("""select sum(payment.items_value) from `tabProject Payment Schedule` payment
-		 	 			join `tabProject Billing Control` billing on payment.parent=billing.name where payment.parenttype='Project Billing Control' 
-		 	 			and billing.project_name='{0}' and payment.invoice=1 and payment.scope_item='{1}' """.format(self.project_name,row.scope_item))
+				total_item = frappe.db.sql("""select sum(payment.items_value) from `tabProject Payment Schedule` payment
+			 	 			join `tabProject Billing Control` billing on payment.parent=billing.name where payment.parenttype='Project Billing Control' 
+			 	 			and billing.project_name='{0}' and payment.invoice=1 and payment.scope_item='{1}' """.format(self.project_name,row.scope_item))
 			
 		if total_project:
 			total_project = total_project[0][0]
