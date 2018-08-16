@@ -154,8 +154,3 @@ class ProjectBillingControl(Document):
 		return total_project,total_item,total_project_count
 
 
-
-	
-
-
-

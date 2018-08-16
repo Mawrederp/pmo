@@ -7,14 +7,10 @@ import frappe
 from frappe.model.document import Document
 
 class ProjectsProcurementControl(Document):
-	# def before_save(self):
-	# 	for row in self.project_payment_schedule_control:
-	# 		if row.date_period=='Date' and not row.when:
-	# 			frappe.throw("Mandatory field: When in table row {0}".format(row.idx))
-	# 		elif row.date_period=='Period' and not row.from_date:
-	# 			frappe.throw("Mandatory field: From Date in table row {0}".format(row.idx))
-	# 		elif row.date_period=='Period' and not row.to_date:
-	# 			frappe.throw("Mandatory field: To Date in table row {0}".format(row.idx))
+	def before_save(self):
+		for row in self.project_costing_schedule_control:
+			if not row.last_date:
+				frappe.throw("Mandatory field: Last Date in table row {0}".format(row.idx))
 	
 
 	def make_material_request(self,scope_item,description_comments,last_date,material_request):
