@@ -1959,6 +1959,8 @@ frappe.ui.form.on('Project Costing Schedule', {
             callback: function (r) {
                 if(r.message){
                     frappe.model.set_value(cdt, cdn, "project_cost_value", r.message);
+                }else{
+                    frappe.model.set_value(cdt, cdn, "project_cost_value", 0);
                 }
             }
         });
@@ -1994,6 +1996,8 @@ frappe.ui.form.on('Project Costing Schedule', {
             callback: function (r) {
                 if(r.message){
                     frappe.model.set_value(cdt, cdn, "scope_item_cost_value", r.message);
+                }else{
+                    frappe.model.set_value(cdt, cdn, "scope_item_cost_value", 0);
                 }
             }
         });
