@@ -169,96 +169,112 @@ frappe.ui.form.on('Project Initiation', {
         margin_0 = cur_frm.doc.profit_0 / cur_frm.doc.total_selling_price_0
         cur_frm.set_value("markup_0", Math.round(markup_0 * 100));
         cur_frm.set_value("margin_0", Math.round(margin_0 * 100));
+        refresh_general_pricing(frm);
     },
     profit_1: function (frm) {
         var markup_1 = cur_frm.doc.profit_1 / (cur_frm.doc.cost_1 + cur_frm.doc.risk_contingency_1)
         var margin_1 = cur_frm.doc.profit_1 / cur_frm.doc.total_selling_price_1
         cur_frm.set_value("markup_1", Math.round(markup_1 * 100));
         cur_frm.set_value("margin_1", Math.round(margin_1 * 100));
+        refresh_general_pricing(frm);
     },
     profit_2: function (frm) {
         var markup_2 = cur_frm.doc.profit_2 / (cur_frm.doc.cost_2 + cur_frm.doc.risk_contingency_2)
         var margin_2 = cur_frm.doc.profit_2 / cur_frm.doc.total_selling_price_2
         cur_frm.set_value("markup_2", Math.round(markup_2 * 100));
         cur_frm.set_value("margin_2", Math.round(margin_2 * 100));
+        refresh_general_pricing(frm);
     },
     profit_3: function (frm) {
         var markup_3 = cur_frm.doc.profit_3 / (cur_frm.doc.cost_3 + cur_frm.doc.risk_contingency_3)
         var margin_3 = cur_frm.doc.profit_3 / cur_frm.doc.total_selling_price_3
         cur_frm.set_value("markup_3", Math.round(markup_3 * 100));
         cur_frm.set_value("margin_3", Math.round(margin_3 * 100));
+        refresh_general_pricing(frm);
     },
     profit_4: function (frm) {
         var markup_4 = cur_frm.doc.profit_4 / (cur_frm.doc.cost_4 + cur_frm.doc.risk_contingency_4)
         var margin_4 = cur_frm.doc.profit_4 / cur_frm.doc.total_selling_price_4
         cur_frm.set_value("markup_4", Math.round(markup_4 * 100));
         cur_frm.set_value("margin_4", Math.round(margin_4 * 100));
+        refresh_general_pricing(frm);
     },
     profit_5: function (frm) {
         var markup_5 = cur_frm.doc.profit_5 / (cur_frm.doc.cost_5 + cur_frm.doc.risk_contingency_5)
         var margin_5 = cur_frm.doc.profit_5 / cur_frm.doc.total_selling_price_5
         cur_frm.set_value("markup_5", Math.round(markup_5 * 100));
         cur_frm.set_value("margin_5", Math.round(margin_5 * 100));
+        refresh_general_pricing(frm);
     },
     profit_6: function (frm) {
         var markup_6 = cur_frm.doc.profit_6 / (cur_frm.doc.cost_6 + cur_frm.doc.risk_contingency_6)
         var margin_6 = cur_frm.doc.profit_6 / cur_frm.doc.total_selling_price_6
         cur_frm.set_value("markup_6", Math.round(markup_6 * 100));
         cur_frm.set_value("margin_6", Math.round(margin_6 * 100));
+        refresh_general_pricing(frm);
     },
     profit_7: function (frm) {
         var markup_7 = cur_frm.doc.profit_7 / (cur_frm.doc.cost_7 + cur_frm.doc.risk_contingency_7)
         var margin_7 = cur_frm.doc.profit_7 / cur_frm.doc.total_selling_price_7
         cur_frm.set_value("markup_7", Math.round(markup_7 * 100));
         cur_frm.set_value("margin_7", Math.round(margin_7 * 100));
+        refresh_general_pricing(frm);
     },
     profit_8: function (frm) {
         var markup_8 = cur_frm.doc.profit_8 / (cur_frm.doc.cost_8 + cur_frm.doc.risk_contingency_8)
         var margin_8 = cur_frm.doc.profit_8 / cur_frm.doc.total_selling_price_8
         cur_frm.set_value("markup_8", Math.round(markup_8 * 100));
         cur_frm.set_value("margin_8", Math.round(margin_8 * 100));
+        refresh_general_pricing(frm);
     },
     profit_9: function (frm) {
         var markup_9 = cur_frm.doc.profit_9 / (cur_frm.doc.cost_9 + cur_frm.doc.risk_contingency_9)
         var margin_9 = cur_frm.doc.profit_9 / cur_frm.doc.total_selling_price_9
         cur_frm.set_value("markup_9", Math.round(markup_9 * 100));
         cur_frm.set_value("margin_9", Math.round(margin_9 * 100));
+        refresh_general_pricing(frm);
     },
     profit_10: function (frm) {
         var markup_10 = cur_frm.doc.profit_10 / (cur_frm.doc.cost_10 + cur_frm.doc.risk_contingency_10)
         var margin_10 = cur_frm.doc.profit_10 / cur_frm.doc.total_selling_price_10
         cur_frm.set_value("markup_10", Math.round(markup_10 * 100));
         cur_frm.set_value("margin_10", Math.round(margin_10 * 100));
+        refresh_general_pricing(frm);
     },
     profit_11: function (frm) {
         var markup_11 = cur_frm.doc.profit_11 / (cur_frm.doc.cost_11 + cur_frm.doc.risk_contingency_11)
         var margin_11 = cur_frm.doc.profit_11 / cur_frm.doc.total_selling_price_11
         cur_frm.set_value("markup_11", Math.round(markup_11 * 100));
         cur_frm.set_value("margin_11", Math.round(margin_11 * 100));
+        refresh_general_pricing(frm);
     },
     profit_12: function (frm) {
         var markup_12 = cur_frm.doc.profit_12 / (cur_frm.doc.cost_12 + cur_frm.doc.risk_contingency_12)
         var margin_12 = cur_frm.doc.profit_12 / cur_frm.doc.total_selling_price_12
         cur_frm.set_value("markup_12", Math.round(markup_12 * 100));
         cur_frm.set_value("margin_12", Math.round(margin_12 * 100));
+        refresh_general_pricing(frm);
     },
     profit_13: function (frm) {
         var markup_13 = cur_frm.doc.profit_13 / (cur_frm.doc.cost_13 + cur_frm.doc.risk_contingency_13)
         var margin_13 = cur_frm.doc.profit_13 / cur_frm.doc.total_selling_price_13
         cur_frm.set_value("markup_13", Math.round(markup_13 * 100));
         cur_frm.set_value("margin_13", Math.round(margin_13 * 100));
+        refresh_general_pricing(frm);
     },
     profit_14: function (frm) {
         var markup_14 = cur_frm.doc.profit_14 / (cur_frm.doc.cost_14 + cur_frm.doc.risk_contingency_14)
         var margin_14 = cur_frm.doc.profit_14 / cur_frm.doc.total_selling_price_14
         cur_frm.set_value("markup_14", Math.round(markup_14 * 100));
         cur_frm.set_value("margin_14", Math.round(margin_14 * 100));
+        refresh_general_pricing(frm);
     },
     profit_15: function (frm) {
         var markup_15 = cur_frm.doc.profit_15 / (cur_frm.doc.cost_15 + cur_frm.doc.risk_contingency_15)
         var margin_15 = cur_frm.doc.profit_15 / cur_frm.doc.total_selling_price_15
         cur_frm.set_value("markup_15", Math.round(markup_15 * 100));
         cur_frm.set_value("margin_15", Math.round(margin_15 * 100));
+        refresh_general_pricing(frm);
     },
     vat: function (frm) {
         cur_frm.set_value("vat_value", cur_frm.doc.total_final_selling_price*(cur_frm.doc.vat/100));
