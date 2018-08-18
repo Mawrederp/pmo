@@ -314,7 +314,7 @@ frappe.ui.form.on('Items Details', {
 			frappe.model.set_value(cdt, cdn, "selling_price_unit", total);
 		}
 		if (d.cost_price_ts && d.markup_follow) {
-			var total = d.cost_price_ts + (d.cost_price_ts * d.markup_follow)
+			var total = d.cost_price_ts + (d.cost_price_ts * (d.markup_follow / 100))
 			frappe.model.set_value(cdt, cdn, "selling_price_ts", total);
 		}
 		frappe.model.set_value(cdt, cdn, "total_cost", d.total_cost_price + d.cost_price_ts);
