@@ -113,9 +113,8 @@ frappe.ui.form.on('Project Billing Control', {
      						$.each(frm.doc.project_payment_schedule_control || [], function(i, v) {
      							if(v.invoice){
 	     							frappe.model.set_value(v.doctype, v.name, "sales_order", invoice_name)
+	     							frappe.model.set_value(v.doctype, v.name, "billing_status", 1)
 	     						
-
-
 	     							frappe.call({
 							            "method": "updat_init_payment_table_invoice",
 							            doc: cur_frm.doc,
