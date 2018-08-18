@@ -165,15 +165,8 @@ frappe.ui.form.on('Project Initiation', {
     profit_0: function (frm) {
         var markup_0 = 0;
         var margin_0 = 0
-        if (cur_frm.doc.profit_0 && cur_frm.doc.profit_0 != 0) {
-            if (cur_frm.doc.cost_0 && cur_frm.doc.risk_contingency_0) {
-                markup_0 = cur_frm.doc.profit_0 / (cur_frm.doc.cost_0 + cur_frm.doc.risk_contingency_0)
-            }
-            if (cur_frm.doc.total_selling_price_0) {
-                margin_0 = cur_frm.doc.profit_0 / cur_frm.doc.total_selling_price_0
-            }
-
-        }
+        markup_0 = cur_frm.doc.profit_0 / (cur_frm.doc.cost_0 + cur_frm.doc.risk_contingency_0)
+        margin_0 = cur_frm.doc.profit_0 / cur_frm.doc.total_selling_price_0
         cur_frm.set_value("markup_0", Math.round(markup_0 * 100));
         cur_frm.set_value("margin_0", Math.round(margin_0 * 100));
     },
