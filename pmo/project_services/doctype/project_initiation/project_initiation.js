@@ -2,13 +2,13 @@
 // For license information, please see license.txt
 
 function refresh_general_pricing(frm) {
-	adj=[]
+	var adj=[]
 	for (let i = 0; i < cur_frm.doc.project_financial_detail.length; i++) {
 		adj.push(cur_frm.doc.project_financial_detail[i].adjustment)
 	}
 
     frm.clear_table("project_financial_detail");
-    indexing=[]
+    var indexing=[]
     for (let i = 0; i <= 15; i++) {
         if ((frm.doc["section_name_" + i] != undefined || "" || frm.doc["cost_" + i] != 0 ||
                 frm.doc["selling_price_" + i] != 0 || frm.doc["risk_contingency_" + i] != 0)) {
@@ -25,7 +25,7 @@ function refresh_general_pricing(frm) {
             d.profit = frm.doc["profit_" + i];
             d.markup = frm.doc["markup_" + i];
             d.margin = frm.doc["margin_" + i];
-            // d.adjustment = adj[indexing.indexOf(i)];
+            d.adjustment = adj[indexing.indexOf(i)];
 
 
             // console.log(frm.doc["markup_" + i])
