@@ -32,23 +32,37 @@ class ProjectsProcurementControl(Document):
 
 			item_name = frappe.get_value("Item", filters = {"item_name": scope_item}, fieldname = "name")    
 
+			resources_details_name = frappe.db.sql("select name from `tabResources Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,scope_item))
+
 			mreq=frappe.get_doc({
 				"doctype":"Material Request",
 				"naming_series": 'MREQ-',
 				# "workflow_state": 'Pending',
-				"material_request_type": 'Purchase',
+				"material_request_type": 'Purchase'
 				# "due_date": due_date,
 				# "debit_to": 'Debtors - O',
-				"items": [
-					  {
-						"doctype": "Material Request Item",
-						"item_code": item_name,
-						"description": description_comments,
-						"qty": 50,
-						"schedule_date": last_date
-					  }
-					]
+				
+				# "items": [
+				# 	  {
+				# 		"doctype": "Material Request Item",
+				# 		"item_code": item_name,
+				# 		"description": description_comments,
+				# 		# "qty": 50,
+				# 		"schedule_date": last_date
+				# 	  }
+				# 	]
 			})
+
+			for resource in resources_details_name:
+				doc = frappe.get_doc("Resources Details",resource[0])
+
+				mreq.append("items", {
+					"item_code": doc.resources,
+					"description": description_comments,
+					"schedule_date": last_date
+				})
+
+
 			# mreq.flags.ignore_validate = True
 			mreq.flags.ignore_mandatory = True
 			mreq.insert(ignore_permissions=True)
