@@ -293,7 +293,16 @@ frappe.ui.form.on('Project Initiation', {
     validate: function (frm) {
         for (let index = 0; index <= 15; index++) {
             $.each(cur_frm.doc["items_details_" + index] || [], function (i, d) {
-                frappe.model.set_value("Items Details", d.name, 'tawaris_services', cur_frm.doc["total_overhead_expenses_" + index]);
+
+                section_caracter = d.parentfield.slice(-1)
+                defult_tawaris_services = cur_frm.doc["total_overhead_expenses_" + section_caracter]
+
+                if(d.tawaris_services_check && d.tawaris_services_percent){
+                    var total = defult_tawaris_services*d.tawaris_services_percent/100
+                    frappe.model.set_value("Items Details", d.name, 'tawaris_services', total);
+                }else{
+                    frappe.model.set_value("Items Details", d.name, 'tawaris_services', cur_frm.doc["total_overhead_expenses_" + index]);
+                }
             });
 
             var grand_total = 0;
