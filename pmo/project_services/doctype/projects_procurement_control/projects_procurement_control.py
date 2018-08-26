@@ -11,6 +11,9 @@ class ProjectsProcurementControl(Document):
 		for row in self.project_costing_schedule_control:
 			if not row.last_date:
 				frappe.throw("Mandatory field: Last Date in table row {0}".format(row.idx))
+
+			if not row.scope_item:
+				frappe.throw("Mandatory field: Scope Item in table row {0}".format(row.idx))
 	
 
 	def make_material_request(self,scope_item,description_comments,last_date,material_request):

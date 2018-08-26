@@ -48,31 +48,7 @@ frappe.ui.form.on('Projects Procurement Control', {
      							if(v.pr){
 	     							frappe.model.set_value(v.doctype, v.name, "material_request", material_request_name)
 	     						
-	     			// 				var last_date = cur_frm.doc.project_costing_schedule_control[row].last_date
-									// if(last_date){
-									// 	last_date=last_date
-									// }else{
-									// 	last_date=''
-									// }
-
-									// var material_request = cur_frm.doc.project_costing_schedule_control[row].material_request
-									// if(material_request){
-									// 	material_request=material_request
-									// }else{
-									// 	material_request=''
-									// }
-
-									// var material_request = cur_frm.doc.project_costing_schedule_control[row].material_request
-									// if(material_request){
-									// 	material_request=material_request
-									// }else{
-									// 	material_request=''
-									// }
-
-									console.log(v.scope_item)
-									console.log(v.idx)
-									console.log(material_request_name)
-
+	     			
 	     							frappe.call({
 							            "method": "updat_material_costing_table",
 							            doc: cur_frm.doc,
