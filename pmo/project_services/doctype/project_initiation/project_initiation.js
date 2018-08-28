@@ -372,14 +372,14 @@ frappe.ui.form.on('Project Initiation', {
         //     total += flt(d.profit);
         // });
         // frm.set_value("total_profit", total);
-        console.log("hello validate")
-        // cur_frm.set_value("vat_value", cur_frm.doc.total_final_selling_price*(cur_frm.doc.vat/100));
+
+        cur_frm.set_value("vat_value", cur_frm.doc.total_final_selling_price*(cur_frm.doc.vat/100));
 
         cur_frm.set_value("total_final_selling_price_with_vat", cur_frm.doc.total_final_selling_price+cur_frm.doc.vat_value);
 
-        // if(cur_frm.doc.total_final_selling_price && cur_frm.doc.total_final_selling_price_with_vat!=0){
-        // 	cur_frm.set_value("overall_project_billing_percent", (cur_frm.doc.total_billing_vat/cur_frm.doc.total_final_selling_price_with_vat)*100);
-    	// }
+        if(cur_frm.doc.total_final_selling_price && cur_frm.doc.total_final_selling_price_with_vat!=0){
+        	cur_frm.set_value("overall_project_billing_percent", (cur_frm.doc.total_billing_vat/cur_frm.doc.total_final_selling_price_with_vat)*100);
+    	}
     }
 
 });
@@ -1738,7 +1738,7 @@ frappe.ui.form.on("Project Payment Schedule", "total_billing_value", function (f
 
 frappe.ui.form.on('Project Financial Details', {
     selling_price: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
+        var row = locals[cdt][cdn]; if (!row || row === undefined){return}
         frappe.model.set_value(cdt, cdn, "final_selling_price", 0);
 
         if (row.selling_price || row.additions_value) {
@@ -1747,7 +1747,7 @@ frappe.ui.form.on('Project Financial Details', {
 
     },
     additions_value: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
+        var row = locals[cdt][cdn]; if (!row || row === undefined){return}
         frappe.model.set_value(cdt, cdn, "final_selling_price", 0);
 
         if (row.selling_price || row.additions_value) {
@@ -1762,7 +1762,7 @@ frappe.ui.form.on('Project Financial Details', {
 
     },
     final_selling_price: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
+        var row = locals[cdt][cdn]; if (!row || row === undefined){return}
         frappe.model.set_value(cdt, cdn, "profit", row.final_selling_price-(row.cost_price+row.additions_value));
 
         if(row.final_selling_price!=0){
@@ -1770,7 +1770,7 @@ frappe.ui.form.on('Project Financial Details', {
         }
     },
     cost_price: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
+        var row = locals[cdt][cdn]; if (!row || row === undefined){return}
         frappe.model.set_value(cdt, cdn, "profit", row.final_selling_price-(row.cost_price+row.additions_value));
 
         if((row.cost_price+row.additions_value)!=0){
@@ -1778,7 +1778,7 @@ frappe.ui.form.on('Project Financial Details', {
         }
     },
     profit: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
+        var row = locals[cdt][cdn]; if (!row || row === undefined){return}
         if((row.cost_price+row.additions_value)!=0){
             frappe.model.set_value(cdt, cdn, "markup", (row.profit/(row.cost_price+row.additions_value))*100);
         }
@@ -1788,7 +1788,7 @@ frappe.ui.form.on('Project Financial Details', {
         }
     },
     adjustment: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
+        var row = locals[cdt][cdn]; if (!row || row === undefined){return}
         frappe.model.set_value(cdt, cdn, "final_selling_price", row.selling_price+row.additions_value+row.adjustment);       
     }
 
@@ -1797,7 +1797,7 @@ frappe.ui.form.on('Project Financial Details', {
 
 
 cur_frm.set_query("scope_item", "project_payment_schedule", function (doc, cdt, cdn) {
-    var row = locals[cdt][cdn];
+    var row = locals[cdt][cdn]; if (!row || row === undefined){return}
     item_length = cur_frm.doc.project_financial_detail.length
     item = []
     cost = []
@@ -1819,7 +1819,7 @@ cur_frm.set_query("scope_item", "project_payment_schedule", function (doc, cdt, 
 
 frappe.ui.form.on('Project Payment Schedule', {
 	validate: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
+        var row = locals[cdt][cdn]; if (!row || row === undefined){return}
 
 		var billing_total = 0;
         $.each(frm.doc.project_payment_schedule || [], function (i, d) {
@@ -1835,7 +1835,7 @@ frappe.ui.form.on('Project Payment Schedule', {
 
     },
     scope_item: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
+        var row = locals[cdt][cdn]; if (!row || row === undefined){return}
 
         item_length = cur_frm.doc.project_financial_detail.length
         item = []
@@ -1848,7 +1848,7 @@ frappe.ui.form.on('Project Payment Schedule', {
 
     },
     items_value: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
+        var row = locals[cdt][cdn]; if (!row || row === undefined){return}
         frappe.model.set_value(cdt, cdn, "billing_value", 0);
 
         if (row.billing_percentage<=row.remaining_billing_percent && row.billing_percentage>=0) {
@@ -1871,7 +1871,7 @@ frappe.ui.form.on('Project Payment Schedule', {
 
     },
     billing_percentage: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
+        var row = locals[cdt][cdn]; if (!row || row === undefined){return}
         frappe.model.set_value(cdt, cdn, "billing_value", 0);
 
         if (row.billing_percentage<=row.remaining_billing_percent && row.billing_percentage>=0) {
@@ -1893,7 +1893,7 @@ frappe.ui.form.on('Project Payment Schedule', {
 
     },
     billing_value: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
+        var row = locals[cdt][cdn]; if (!row || row === undefined){return}
 
         if (row.vat && row.billing_value) {
             frappe.model.set_value(cdt, cdn, "vat_value", (row.vat/100)*row.billing_value);
@@ -1912,7 +1912,7 @@ frappe.ui.form.on('Project Payment Schedule', {
 
     },
     vat: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
+        var row = locals[cdt][cdn]; if (!row || row === undefined){return}
 
         if (row.vat && row.billing_value) {
             frappe.model.set_value(cdt, cdn, "vat_value", (row.vat/100)*row.billing_value);
@@ -1920,7 +1920,7 @@ frappe.ui.form.on('Project Payment Schedule', {
 
     },
     vat_value: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
+        var row = locals[cdt][cdn]; if (!row || row === undefined){return}
 
         if (row.vat_value && row.billing_value) {
             frappe.model.set_value(cdt, cdn, "total_billing_value", row.vat_value+row.billing_value);
@@ -1928,7 +1928,7 @@ frappe.ui.form.on('Project Payment Schedule', {
 
     },
     remaining_billing_value: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
+        var row = locals[cdt][cdn]; if (!row || row === undefined){return}
         if(row.items_value && row.items_value!=0){
 	        frappe.model.set_value(cdt, cdn, "remaining_billing_percent", (row.remaining_billing_value/row.items_value)*100);
 	    }
@@ -1940,7 +1940,7 @@ frappe.ui.form.on('Project Payment Schedule', {
 
 
 cur_frm.set_query("scope_item", "project_costing_schedule", function (doc, cdt, cdn) {
-    var row = locals[cdt][cdn];
+    var row = locals[cdt][cdn]; if (!row || row === undefined){return}
     item_length = cur_frm.doc.project_financial_detail.length
     item = []
     cost = []
@@ -1960,7 +1960,7 @@ cur_frm.set_query("scope_item", "project_costing_schedule", function (doc, cdt, 
 
 frappe.ui.form.on('Project Costing Schedule', {
     type_of_cost: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
+        var row = locals[cdt][cdn]; if (!row || row === undefined){return}
         frappe.model.set_value(cdt, cdn, "scope_item", );
         frappe.model.set_value(cdt, cdn, "scope_item_cost_value", 0);
         frappe.model.set_value(cdt, cdn, "no_contracts", );
@@ -1994,7 +1994,7 @@ frappe.ui.form.on('Project Costing Schedule', {
 
     },
     scope_item: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
+        var row = locals[cdt][cdn]; if (!row || row === undefined){return}
         
         section_number = 0
         for(i=0;i<=15;i++){
@@ -2023,7 +2023,7 @@ frappe.ui.form.on('Project Costing Schedule', {
 
     },
     po_contract_extimated_cost: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
+        var row = locals[cdt][cdn]; if (!row || row === undefined){return}
         if(row.po_contract_extimated_cost>row.scope_item_cost_value){
         	frappe.model.set_value(cdt, cdn, "po_contract_extimated_cost", );
         	
