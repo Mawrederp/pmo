@@ -396,7 +396,7 @@ def costing_schedule_notification():
                         """.format(doc.name,row.project_cost_value,row.delivery_date,row.description_comments)
 
            
-            if doc.notification and row.type_of_cost=='Tawari Services':
+            if row.type_of_cost=='Tawari Services':
                 if date.today()==frappe.utils.get_last_day(date.today()):
                     try:
                         make(subject = "Project Costing Notification", content=content_msg, recipients='ai.alamri@tawari.sa',
@@ -447,7 +447,7 @@ def costing_schedule_notification_expenses():
                         """.format(doc.name,row.type_of_cost,row.scope_item,row.scope_item_cost_value,row.no_contracts,row.po_contract_extimated_cost,row.vendor,row.delivery_date,row.last_date)
 
            
-            if doc.notification and row.type_of_cost=='External Expenses':
+            if row.type_of_cost=='External Expenses':
                 if date.today()==row.last_date:
                     try:
                         make(subject = "Project Costing Notification", content=content_msg, recipients='ai.alamri@tawari.sa',
