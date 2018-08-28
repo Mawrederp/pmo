@@ -1993,6 +1993,34 @@ frappe.ui.form.on('Project Costing Schedule', {
         }
 
     },
+    last_date_period: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        
+        if(row.type_of_cost=='External Expenses' && row.last_date_period=='Date'){
+            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("last_date", true);
+            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("last_period_from", false);
+            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("last_period_to", false);
+        }else{
+            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("last_date", false);
+            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("last_period_from", true);
+            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("last_period_to", true);
+        }
+        
+    },
+    delivery_date_period: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        
+        if(row.delivery_date_period=='Date'){
+            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("delivery_date", true);
+            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("delivery_period_from_date", false);
+            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("delivery_period_to_date", false);
+        }else{
+            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("delivery_date", false);
+            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("delivery_period_from_date", true);
+            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("delivery_period_to_date", true);
+        }
+        
+    },
     scope_item: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn]; if (!row || row === undefined){return}
         
