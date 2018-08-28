@@ -373,13 +373,13 @@ frappe.ui.form.on('Project Initiation', {
         // });
         // frm.set_value("total_profit", total);
 
-        cur_frm.set_value("vat_value", cur_frm.doc.total_final_selling_price*(cur_frm.doc.vat/100));
+        // cur_frm.set_value("vat_value", cur_frm.doc.total_final_selling_price*(cur_frm.doc.vat/100));
 
-        cur_frm.set_value("total_final_selling_price_with_vat", cur_frm.doc.total_final_selling_price+cur_frm.doc.vat_value);
+        // cur_frm.set_value("total_final_selling_price_with_vat", cur_frm.doc.total_final_selling_price+cur_frm.doc.vat_value);
 
-        if(cur_frm.doc.total_final_selling_price && cur_frm.doc.total_final_selling_price_with_vat!=0){
-        	cur_frm.set_value("overall_project_billing_percent", (cur_frm.doc.total_billing_vat/cur_frm.doc.total_final_selling_price_with_vat)*100);
-    	}
+        // if(cur_frm.doc.total_final_selling_price && cur_frm.doc.total_final_selling_price_with_vat!=0){
+        // 	cur_frm.set_value("overall_project_billing_percent", (cur_frm.doc.total_billing_vat/cur_frm.doc.total_final_selling_price_with_vat)*100);
+    	// }
     }
 
 });
