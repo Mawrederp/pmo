@@ -95,8 +95,10 @@ frappe.ui.form.on('Projects Procurement Control', {
 			            d.scope_item_cost_value = row.scope_item_cost_value;
 			            d.no_contracts = row.no_contracts;
 			            d.po_contract_extimated_cost = row.po_contract_extimated_cost;
-			            d.vendor = row.vendor;
+			            d.last_date_period = row.last_date_period;
 			            d.last_date = row.last_date;
+			            d.last_period_from = row.last_period_from;
+			            d.last_period_to = row.last_period_to;
 			            d.delivery_date_period = row.delivery_date_period;
 			            d.delivery_date = row.delivery_date;
 			            d.delivery_period_from_date = row.delivery_period_from_date;
