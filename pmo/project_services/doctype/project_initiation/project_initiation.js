@@ -2010,7 +2010,7 @@ frappe.ui.form.on('Project Costing Schedule', {
     delivery_date_period: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
         
-        if(row.type_of_cost=='External Expenses' && row.delivery_date_period=='Date'){
+        if(row.delivery_date_period=='Date'){
             frm.fields_dict["project_costing_schedule"].grid.set_column_disp("delivery_date", true);
             frm.fields_dict["project_costing_schedule"].grid.set_column_disp("delivery_period_from_date", false);
             frm.fields_dict["project_costing_schedule"].grid.set_column_disp("delivery_period_to_date", false);
