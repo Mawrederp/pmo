@@ -345,33 +345,33 @@ frappe.ui.form.on('Project Initiation', {
 
 
 
-        // for (let index = 0; index <= 15; index++) {
-        //     $.each(cur_frm.doc["resources_details_" + index] || [], function (i, d) {
-        //         frappe.model.set_value("Resources Details", d.name, 'section_name', cur_frm.doc["section_name_" + index]);
-        //     });
-        // }
+        for (let index = 0; index <= 15; index++) {
+            $.each(cur_frm.doc["resources_details_" + index] || [], function (i, d) {
+                frappe.model.set_value("Resources Details", d.name, 'section_name', cur_frm.doc["section_name_" + index]);
+            });
+        }
 
 
-        // refresh_general_pricing(frm);
+        refresh_general_pricing(frm);
 
 
-        // var grand_total = 0;
-        // $.each(frm.doc.project_financial_detail || [], function (i, d) {
-        //     grand_total += flt(d.additions_value);
-        // });
-        // frm.set_value("total_risk", grand_total);
+        var grand_total = 0;
+        $.each(frm.doc.project_financial_detail || [], function (i, d) {
+            grand_total += flt(d.additions_value);
+        });
+        frm.set_value("total_risk", grand_total);
+
+        var total = 0;
+        $.each(frm.doc.project_financial_detail || [], function (i, d) {
+            total += flt(d.selling_price);
+        });
+        frm.set_value("general_total_selling_price", total);
 
         // var total = 0;
         // $.each(frm.doc.project_financial_detail || [], function (i, d) {
-        //     total += flt(d.selling_price);
+        //     total += flt(d.profit);
         // });
-        // frm.set_value("general_total_selling_price", total);
-
-        // // var total = 0;
-        // // $.each(frm.doc.project_financial_detail || [], function (i, d) {
-        // //     total += flt(d.profit);
-        // // });
-        // // frm.set_value("total_profit", total);
+        // frm.set_value("total_profit", total);
 
         // cur_frm.set_value("vat_value", cur_frm.doc.total_final_selling_price*(cur_frm.doc.vat/100));
 
@@ -1992,34 +1992,6 @@ frappe.ui.form.on('Project Costing Schedule', {
             frm.fields_dict["project_costing_schedule"].grid.set_column_disp("vendor", false);
         }
 
-    },
-    last_date_period: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
-        
-        if(row.type_of_cost=='External Expenses' && row.last_date_period=='Date'){
-            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("last_date", true);
-            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("last_period_from", false);
-            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("last_period_to", false);
-        }else{
-            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("last_date", false);
-            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("last_period_from", true);
-            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("last_period_to", true);
-        }
-        
-    },
-    delivery_date_period: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
-        
-        if(row.type_of_cost=='External Expenses' && row.delivery_date_period=='Date'){
-            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("delivery_date", true);
-            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("delivery_period_from_date", false);
-            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("delivery_period_to_date", false);
-        }else{
-            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("delivery_date", false);
-            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("delivery_period_from_date", true);
-            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("delivery_period_to_date", true);
-        }
-        
     },
     scope_item: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
