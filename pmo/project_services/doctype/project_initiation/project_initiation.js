@@ -48,6 +48,7 @@ function refresh_general_pricing(frm) {
             // console.log(adj[indexing.indexOf(i)])
             // console.log("---------------------------")
             frm.script_manager.trigger("adjustment", d.doctype, d.name);
+            frm.script_manager.trigger("total_cost", d.doctype, d.name);
             frm.script_manager.trigger("final_selling_price", d.doctype, d.name);
 
         }
@@ -1696,7 +1697,7 @@ cur_frm.cscript.custom_validate = function (frm) {
 
 
 
-frappe.ui.form.on("Project Financial Details", "cost_price", function (frm, cdt, cdn) {
+frappe.ui.form.on("Project Financial Details", "total_cost", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
     var grand_total = 0;
     $.each(frm.doc.project_financial_detail || [], function (i, d) {
@@ -1722,6 +1723,7 @@ frappe.ui.form.on("Project Financial Details", "final_selling_price", function (
 
 frappe.ui.form.on("Project Financial Details", "additions_value", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
+
     var total = 0;
     $.each(frm.doc.project_financial_detail || [], function (i, d) {
         total += flt(d.additions_value);
@@ -1732,6 +1734,7 @@ frappe.ui.form.on("Project Financial Details", "additions_value", function (frm,
 
 frappe.ui.form.on("Project Financial Details", "selling_price", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
+
     var total = 0;
     $.each(frm.doc.project_financial_detail || [], function (i, d) {
         total += flt(d.selling_price);
