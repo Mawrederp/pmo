@@ -69,7 +69,8 @@ class ProjectBillingControl(Document):
 								"description": description_when,
 								"tax_amount": vat_value
 							  }
-							]
+							],
+						"taxes_and_charges": "VAT"
 					})
 
 					# for resource in resources_details_name:
@@ -127,6 +128,7 @@ class ProjectBillingControl(Document):
 
  	def get_total_billing_so_far(self):
  		total_project = 0
+ 		total_project_count = 0
  		total_item = 0
 		for row in self.project_payment_schedule_control:
 			if row.invoice==1:
