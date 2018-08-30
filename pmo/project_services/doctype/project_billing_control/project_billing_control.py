@@ -106,6 +106,75 @@ class ProjectBillingControl(Document):
 
 
 
+
+	def make_project_sales_order_approval(self,project_name,scope_item,items_value,billing_percentage,due_date,description_when,vat_value,billing_state,sales_order):
+		arr=[]
+		arr_all=[]
+		for row in self.project_payment_schedule_control:
+			if row.invoice==1:
+				arr.append(row.name)
+				arr_all.append(row.number_of_invoices)
+				arr_all.append(row.vat)
+				arr_all.append(row.total_billing_value)
+				arr_all.append(row.remaining_billing_value)
+				arr_all.append(row.remaining_billing_percent)
+				arr_all.append(row.billing_value)
+
+		if sales_order and billing_state==1:
+			frappe.throw("You make Sales Order for this item before")
+		else:
+			if arr and len(arr)==1:
+				if not frappe.db.exists("Item", {"item_name": scope_item }):
+					doc = frappe.new_doc("Item")
+					doc.item_group = 'Project'
+					doc.item_code = scope_item
+					doc.item_name = scope_item
+					doc.is_stock_item = 0
+					doc.flags.ignore_mandatory = True
+					doc.insert(ignore_permissions=True)
+
+
+				item_name = frappe.get_value("Item", filters = {"item_name": scope_item}, fieldname = "name")    
+
+				customer = frappe.db.sql("select customer from `tabProject Initiation` where name='{0}' ".format(self.project_name))
+
+				resources_details_name = frappe.db.sql("select name from `tabResources Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,scope_item))
+				
+				if customer:
+					psoa=frappe.get_doc({
+						"doctype":"Project Sales Order Approval",
+						"project": project_name,
+						"customer": customer[0][0],
+						"scope_item": item_name,
+						"items_value": items_value,
+						"billing_percentage": billing_percentage,
+						"number_of_invoices": arr_all[0],
+						"vat": arr_all[1],
+						"vat_value": vat_value,
+						"total_billing_value": arr_all[2],
+						"remaining_billing_value": arr_all[3],
+						"remaining_billing_percent": arr_all[4],
+						"delivery_date": due_date,
+						"billing_value": arr_all[5],
+						"description_when": description_when
+					})
+				
+					psoa.flags.ignore_validate = True
+					psoa.flags.ignore_mandatory = True
+					psoa.insert(ignore_permissions=True)
+
+
+					frappe.msgprint("Project Sales Order Approval is created")
+				else:
+					frappe.throw('You sould select customer for this project before issue invoice')
+			else:
+				frappe.throw("You should check one invoice")
+
+		return psoa.name
+		
+
+
+
 	def updat_init_payment_table_invoice(self,sales_order,itm,idx):
 		init_payment_name = ''
 		init_payment_name = frappe.db.sql("""

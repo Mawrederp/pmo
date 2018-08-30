@@ -99,8 +99,9 @@ frappe.ui.form.on('Project Billing Control', {
 					}
 
 
+
 					frappe.call({
-			            "method": "make_sales_order",
+			            "method": "make_project_sales_order_approval",
 			            doc: cur_frm.doc,
 			            args: { "scope_item": scope_item,"project_name": project_name,
 			            		"items_value": items_value,"billing_percentage": billing_percentage,
@@ -109,33 +110,70 @@ frappe.ui.form.on('Project Billing Control', {
 			            callback: function (r) {
 		                    console.log(r.message)
 
-		                    invoice_name = r.message
-     						$.each(frm.doc.project_payment_schedule_control || [], function(i, v) {
-     							if(v.invoice){
-	     							frappe.model.set_value(v.doctype, v.name, "sales_order", invoice_name)
-	     							frappe.model.set_value(v.doctype, v.name, "billing_status", 1)
+		     //                invoice_name = r.message
+     		// 				$.each(frm.doc.project_payment_schedule_control || [], function(i, v) {
+     		// 					if(v.invoice){
+	     	// 						frappe.model.set_value(v.doctype, v.name, "sales_order", invoice_name)
+	     	// 						frappe.model.set_value(v.doctype, v.name, "billing_status", 1)
 	     						
-	     							frappe.call({
-							            "method": "updat_init_payment_table_invoice",
-							            doc: cur_frm.doc,
-							            args: {"itm": v.scope_item,"idx": v.idx,"sales_order":invoice_name},
-							            callback: function (r) {
-							            	if(r.message){
-							            		console.log(r.message)
-		     								}
+	     	// 						frappe.call({
+							//             "method": "updat_init_payment_table_invoice",
+							//             doc: cur_frm.doc,
+							//             args: {"itm": v.scope_item,"idx": v.idx,"sales_order":invoice_name},
+							//             callback: function (r) {
+							//             	if(r.message){
+							//             		console.log(r.message)
+		     // 								}
 
-						                }
-							        });
+						 //                }
+							//         });
 
-
-
-								}		
-							})
-
-
+							// 	}		
+							// })
 
 		                }
 			        });
+
+
+
+
+					// frappe.call({
+			  //           "method": "make_sales_order",
+			  //           doc: cur_frm.doc,
+			  //           args: { "scope_item": scope_item,"project_name": project_name,
+			  //           		"items_value": items_value,"billing_percentage": billing_percentage,
+			  //           		"due_date": due_date,"description_when":description_when,"vat_value":vat_value,
+			  //           		"billing_state":billing_status,"sales_order":sales_order},
+			  //           callback: function (r) {
+		   //                  console.log(r.message)
+
+		   //                  invoice_name = r.message
+     // 						$.each(frm.doc.project_payment_schedule_control || [], function(i, v) {
+     // 							if(v.invoice){
+	    //  							frappe.model.set_value(v.doctype, v.name, "sales_order", invoice_name)
+	    //  							frappe.model.set_value(v.doctype, v.name, "billing_status", 1)
+	     						
+	    //  							frappe.call({
+					// 		            "method": "updat_init_payment_table_invoice",
+					// 		            doc: cur_frm.doc,
+					// 		            args: {"itm": v.scope_item,"idx": v.idx,"sales_order":invoice_name},
+					// 		            callback: function (r) {
+					// 		            	if(r.message){
+					// 		            		console.log(r.message)
+		   //   								}
+
+					// 	                }
+					// 		        });
+
+
+
+					// 			}		
+					// 		})
+
+
+
+		   //              }
+			  //       });
 
 				}
 			}
