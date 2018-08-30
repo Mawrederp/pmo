@@ -143,7 +143,7 @@ class ProjectBillingControl(Document):
 				if customer:
 					psoa=frappe.get_doc({
 						"doctype":"Project Sales Order Approval",
-						"project": project_name,
+						"project_name": project_name,
 						"customer": customer[0][0],
 						"scope_item": item_name,
 						"items_value": items_value,
@@ -156,7 +156,8 @@ class ProjectBillingControl(Document):
 						"remaining_billing_percent": arr_all[4],
 						"delivery_date": due_date,
 						"billing_value": arr_all[5],
-						"description_when": description_when
+						"description_when": description_when,
+						"workflow_state": "Pending"
 					})
 				
 					psoa.flags.ignore_validate = True

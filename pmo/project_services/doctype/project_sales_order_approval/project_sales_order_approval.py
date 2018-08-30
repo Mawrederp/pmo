@@ -2,6 +2,8 @@
 # License: GNU General Public License v3. See license.txt
 
 
+from __future__ import unicode_literals
+import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import cint, cstr, date_diff, flt, formatdate, getdate, get_link_to_form, \
@@ -76,9 +78,10 @@ class ProjectSalesOrderApproval(Document):
 	 		init_payment_name=init_payment_name[0][0]
 
 	 	doc = frappe.get_doc("Project Payment Schedule",init_payment_name)
-		doc.sales_order = sales_order
-		doc.billing_status = 1
-		doc.flags.ignore_mandatory = True
-		doc.save(ignore_permissions=True)
+	 	if doc.scope_item==self.scope_item and doc.billing_percentage==self.billing_percentage and doc.total_billing_value==self.total_billing_value and doc.remaining_billing_value==self.remaining_billing_value:
+			doc.sales_order = sales_order
+			doc.billing_status = 1
+			doc.flags.ignore_mandatory = True
+			doc.save(ignore_permissions=True)
 
  		return init_payment_name
