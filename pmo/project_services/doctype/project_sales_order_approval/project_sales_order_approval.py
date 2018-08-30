@@ -14,8 +14,8 @@ from frappe.desk.notifications import clear_doctype_notifications
 from frappe.contacts.doctype.address.address import get_company_address
 from erpnext.controllers.selling_controller import SellingController
 from erpnext.selling.doctype.customer.customer import check_credit_limit
-from erpnext.stock.doctype.item.item import get_item_defaults
-from erpnext.setup.doctype.item_group.item_group import get_item_group_defaults
+# from erpnext.stock.doctype.item.item import get_item_defaults
+# from erpnext.setup.doctype.item_group.item_group import get_item_group_defaults
 from dateutil.relativedelta import relativedelta
 from frappe.utils import cstr, getdate, split_emails, add_days, today, get_last_day, get_first_day
 
@@ -558,8 +558,11 @@ def make_delivery_note(source_name, target_doc=None):
 		target.amount = (flt(source.qty) - flt(source.delivered_qty)) * flt(source.rate)
 		target.qty = flt(source.qty) - flt(source.delivered_qty)
 
-		item = get_item_defaults(target.item_code, source_parent.company)
-		item_group = get_item_group_defaults(target.item_code, source_parent.company)
+		item = None
+		item_group = None
+		###To fix
+		# item = get_item_defaults(target.item_code, source_parent.company)
+		# item_group = get_item_group_defaults(target.item_code, source_parent.company)
 
 		if item:
 			target.cost_center = frappe.db.get_value("Project", source_parent.project, "cost_center") \
@@ -627,8 +630,11 @@ def make_sales_invoice(source_name, target_doc=None, ignore_permissions=False):
 		if source_parent.project:
 			target.cost_center = frappe.db.get_value("Project", source_parent.project, "cost_center")
 		if not target.cost_center and target.item_code:
-			item = get_item_defaults(target.item_code, target.company)
-			item_group = get_item_group_defaults(target.item_code, target.company)
+			item = None
+		item_group = None
+		###To fix
+		# item = get_item_defaults(target.item_code, source_parent.company)
+		# item_group = get_item_group_defaults(target.item_code, source_parent.company)
 			target.cost_center = item.get("selling_cost_center") \
 				or item_group.get("selling_cost_center")
 
