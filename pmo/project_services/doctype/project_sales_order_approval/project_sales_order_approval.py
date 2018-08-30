@@ -27,7 +27,7 @@ class ProjectSalesOrderApproval(Document):
 				doc.flags.ignore_mandatory = True
 				doc.insert(ignore_permissions=True)
 
-			item_name = frappe.get_value("Item", filters = {"item_name": self.scope_item}, fieldname = "name")    
+			item_name = frappe.get_value("Item", filters = {"item_name": self.scope_item}, fieldname = "name")
 
 			if self.customer:
 				sinv=frappe.get_doc({
