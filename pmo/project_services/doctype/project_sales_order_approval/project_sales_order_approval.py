@@ -13,14 +13,30 @@ from erpnext.stock.stock_balance import update_bin_qty, get_reserved_qty
 from frappe.desk.notifications import clear_doctype_notifications
 from frappe.contacts.doctype.address.address import get_company_address
 from erpnext.controllers.selling_controller import SellingController
-from frappe.desk.doctype.auto_repeat.auto_repeat import get_next_schedule_date
 from erpnext.selling.doctype.customer.customer import check_credit_limit
 from erpnext.stock.doctype.item.item import get_item_defaults
 from erpnext.setup.doctype.item_group.item_group import get_item_group_defaults
+from dateutil.relativedelta import relativedelta
+from frappe.utils import cstr, getdate, split_emails, add_days, today, get_last_day, get_first_day
 
 form_grid_templates = {
 	"items": "templates/form_grid/item_grid.html"
 }
+month_map = {'Monthly': 1, 'Quarterly': 3, 'Half-yearly': 6, 'Yearly': 12}
+
+def get_next_date(dt, mcount, day=None):
+	dt = getdate(dt)
+	dt += relativedelta(months=mcount, day=day)
+
+	return dt
+def get_next_schedule_date(start_date, frequency, repeat_on_day):
+	mcount = month_map.get(frequency)
+	if mcount:
+		next_date = get_next_date(start_date, mcount, repeat_on_day)
+	else:
+		days = 7 if frequency == 'Weekly' else 1
+		next_date = add_days(start_date, days)
+	return next_date
 
 class WarehouseRequired(frappe.ValidationError): pass
 
