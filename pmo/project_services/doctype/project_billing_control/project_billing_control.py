@@ -145,7 +145,7 @@ class ProjectBillingControl(Document):
 						"doctype":"Project Sales Order Approval",
 						"project_name": project_name,
 						"customer": customer[0][0],
-						"scope_item": item_name,
+						"scope_item": scope_item,
 						"items_value": items_value,
 						"billing_percentage": billing_percentage,
 						"number_of_invoices": arr_all[0],
