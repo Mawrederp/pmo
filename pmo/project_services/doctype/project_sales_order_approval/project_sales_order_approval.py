@@ -631,10 +631,9 @@ def make_sales_invoice(source_name, target_doc=None, ignore_permissions=False):
 			target.cost_center = frappe.db.get_value("Project", source_parent.project, "cost_center")
 		if not target.cost_center and target.item_code:
 			item = None
-		item_group = None
-		###To fix
-		# item = get_item_defaults(target.item_code, source_parent.company)
-		# item_group = get_item_group_defaults(target.item_code, source_parent.company)
+			item_group = None
+			# item = get_item_defaults(target.item_code, target.company)
+			# item_group = get_item_group_defaults(target.item_code, target.company)
 			target.cost_center = item.get("selling_cost_center") \
 				or item_group.get("selling_cost_center")
 
