@@ -12,8 +12,6 @@ from frappe.utils import cint, cstr, date_diff, flt, formatdate, getdate, get_li
 from frappe.model.mapper import get_mapped_doc
 from frappe.contacts.doctype.address.address import get_company_address
 from frappe.model.utils import get_fetch_values
-from erpnext.stock.doctype.item.item import get_item_defaults
-from erpnext.setup.doctype.item_group.item_group import get_item_group_defaults
 
 class ProjectSalesOrderApproval(Document):
 	def make_sales_order(self,description_when):
@@ -111,8 +109,8 @@ def make_delivery_note(source_name, target_doc=None):
 		target.amount = (flt(source.qty) - flt(source.delivered_qty)) * flt(source.rate)
 		target.qty = flt(source.qty) - flt(source.delivered_qty)
 
-		item = get_item_defaults(target.item_code, source_parent.company)
-		item_group = get_item_group_defaults(target.item_code, source_parent.company)
+		item = None
+		item_group = None
 
 		if item:
 			target.cost_center = frappe.db.get_value("Project", source_parent.project, "cost_center") \
