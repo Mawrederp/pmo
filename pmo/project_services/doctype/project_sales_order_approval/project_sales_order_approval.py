@@ -10,6 +10,10 @@ from frappe.model.document import Document
 from frappe.utils import cint, cstr, date_diff, flt, formatdate, getdate, get_link_to_form, \
 	comma_or, get_fullname
 from frappe.model.mapper import get_mapped_doc
+from frappe.contacts.doctype.address.address import get_company_address
+from frappe.model.utils import get_fetch_values
+from erpnext.stock.doctype.item.item import get_item_defaults
+from erpnext.setup.doctype.item_group.item_group import get_item_group_defaults
 
 class ProjectSalesOrderApproval(Document):
 	def make_sales_order(self,description_when):
@@ -90,39 +94,38 @@ class ProjectSalesOrderApproval(Document):
 
 
 @frappe.whitelist()
-def make_material_request(source_name, target_doc=None):
-	def postprocess(source, doc):
-		doc.material_request_type = "Purchase"
+def make_delivery_note(source_name, target_doc=None):
+	def set_missing_values(source, target):
+		target.ignore_pricing_rule = 1
+		target.run_method("set_missing_values")
+		target.run_method("set_po_nos")
+		target.run_method("calculate_taxes_and_totals")
+
+		# set company address
+		target.update(get_company_address(target.company))
+		if target.company_address:
+			target.update(get_fetch_values("Delivery Note", 'company_address', target.company_address))
 
 	def update_item(source, target, source_parent):
-		target.project = source_parent.project
+		target.base_amount = (flt(source.qty) - flt(source.delivered_qty)) * flt(source.base_rate)
+		target.amount = (flt(source.qty) - flt(source.delivered_qty)) * flt(source.rate)
+		target.qty = flt(source.qty) - flt(source.delivered_qty)
 
-	doc = get_mapped_doc("Project Sales Order Approval", source_name, {
+		item = get_item_defaults(target.item_code, source_parent.company)
+		item_group = get_item_group_defaults(target.item_code, source_parent.company)
+
+		if item:
+			target.cost_center = frappe.db.get_value("Project", source_parent.project, "cost_center") \
+				or item.get("selling_cost_center") \
+				or item_group.get("selling_cost_center")
+
+	target_doc = get_mapped_doc("Project Sales Order Approval", source_name, {
 		"Project Sales Order Approval": {
-			"doctype": "Material Request",
+			"doctype": "Delivery Note",
 			"validation": {
 				"docstatus": ["=", 1]
 			}
-		},
-		"Packed Item": {
-			"doctype": "Material Request Item",
-			"field_map": {
-				"parent": "sales_order",
-				"stock_uom": "uom"
-			},
-			"postprocess": update_item
-		},
-		"Sales Order Item": {
-			"doctype": "Material Request Item",
-			"field_map": {
-				"name": "sales_order_item",
-				"parent": "sales_order",
-				"stock_uom": "uom",
-				"stock_qty": "qty"
-			},
-			"condition": lambda doc: not frappe.db.exists('Product Bundle', doc.item_code),
-			"postprocess": update_item
 		}
-	}, target_doc, postprocess)
+	}, target_doc, set_missing_values)
 
-	return doc
+	return target_doc
