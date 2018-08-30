@@ -19,7 +19,7 @@
    "bold": 0, 
    "collapsible": 0, 
    "columns": 0, 
-   "fieldname": "project", 
+   "fieldname": "project_name", 
    "fieldtype": "Link", 
    "hidden": 0, 
    "ignore_user_permissions": 0, 
@@ -515,7 +515,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2018-08-30 11:43:07.174177", 
+ "modified": "2018-08-30 13:21:58.386994", 
  "modified_by": "Administrator", 
  "module": "Project Services", 
  "name": "Project Sales Order Approval", 
@@ -629,7 +629,7 @@
  "show_name_in_global_search": 0, 
  "sort_field": "modified", 
  "sort_order": "DESC", 
- "title_field": "project", 
+ "title_field": "project_name", 
  "track_changes": 1, 
  "track_seen": 0
 }

@@ -20,7 +20,7 @@ frappe.ui.form.on('Project Billing Control', {
 
 	},
 	refresh: function(frm,cdt,cdn) {
-		frm.add_custom_button(__("Make Sales Order"), function () {
+		frm.add_custom_button(__("Make Sales Order Approval"), function () {
 			// items = []
 			for(row= 0;row<cur_frm.doc.project_payment_schedule_control.length;row++){
 				if(cur_frm.doc.project_payment_schedule_control[row].invoice == 1){
@@ -97,7 +97,6 @@ frappe.ui.form.on('Project Billing Control', {
 					}else{
 						sales_order=''
 					}
-
 
 
 					frappe.call({
