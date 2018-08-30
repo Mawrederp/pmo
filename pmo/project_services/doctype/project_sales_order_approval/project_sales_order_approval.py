@@ -1,5 +1,6 @@
-# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
-# License: GNU General Public License v3. See license.txt
+# -*- coding: utf-8 -*-
+# Copyright (c) 2018, s and contributors
+# For license information, please see license.txt
 
 
 from __future__ import unicode_literals
@@ -8,6 +9,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import cint, cstr, date_diff, flt, formatdate, getdate, get_link_to_form, \
 	comma_or, get_fullname
+from frappe.model.mapper import get_mapped_doc
 
 class ProjectSalesOrderApproval(Document):
 	def make_sales_order(self,description_when):
@@ -85,3 +87,42 @@ class ProjectSalesOrderApproval(Document):
 			doc.save(ignore_permissions=True)
 
  		return init_payment_name
+
+
+@frappe.whitelist()
+def make_material_request(source_name, target_doc=None):
+	def postprocess(source, doc):
+		doc.material_request_type = "Purchase"
+
+	def update_item(source, target, source_parent):
+		target.project = source_parent.project
+
+	doc = get_mapped_doc("Project Sales Order Approval", source_name, {
+		"Project Sales Order Approval": {
+			"doctype": "Material Request",
+			"validation": {
+				"docstatus": ["=", 1]
+			}
+		},
+		"Packed Item": {
+			"doctype": "Material Request Item",
+			"field_map": {
+				"parent": "sales_order",
+				"stock_uom": "uom"
+			},
+			"postprocess": update_item
+		},
+		"Sales Order Item": {
+			"doctype": "Material Request Item",
+			"field_map": {
+				"name": "sales_order_item",
+				"parent": "sales_order",
+				"stock_uom": "uom",
+				"stock_qty": "qty"
+			},
+			"condition": lambda doc: not frappe.db.exists('Product Bundle', doc.item_code),
+			"postprocess": update_item
+		}
+	}, target_doc, postprocess)
+
+	return doc
