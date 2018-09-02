@@ -104,18 +104,17 @@ def make_delivery_note(source_name, target_doc=None):
 		doc.item_code = source.scope_item
 		doc.qty = flt(flt(source.billing_percentage)/100)
 		doc.rate = float(source.items_value)
-		print(source.items_value)
-		print("////////*******************")
+		doc.uom = "Nos"
 		doc.is_stock_item = 0
 		doc.description = source.description_when
 		item_name = frappe.get_value("Item", filters = {"item_name": source.scope_item}, fieldname = "name")
+		barcode = frappe.get_value("Item", filters = {"item_name": source.scope_item}, fieldname = "barcode")
 		doc.item_name = item_name
-
+		doc.warehouse = "Stores - M"
+		doc.barcode = barcode
 		target.items.append(doc)
+
 		
-		print(target.run_method)
-		print("*******************************")
-		print(source)
 		# set company address
 		target.update(get_company_address(target.company))
 		if target.company_address:
