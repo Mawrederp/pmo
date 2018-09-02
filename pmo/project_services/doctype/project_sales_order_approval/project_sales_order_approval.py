@@ -98,7 +98,24 @@ def make_delivery_note(source_name, target_doc=None):
 		target.run_method("set_missing_values")
 		target.run_method("set_po_nos")
 		target.run_method("calculate_taxes_and_totals")
+		
+		doc = frappe.new_doc("Delivery Note Item")
+		doc.item_group = 'Project'
+		doc.item_code = source.scope_item
+		doc.qty = flt(flt(source.billing_percentage)/100)
+		doc.rate = float(source.items_value)
+		print(source.items_value)
+		print("////////*******************")
+		doc.is_stock_item = 0
+		doc.description = source.description_when
+		item_name = frappe.get_value("Item", filters = {"item_name": source.scope_item}, fieldname = "name")
+		doc.item_name = item_name
 
+		target.items.append(doc)
+		
+		print(target.run_method)
+		print("*******************************")
+		print(source)
 		# set company address
 		target.update(get_company_address(target.company))
 		if target.company_address:
@@ -108,7 +125,7 @@ def make_delivery_note(source_name, target_doc=None):
 		target.base_amount = (flt(source.qty) - flt(source.delivered_qty)) * flt(source.base_rate)
 		target.amount = (flt(source.qty) - flt(source.delivered_qty)) * flt(source.rate)
 		target.qty = flt(source.qty) - flt(source.delivered_qty)
-
+		
 		item = None
 		item_group = None
 
