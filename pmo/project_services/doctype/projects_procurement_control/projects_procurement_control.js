@@ -52,7 +52,8 @@ frappe.ui.form.on('Projects Procurement Control', {
 	     							frappe.call({
 							            "method": "updat_material_costing_table",
 							            doc: cur_frm.doc,
-							            args: {"itm": v.scope_item,"idx": v.idx,"material_request":material_request_name},
+							            args: {"itm": v.scope_item,"idx": v.idx,"material_request":material_request_name,
+							        		   "scope_item_cost_value":v.scope_item_cost_value,"po_contract_extimated_cost":v.po_contract_extimated_cost},
 							            callback: function (r) {
 							            	if(r.message){
 							            		console.log(r.message)
