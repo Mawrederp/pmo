@@ -1,18 +1,18 @@
 // Copyright (c) 2018, s and contributors
 // For license information, please see license.txt
 function set_value_model(doctype, docname, field, value){
-    if (value && !isNaN(value)) {
+    if (value) {
         frappe.model.set_value(doctype, docname, field, value);
-    } else {
-        frappe.model.set_value(doctype, docname, field, 0);
+    }else{
+        frappe.model.set_value(doctype, docname, field, "");
     }
 }
 
 function set_value(frm, field, value) {
-    if (value && !isNaN(value)) {
+    if (value) {
         frm.set_value(field, value);
-    } else {
-        frm.set_value(field, 0);
+    } else{
+        frm.set_value(field, "");
     }
 }
 
