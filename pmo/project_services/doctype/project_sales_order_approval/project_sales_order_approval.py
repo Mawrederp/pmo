@@ -110,7 +110,7 @@ def make_delivery_note(source_name, target_doc=None):
 		item_name = frappe.get_value("Item", filters = {"item_name": source.scope_item}, fieldname = "name")
 		barcode = frappe.get_value("Item", filters = {"item_name": source.scope_item}, fieldname = "barcode")
 		doc.item_code = item_name
-		doc.warehouse = "Stores - M"
+		doc.warehouse = "Stores - T"
 		doc.barcode = barcode
 		target.items.append(doc)
 
