@@ -95,10 +95,10 @@ class ProjectSalesOrderApproval(Document):
 def make_delivery_note(source_name, target_doc=None):
 	def set_missing_values(source, target):
 		target.ignore_pricing_rule = 1
-		target.run_method("set_missing_values")
-		target.run_method("set_po_nos")
-		target.run_method("calculate_taxes_and_totals")
-		
+		# target.run_method("set_missing_values")
+		# target.run_method("set_po_nos")
+		# target.run_method("calculate_taxes_and_totals")
+		target.items = []
 		doc = frappe.new_doc("Delivery Note Item")
 		doc.item_group = 'Project'
 		doc.item_code = source.scope_item
@@ -137,8 +137,7 @@ def make_delivery_note(source_name, target_doc=None):
 		"Project Sales Order Approval": {
 			"doctype": "Delivery Note",
 			"validation": {
-				"docstatus": ["=", 0],
-				"workflow_state":["=","Approved by PMO Director"]
+				"docstatus": ["=", 1]
 			}
 		}
 	}, target_doc, set_missing_values)
