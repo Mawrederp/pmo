@@ -82,22 +82,20 @@ class ProjectsProcurementControl(Document):
 
 
 
-	def updat_material_costing_table(self,material_request,itm,idx):
+	def updat_material_costing_table(self,material_request,itm,idx,scope_item_cost_value,po_contract_extimated_cost):
 		material_costing_name = ''
 		material_costing_name = frappe.db.sql("""
 	 	select costing.name from `tabProject Costing Schedule` costing join `tabProject Initiation` init on costing.parent=init.name
 	 	where costing.parenttype='Project Initiation' and init.name='{0}' and costing.scope_item='{1}'
-	 	and costing.idx='{2}'
-	 	""".format(self.project_name,itm,idx)) 
+	 	and costing.scope_item_cost_value='{2}' and costing.po_contract_extimated_cost='{3}'
+	 	""".format(self.project_name,itm,scope_item_cost_value,po_contract_extimated_cost)) 
 	 	if material_costing_name:
 	 		material_costing_name=material_costing_name[0][0]
-		print material_costing_name
 		
-		print("************************-*-*-*-*-*--*-*-*-*-*-*-*")
-	 	doc = frappe.get_doc("Project Costing Schedule",material_costing_name)
-		doc.material_request = material_request
-		doc.flags.ignore_mandatory = True
-		doc.save(ignore_permissions=True)
+		 	doc = frappe.get_doc("Project Costing Schedule",material_costing_name)
+			doc.material_request = material_request
+			doc.flags.ignore_mandatory = True
+			doc.save(ignore_permissions=True)
 
  		return material_costing_name
 
