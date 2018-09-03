@@ -12,6 +12,9 @@ from datetime import date
 
 class ProjectInitiation(Document):
     def validate(self):
+        if self.customer:
+            self.add_customer_to_project()
+    
         if self.workflow_state == 'Approved by PMO Director':
             if not frappe.db.exists("Project Planning", {"project_name": self.project_name}):
                 self.make_project_planning()
@@ -21,6 +24,8 @@ class ProjectInitiation(Document):
             if "Rejected" in self.workflow_state:
                 self.docstatus = 1
                 self.docstatus = 2
+
+
             
         # field_array = ["cost","selling_price","risk_contingency", "total_selling_price","profit","markup","margin"]
         # final_totals_list = [0] * 7
@@ -254,6 +259,12 @@ class ProjectInitiation(Document):
 
         frappe.msgprint(_("""Project Planning have been created: <b><a href="#Form/Project Planning/{pp}">{pp}</a></b>""".format(pp = pp)))
     
+
+    def add_customer_to_project(self):
+        doc = frappe.get_doc("Project", self.project_name)
+        doc.customer = self.customer
+        doc.save(ignore_permissions=True)
+
 
     def existing_project_planning(self):
         project_name = frappe.get_value("Project Planning", filters = {"project_name": self.project_name}, fieldname = "name")

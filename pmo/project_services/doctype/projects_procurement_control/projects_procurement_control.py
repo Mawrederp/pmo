@@ -92,6 +92,8 @@ class ProjectsProcurementControl(Document):
 	 	if material_costing_name:
 	 		material_costing_name=material_costing_name[0][0]
 		print material_costing_name
+		
+		print("************************-*-*-*-*-*--*-*-*-*-*-*-*")
 	 	doc = frappe.get_doc("Project Costing Schedule",material_costing_name)
 		doc.material_request = material_request
 		doc.flags.ignore_mandatory = True
