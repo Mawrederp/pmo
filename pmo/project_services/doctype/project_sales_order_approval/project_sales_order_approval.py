@@ -136,9 +136,9 @@ def make_delivery_note(source_name, target_doc=None):
 	target_doc = get_mapped_doc("Project Sales Order Approval", source_name, {
 		"Project Sales Order Approval": {
 			"doctype": "Delivery Note",
-			"validation": {
-				"docstatus": ["=", 1]
-			}
+			# "validation": {
+			# 	"workflow_state": ["=", "Approved by PMO Director"]
+			# }
 		}
 	}, target_doc, set_missing_values)
 
