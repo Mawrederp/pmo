@@ -378,11 +378,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
-<<<<<<< HEAD
  "modified": "2018-09-03 13:37:34.756730", 
-=======
- "modified": "2018-09-03 13:37:34.724426", 
->>>>>>> d7afeae370182bb1440bf93136e9d58ab4875dd0
  "modified_by": "Administrator", 
  "module": "Project Services", 
  "name": "Project Costing Control", 
