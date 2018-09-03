@@ -82,7 +82,6 @@ frappe.ui.form.on('Projects Procurement Control', {
 		// cur_frm.set_df_property("project_costing_schedule_control", "read_only",1);
 		$(".grid-add-row").hide();
 
-		
 		frappe.meta.get_docfield("Project Costing Schedule","type_of_cost", cur_frm.doc.name).read_only = 1;
 		frappe.meta.get_docfield("Project Costing Schedule","description_comments", cur_frm.doc.name).read_only = 1;
 		frappe.meta.get_docfield("Project Costing Schedule","scope_item", cur_frm.doc.name).read_only = 1;
