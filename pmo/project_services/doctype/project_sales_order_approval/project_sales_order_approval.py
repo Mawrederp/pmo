@@ -101,7 +101,7 @@ def make_delivery_note(source_name, target_doc=None):
 		target.items = []
 		doc = frappe.new_doc("Delivery Note Item")
 		doc.item_group = 'Project'
-		doc.item_code = source.scope_item
+		doc.item_name = source.scope_item
 		doc.qty = flt(flt(source.billing_percentage)/100)
 		doc.rate = float(source.items_value)
 		doc.uom = "Nos"
@@ -109,7 +109,7 @@ def make_delivery_note(source_name, target_doc=None):
 		doc.description = source.description_when
 		item_name = frappe.get_value("Item", filters = {"item_name": source.scope_item}, fieldname = "name")
 		barcode = frappe.get_value("Item", filters = {"item_name": source.scope_item}, fieldname = "barcode")
-		doc.item_name = item_name
+		doc.item_code = item_name
 		doc.warehouse = "Stores - M"
 		doc.barcode = barcode
 		target.items.append(doc)
