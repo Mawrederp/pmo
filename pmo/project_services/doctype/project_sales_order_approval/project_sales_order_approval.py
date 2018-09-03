@@ -137,7 +137,8 @@ def make_delivery_note(source_name, target_doc=None):
 		"Project Sales Order Approval": {
 			"doctype": "Delivery Note",
 			"validation": {
-				"docstatus": ["=", 1]
+				"docstatus": ["=", 0],
+				"workflow_state":["=","Approved by PMO Director"]
 			}
 		}
 	}, target_doc, set_missing_values)
