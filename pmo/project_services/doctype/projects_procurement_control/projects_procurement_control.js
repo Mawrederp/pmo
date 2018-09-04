@@ -20,7 +20,7 @@ frappe.ui.form.on('Projects Procurement Control', {
 		frappe.meta.get_docfield("Project Costing Schedule","delivery_period_from_date", cur_frm.doc.name).read_only = 1;
 		frappe.meta.get_docfield("Project Costing Schedule","delivery_period_to_date", cur_frm.doc.name).read_only = 1;
 
-    	frm.add_custom_button(__("Make a PR"), function () {
+    	frm.add_custom_button(__("Make a Material Request"), function () {
 
 			for(row= 0;row<cur_frm.doc.project_costing_schedule_control.length;row++){
 				if(cur_frm.doc.project_costing_schedule_control[row].pr == 1){
