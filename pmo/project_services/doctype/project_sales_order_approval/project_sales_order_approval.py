@@ -113,6 +113,7 @@ def make_delivery_note(source_name, target_doc=None):
 		doc.warehouse = "Stores - T"
 		doc.barcode = barcode
 		target.items.append(doc)
+		target.project = source.project_name
 
 		
 		# set company address
