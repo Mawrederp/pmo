@@ -1,9 +1,9 @@
 // Copyright (c) 2018, s and contributors
 // For license information, please see license.txt
-function set_value_model(doctype, docname, field, value){
+function set_value_model(doctype, docname, field, value) {
     if (value) {
         frappe.model.set_value(doctype, docname, field, value);
-    }else{
+    } else {
         frappe.model.set_value(doctype, docname, field, "");
     }
 }
@@ -11,8 +11,15 @@ function set_value_model(doctype, docname, field, value){
 function set_value(frm, field, value) {
     if (value) {
         frm.set_value(field, value);
-    } else{
-        frm.set_value(field, "");
+    } else {
+        if (cur_frm.fields_dict[field].df.fieldtype == "Currency" ||
+            cur_frm.fields_dict[field].df.fieldtype == "Percent" ||
+            cur_frm.fields_dict[field].df.fieldtype == "Number") {
+            frm.set_value(field, 0);
+        } else {
+            frm.set_value(field, "");
+
+        }
     }
 }
 
@@ -398,17 +405,17 @@ frappe.ui.form.on('Project Initiation', {
 
 
         var total = 0;
-	    $.each(frm.doc.project_costing_schedule || [], function (i, d) {
-	    	if(d.type_of_cost=='Tawari Services'){
-	        	total += flt(d.project_cost_value);
-	    	}else if(d.type_of_cost=='External Expenses'){
-	    		total += flt(d.scope_item_cost_value);
-	    	}
-	    });
-	    set_value(frm, "total_project_cost_scheduled", total);
-	    if(cur_frm.doc.total_cost_price){
-	    	set_value(frm, "total_project_cost_scheduled_percent", (total/cur_frm.doc.total_cost_price)*100);
-	    }
+        $.each(frm.doc.project_costing_schedule || [], function (i, d) {
+            if (d.type_of_cost == 'Tawari Services') {
+                total += flt(d.project_cost_value);
+            } else if (d.type_of_cost == 'External Expenses') {
+                total += flt(d.scope_item_cost_value);
+            }
+        });
+        set_value(frm, "total_project_cost_scheduled", total);
+        if (cur_frm.doc.total_cost_price) {
+            set_value(frm, "total_project_cost_scheduled_percent", (total / cur_frm.doc.total_cost_price) * 100);
+        }
 
 
 
@@ -2076,18 +2083,18 @@ frappe.ui.form.on('Project Costing Schedule', {
                     set_value_model(cdt, cdn, "project_cost_value", r.message);
 
 
-				    var total = 0;
-				    $.each(frm.doc.project_costing_schedule || [], function (i, d) {
-				    	if(d.type_of_cost=='Tawari Services'){
-				        	total += flt(d.project_cost_value);
-				    	}else if(d.type_of_cost=='External Expenses'){
-				    		total += flt(d.scope_item_cost_value);
-				    	}
-				    });
-				    set_value(frm, "total_project_cost_scheduled", total);
-				    if(cur_frm.doc.total_cost_price){
-				    	set_value(frm, "total_project_cost_scheduled_percent", (total/cur_frm.doc.total_cost_price)*100);
-				    }
+                    var total = 0;
+                    $.each(frm.doc.project_costing_schedule || [], function (i, d) {
+                        if (d.type_of_cost == 'Tawari Services') {
+                            total += flt(d.project_cost_value);
+                        } else if (d.type_of_cost == 'External Expenses') {
+                            total += flt(d.scope_item_cost_value);
+                        }
+                    });
+                    set_value(frm, "total_project_cost_scheduled", total);
+                    if (cur_frm.doc.total_cost_price) {
+                        set_value(frm, "total_project_cost_scheduled_percent", (total / cur_frm.doc.total_cost_price) * 100);
+                    }
 
 
                 } else {
@@ -2163,17 +2170,17 @@ frappe.ui.form.on('Project Costing Schedule', {
 
 
                     var total = 0;
-				    $.each(frm.doc.project_costing_schedule || [], function (i, d) {
-				    	if(d.type_of_cost=='Tawari Services'){
-				        	total += flt(d.project_cost_value);
-				    	}else if(d.type_of_cost=='External Expenses'){
-				    		total += flt(d.scope_item_cost_value);
-				    	}
-				    });
-				    set_value(frm, "total_project_cost_scheduled", total);
-				    if(cur_frm.doc.total_cost_price){
-				    	set_value(frm, "total_project_cost_scheduled_percent", (total/cur_frm.doc.total_cost_price)*100);
-				    }
+                    $.each(frm.doc.project_costing_schedule || [], function (i, d) {
+                        if (d.type_of_cost == 'Tawari Services') {
+                            total += flt(d.project_cost_value);
+                        } else if (d.type_of_cost == 'External Expenses') {
+                            total += flt(d.scope_item_cost_value);
+                        }
+                    });
+                    set_value(frm, "total_project_cost_scheduled", total);
+                    if (cur_frm.doc.total_cost_price) {
+                        set_value(frm, "total_project_cost_scheduled_percent", (total / cur_frm.doc.total_cost_price) * 100);
+                    }
 
 
                 } else {
@@ -2258,5 +2265,3 @@ frappe.ui.form.on('Project Costing Schedule', {
 //     while (currentTime + miliseconds >= new Date().getTime()) {
 //     }
 // }
-
-
