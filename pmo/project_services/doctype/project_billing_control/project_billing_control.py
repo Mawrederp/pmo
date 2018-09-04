@@ -120,7 +120,7 @@ class ProjectBillingControl(Document):
 				arr_all.append(row.remaining_billing_percent)
 				arr_all.append(row.billing_value)
 
-		if sales_order and billing_state==1:
+		if billing_state==1:
 			frappe.throw("You make Sales Order for this item before")
 		else:
 			if arr and len(arr)==1:
