@@ -3,7 +3,7 @@
 
 frappe.ui.form.on('Project Sales Order Approval', {
 	refresh: function(frm,cdt,cdn) {
-		if(cur_frm.doc.workflow_state=="Approved by PMO Director"){
+		if(cur_frm.doc.workflow_state=="Approved By CEO"){
 			frm.add_custom_button(__("Make Sales Order"), function () {
 
 				var description_when = cur_frm.doc.description_when
