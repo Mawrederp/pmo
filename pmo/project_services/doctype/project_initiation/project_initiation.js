@@ -365,9 +365,9 @@ frappe.ui.form.on('Project Initiation', {
         }
 
 
-        for (let index = 0; index <= 15; index++) {
+        for (var index = 0; index <= 15; index++) {
             $.each(cur_frm.doc["resources_details_" + index] || [], function (i, d) {
-                set_value_model("Resources Details", d.name, 'section_name', cur_frm.doc["section_name_" + index]);
+                frappe.model.set_value("Resources Details", d.name, 'section_name', cur_frm.doc["section_name_" + index]);
             });
         }
 

@@ -20,7 +20,7 @@ frappe.ui.form.on('Projects Procurement Control', {
 		frappe.meta.get_docfield("Project Costing Schedule","delivery_period_from_date", cur_frm.doc.name).read_only = 1;
 		frappe.meta.get_docfield("Project Costing Schedule","delivery_period_to_date", cur_frm.doc.name).read_only = 1;
 
-    	frm.add_custom_button(__("Make a PR"), function () {
+    	frm.add_custom_button(__("Make a Material Request"), function () {
 
 			for(row= 0;row<cur_frm.doc.project_costing_schedule_control.length;row++){
 				if(cur_frm.doc.project_costing_schedule_control[row].pr == 1){
@@ -54,17 +54,26 @@ frappe.ui.form.on('Projects Procurement Control', {
 					}
 
 
+					var cost_status = cur_frm.doc.project_costing_schedule_control[row].cost_status
+					if(cost_status){
+						cost_status=cost_status
+					}else{
+						cost_status=0
+					}
+
+
 					frappe.call({
 			            "method": "make_material_request",
 			            doc: cur_frm.doc,
 			            args: { "scope_item": scope_item,"description_comments":description_comments,
-			            		"last_date":last_date,"material_request":material_request},
+			            		"last_date":last_date,"material_request":material_request,"cost_status":cost_status},
 			            callback: function (r) {
 			            	material_request_name = r.message
      						$.each(frm.doc.project_costing_schedule_control || [], function(i, v) {
      							if(v.pr){
+	     							
 	     							frappe.model.set_value(v.doctype, v.name, "material_request", material_request_name)
-	     						
+	     							frappe.model.set_value(v.doctype, v.name, "cost_status", 1)
 	     			
 	     							frappe.call({
 							            "method": "updat_material_costing_table",
@@ -140,6 +149,7 @@ frappe.ui.form.on('Projects Procurement Control', {
 			            d.delivery_period_from_date = row.delivery_period_from_date;
 			            d.delivery_period_to_date = row.delivery_period_to_date;
 			            d.material_request = row.material_request;
+			            d.cost_status = row.cost_status;
 			            frm.refresh_field("project_costing_schedule_control");
 			        }
 		        });
