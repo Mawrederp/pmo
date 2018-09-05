@@ -62,21 +62,62 @@ frappe.ui.form.on('Project Costing Control', {
 	payment_cost_value: function(frm) {
 		arr = []
 		$.each(frm.doc.project_costing_schedule_control || [], function (i, d) {
-	        if(d.pr && d.type_of_cost=='External Expenses' && cur_frm.doc.payment_cost_value>d.po_contract_extimated_cost ){
-	        	cur_frm.set_value("payment_cost_value", );
-	       
-	        	frappe.call({
-		            "method": "validate_payment_cost_value",
-		            doc: cur_frm.doc
-		        });
-	        }else if(d.pr){
+			if(d.pr){
 	        	arr.push(d.pr)
 	        }
 	    });
-	    
-	    if(arr.length==0){
-	    	cur_frm.set_value("payment_cost_value", );
-	    }
+
+		$.each(frm.doc.project_costing_schedule_control || [], function (i, d) {
+	        if(arr.length==1){
+		        if(d.pr && d.type_of_cost=='External Expenses' && cur_frm.doc.payment_cost_value>d.po_contract_extimated_cost ){
+		        	cur_frm.set_value("payment_cost_value", );
+		       
+		        	frappe.call({
+			            "method": "validate_payment_cost_value",
+			            doc: cur_frm.doc
+			        });
+		        }else if(d.pr && d.type_of_cost=='External Expenses'){
+		        	cur_frm.set_value("po_contract_remaining_estimated_cost", d.po_contract_extimated_cost-cur_frm.doc.payment_cost_value-cur_frm.doc.total_payment_cost_value);
+			        cur_frm.set_value("project_external_remaining_estimated", d.scope_item_cost_value-cur_frm.doc.payment_cost_value-cur_frm.doc.total_project_external_expenses);
+		        }
+		    }else if(arr.length==0){
+		    	cur_frm.set_value("payment_cost_value", );
+		    }
+	    });
+
+
+
+	    for(let i=0;i<cur_frm.doc.project_costing_schedule_control.length;i++){
+				if(cur_frm.doc.project_costing_schedule_control[i].pr==1){
+
+					frappe.call({
+			            "method": "get_total_expenses_allocation_so_far",
+			            doc: cur_frm.doc,
+			            args: { "scope_item": cur_frm.doc.project_costing_schedule_control[i].scope_item},
+			            callback: function (r) {
+			                if(r.message){
+			                    cur_frm.set_value("total_payment_cost_value", r.message);
+			                }
+			            }
+			        });
+
+
+			        frappe.call({
+			            "method": "get_total_expenses_external_allocation_so_far",
+			            doc: cur_frm.doc,
+			            callback: function (r) {
+			                if(r.message){
+			                    cur_frm.set_value("total_project_external_expenses", r.message);
+			                }
+			            }
+			        });
+
+				}
+			}
+
+		if(cur_frm.doc.po_contract_remaining_estimated_cost<0){
+			cur_frm.set_value("po_contract_remaining_estimated_cost", 0);
+		}
 
 	},
 	type_of_cost: function(frm){
@@ -106,7 +147,6 @@ frappe.ui.form.on('Project Costing Control', {
         //     df.hidden = 0; 
 
         // }
-
 
 
 		if(cur_frm.doc.project_name && cur_frm.doc.type_of_cost=='Tawari Services'){
@@ -174,18 +214,7 @@ frappe.ui.form.on('Project Costing Control', {
 		        });
 		    })	
 
-
-		    // frappe.call({
-	     //        "method": "get_total_resources_allocation_so_far",
-	     //        doc: cur_frm.doc,
-	     //        callback: function (r) {
-	     //            if(r.message){
-	     //                cur_frm.set_value("total_resources_allocation_so_far", r.message);
-	     //            }
-	     //        }
-	     //    });
-
-
+		    
 		}
 
 
