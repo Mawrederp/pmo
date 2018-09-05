@@ -204,7 +204,7 @@ class ProjectBillingControl(Document):
 			if row.invoice==1:
 				total_project = frappe.db.sql("""select sum(payment.total_billing_value) from `tabProject Payment Schedule` payment
 			 	 			join `tabProject Billing Control` billing on payment.parent=billing.name where payment.parenttype='Project Billing Control' 
-			 	 			and billing.project_name='{0}' and payment.invoice=1 and payment.billing_status=1 """.format(self.project_name))
+			 	 			and billing.project_name='{0}' and payment.invoice=1 """.format(self.project_name))
 				
 				total_project_count = frappe.db.sql("""select count(payment.total_billing_value) from `tabProject Payment Schedule` payment
 			 	 			join `tabProject Billing Control` billing on payment.parent=billing.name where payment.parenttype='Project Billing Control' 
