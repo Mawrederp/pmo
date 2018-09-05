@@ -2196,7 +2196,17 @@ frappe.ui.form.on('Project Costing Schedule', {
         if (!row || row === undefined) {
             return
         }
-        if (row.po_contract_extimated_cost > row.scope_item_cost_value) {
+        var scope_item_used_cost = 0;
+        if(row.scope_item){
+            $.each(frm.doc.project_costing_schedule || [], function (i, d) {
+                if (d.scope_item == row.scope_item) {
+                    scope_item_used_cost += flt(d.po_contract_extimated_cost);
+                }
+            });
+        }
+        
+
+        if ((row.po_contract_extimated_cost > row.scope_item_cost_value)|| (scope_item_used_cost > row.scope_item_cost_value)) {
             set_value_model(cdt, cdn, "po_contract_extimated_cost", );
 
             frappe.call({

@@ -23,9 +23,9 @@ class ProjectsProcurementControl(Document):
 				arr.append(row.name)
 
 		if cost_status==1:
-			frappe.throw("You make Material Request for this item before")
+			frappe.throw("You made Material Request for this item before!")
 		else:
-			if arr and len(arr)==1 and not material_request:
+			if arr and len(arr)==1:
 				if not frappe.db.exists("Item", {"item_name": scope_item }):
 					doc = frappe.new_doc("Item")
 					doc.item_group = 'Project'
@@ -73,7 +73,7 @@ class ProjectsProcurementControl(Document):
 				# mreq.flags.ignore_validate = True
 				mreq.flags.ignore_mandatory = True
 				mreq.insert(ignore_permissions=True)
-
+				self.cost_status = 1
 				frappe.msgprint("Material Request is created")
 				
 			else:
