@@ -73,7 +73,6 @@ class ProjectsProcurementControl(Document):
 				# mreq.flags.ignore_validate = True
 				mreq.flags.ignore_mandatory = True
 				mreq.insert(ignore_permissions=True)
-				self.save(ignore_permissions=True)
 				frappe.msgprint("Material Request is created")
 				
 			else:
