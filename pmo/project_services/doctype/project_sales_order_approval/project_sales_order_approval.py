@@ -104,6 +104,7 @@ def make_delivery_note(source_name, target_doc=None):
 		doc.item_name = source.scope_item
 		doc.qty = flt(flt(source.billing_percentage)/100)
 		doc.rate = float(source.items_value)
+		#doc.price_list_rate = float(source.items_value)
 		doc.uom = "Nos"
 		doc.is_stock_item = 0
 		doc.description = source.description_when
@@ -112,7 +113,10 @@ def make_delivery_note(source_name, target_doc=None):
 		doc.item_code = item_name
 		doc.warehouse = "Stores - T"
 		doc.barcode = barcode
+		#doc.base_amount = (flt(flt(source.billing_percentage)/100) * float(source.items_value))
+		#doc.amount = (flt(flt(source.billing_percentage)/100) * float(source.items_value))
 		target.items.append(doc)
+
 		target.project = source.project_name
 		target.project_sales_order_approval = source.name
 
