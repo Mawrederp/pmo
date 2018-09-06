@@ -1,6 +1,7 @@
 // Copyright (c) 2018, s and contributors
 // For license information, please see license.txt
 
+var calculate_total_and_save = true;
 frappe.ui.form.on('Project Billing Control', {
 	after_save: function(frm) {
 
@@ -13,7 +14,11 @@ frappe.ui.form.on('Project Billing Control', {
 	           		cur_frm.set_value("total_scope_item_billing_so_far", r.message[1])
 	           		// if(r.message[0]){
 	           		// 	cur_frm.set_value("total_project_billing_so_far_percent", r.message[2]/r.message[0])
-	            	// }
+					// }
+					if(calculate_total_and_save){
+						frm.save()
+						calculate_total_and_save = false;
+					}
 	            }
             }
         });
