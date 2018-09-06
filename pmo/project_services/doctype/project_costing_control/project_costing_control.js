@@ -1,6 +1,128 @@
 // Copyright (c) 2018, s and contributors
 // For license information, please see license.txt
 
+
+function load_global_data(item){
+	frappe.call({
+		"method": "get_total_expenses_allocation_so_far",
+		doc: cur_frm.doc,
+		args: { "scope_item": item.scope_item},
+		callback: function (r) {
+			if(r.message){
+				cur_frm.set_value("total_payment_cost_value", r.message);
+			}
+			frappe.call({
+				"method": "get_total_expenses_external_allocation_so_far",
+				doc: cur_frm.doc,
+				callback: function (r) {
+					if(r.message){
+						cur_frm.set_value("total_project_external_expenses", r.message);
+					
+					}
+					if(cur_frm.doc.payment_cost_value>item.po_contract_extimated_cost ){
+						cur_frm.set_value("payment_cost_value",0 );
+				   
+						frappe.call({
+							"method": "validate_payment_cost_value",
+							doc: cur_frm.doc
+						});
+					}else{
+						if (!cur_frm.doc.payment_cost_value){
+							cur_frm.set_value("payment_cost_value", 0);
+						}
+						if (!cur_frm.doc.total_payment_cost_value){
+							cur_frm.set_value("total_payment_cost_value", 0);
+						}
+						var x  = item.po_contract_extimated_cost - cur_frm.doc.payment_cost_value - cur_frm.doc.total_payment_cost_value
+						console.log(x)
+						console.log(item.po_contract_extimated_cost)
+						console.log(cur_frm.doc.payment_cost_value)
+						console.log(cur_frm.doc.total_payment_cost_value)
+						console.log("totals")
+						console.log(item.project_cost_value)
+						console.log(cur_frm.doc.total_project_external_expenses)
+						
+				
+						cur_frm.set_value("po_contract_remaining_estimated_cost", item.po_contract_extimated_cost - cur_frm.doc.payment_cost_value - cur_frm.doc.total_payment_cost_value);
+						cur_frm.set_value("project_external_remaining_estimated", item.scope_item_cost_value-cur_frm.doc.payment_cost_value-cur_frm.doc.total_project_external_expenses);
+						cur_frm.set_value("project_external_remaining_estimated", item.project_cost_value-cur_frm.doc.payment_cost_value-cur_frm.doc.total_project_external_expenses);
+					}
+					
+				}
+				
+			});
+			if(cur_frm.doc.payment_cost_value>item.po_contract_extimated_cost ){
+				cur_frm.set_value("payment_cost_value",0 );
+		   
+				frappe.call({
+					"method": "validate_payment_cost_value",
+					doc: cur_frm.doc
+				});
+			}else{
+				if (!cur_frm.doc.payment_cost_value){
+					cur_frm.set_value("payment_cost_value", 0);
+				}
+				if (!cur_frm.doc.total_payment_cost_value){
+					cur_frm.set_value("total_payment_cost_value", 0);
+				}
+				var x  = item.po_contract_extimated_cost - cur_frm.doc.payment_cost_value - cur_frm.doc.total_payment_cost_value
+				console.log(x)
+				console.log(item.po_contract_extimated_cost)
+				console.log(cur_frm.doc.payment_cost_value)
+				console.log(cur_frm.doc.total_payment_cost_value)
+				console.log("totals")
+				console.log(item.project_cost_value)
+				console.log(cur_frm.doc.total_project_external_expenses)
+				
+		
+				cur_frm.set_value("po_contract_remaining_estimated_cost", item.po_contract_extimated_cost - cur_frm.doc.payment_cost_value - cur_frm.doc.total_payment_cost_value);
+				cur_frm.set_value("project_external_remaining_estimated", item.scope_item_cost_value-cur_frm.doc.payment_cost_value-cur_frm.doc.total_project_external_expenses);
+				cur_frm.set_value("project_external_remaining_estimated", item.project_cost_value-cur_frm.doc.payment_cost_value-cur_frm.doc.total_project_external_expenses);
+			}
+		}
+
+	});
+	
+
+		
+	}
+	
+frappe.ui.form.on('Project Costing Schedule', {
+    pr: function(frm,cdt,cdn) {
+	  console.log("Hello")
+	  
+	  var item = locals[cdt][cdn];
+	  
+	  arr = []
+		$.each(frm.doc.project_costing_schedule_control || [], function (i, d) {
+			if(d.pr){
+				arr.push(d)
+				
+			}
+		});
+		if(arr.length == 1){
+			item = arr[0];
+				if(frm.doc.type_of_cost == "External Expenses"){
+				console.log("1")
+				load_global_data(item);
+		
+				if(cur_frm.doc.po_contract_remaining_estimated_cost<0){
+					cur_frm.set_value("po_contract_remaining_estimated_cost", 0);
+				}
+				if(cur_frm.doc.project_external_remaining_estimated<0){
+					cur_frm.set_value("project_external_remaining_estimated", 0);
+				}
+			}	
+
+		}else{
+			cur_frm.set_value("total_payment_cost_value",0);
+			cur_frm.set_value("total_project_external_expenses", 0);
+			cur_frm.set_value("po_contract_remaining_estimated_cost",0);
+			cur_frm.set_value("project_external_remaining_estimated", 0);
+		}
+   }
+  });
+
 frappe.ui.form.on('Project Costing Control', {
 	refresh: function(frm) {
 		$(".grid-add-row").hide();
@@ -70,7 +192,7 @@ frappe.ui.form.on('Project Costing Control', {
 		$.each(frm.doc.project_costing_schedule_control || [], function (i, d) {
 	        if(arr.length==1){
 		        if(d.pr && d.type_of_cost=='External Expenses' && cur_frm.doc.payment_cost_value>d.po_contract_extimated_cost ){
-		        	cur_frm.set_value("payment_cost_value", );
+		        	cur_frm.set_value("payment_cost_value",0 );
 		       
 		        	frappe.call({
 			            "method": "validate_payment_cost_value",
@@ -78,10 +200,11 @@ frappe.ui.form.on('Project Costing Control', {
 			        });
 		        }else if(d.pr && d.type_of_cost=='External Expenses'){
 		        	cur_frm.set_value("po_contract_remaining_estimated_cost", d.po_contract_extimated_cost-cur_frm.doc.payment_cost_value-cur_frm.doc.total_payment_cost_value);
-			        cur_frm.set_value("project_external_remaining_estimated", d.scope_item_cost_value-cur_frm.doc.payment_cost_value-cur_frm.doc.total_project_external_expenses);
+					cur_frm.set_value("project_external_remaining_estimated", d.scope_item_cost_value-cur_frm.doc.payment_cost_value-cur_frm.doc.total_project_external_expenses);
+					cur_frm.set_value("project_external_remaining_estimated", d.project_cost_value-cur_frm.doc.payment_cost_value-cur_frm.doc.total_project_external_expenses);
 		        }
 		    }else if(arr.length==0){
-		    	cur_frm.set_value("payment_cost_value", );
+		    	cur_frm.set_value("payment_cost_value",0 );
 		    }
 	    });
 
@@ -96,21 +219,29 @@ frappe.ui.form.on('Project Costing Control', {
 			            args: { "scope_item": cur_frm.doc.project_costing_schedule_control[i].scope_item},
 			            callback: function (r) {
 			                if(r.message){
-			                    cur_frm.set_value("total_payment_cost_value", r.message);
-			                }
+								cur_frm.set_value("total_payment_cost_value", r.message);
+								console.log(cur_frm.doc.total_payment_cost_value)
+								console.log(r.message)
+								
+							}
+							frappe.call({
+								"method": "get_total_expenses_external_allocation_so_far",
+								doc: cur_frm.doc,
+								callback: function (r) {
+									if(r.message){
+										cur_frm.set_value("total_project_external_expenses", r.message);
+									}
+								}
+							});
+							
 			            }
-			        });
+					});
+					console.log("Out of callback")
+					
+					console.log(cur_frm.doc.total_payment_cost_value)
 
 
-			        frappe.call({
-			            "method": "get_total_expenses_external_allocation_so_far",
-			            doc: cur_frm.doc,
-			            callback: function (r) {
-			                if(r.message){
-			                    cur_frm.set_value("total_project_external_expenses", r.message);
-			                }
-			            }
-			        });
+			        
 
 				}
 			}
@@ -118,7 +249,9 @@ frappe.ui.form.on('Project Costing Control', {
 		if(cur_frm.doc.po_contract_remaining_estimated_cost<0){
 			cur_frm.set_value("po_contract_remaining_estimated_cost", 0);
 		}
-
+		if(cur_frm.doc.project_external_remaining_estimated<0){
+			cur_frm.set_value("project_external_remaining_estimated", 0);
+		}
 	},
 	type_of_cost: function(frm){
 		$(".grid-add-row").hide();
