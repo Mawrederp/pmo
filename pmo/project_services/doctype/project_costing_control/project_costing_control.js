@@ -139,14 +139,27 @@ frappe.ui.form.on('Project Costing Control', {
 		frappe.meta.get_docfield("Project Costing Schedule","delivery_period_to_date", cur_frm.doc.name).read_only = 1;
 
 
-        // if (row.type_of_cost == 'External Expenses') {
-        //     var df = frappe.meta.get_docfield("Project Costing Control", 'allocation_cost_value' , cur_frm.doc.name);
-        //     df.hidden = 0; 
-        // } else if (row.type_of_cost == 'Tawari Services') {
-        // 	var df = frappe.meta.get_docfield("Project Costing Control", 'payment_cost_value' , cur_frm.doc.name);
-        //     df.hidden = 0; 
-
-        // }
+        if (cur_frm.doc.type_of_cost == 'External Expenses') {
+            frm.set_df_property('allocation_cost_value', 'hidden', 1)
+        	frm.set_df_property('total_resources_allocation_so_far', 'hidden', 1)
+        	frm.set_df_property('remaining_of_the_project_cost_value', 'hidden', 1)
+        	frm.set_df_property('month', 'hidden', 0)
+        	frm.set_df_property('payment_cost_value', 'hidden', 0)
+        	frm.set_df_property('total_payment_cost_value', 'hidden', 0)
+        	frm.set_df_property('total_project_external_expenses', 'hidden', 0)
+        	frm.set_df_property('po_contract_remaining_estimated_cost', 'hidden', 0)
+        	frm.set_df_property('project_external_remaining_estimated', 'hidden', 0)
+        } else if (cur_frm.doc.type_of_cost == 'Tawari Services') {
+        	frm.set_df_property('allocation_cost_value', 'hidden', 0)
+        	frm.set_df_property('total_resources_allocation_so_far', 'hidden', 0)
+        	frm.set_df_property('remaining_of_the_project_cost_value', 'hidden', 0)
+        	frm.set_df_property('month', 'hidden', 1)
+        	frm.set_df_property('payment_cost_value', 'hidden', 1)
+        	frm.set_df_property('total_payment_cost_value', 'hidden', 1)
+        	frm.set_df_property('total_project_external_expenses', 'hidden', 1)
+        	frm.set_df_property('po_contract_remaining_estimated_cost', 'hidden', 1)
+        	frm.set_df_property('project_external_remaining_estimated', 'hidden', 1)
+        }
 
 
 		if(cur_frm.doc.project_name && cur_frm.doc.type_of_cost=='Tawari Services'){
