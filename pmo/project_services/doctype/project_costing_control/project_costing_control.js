@@ -44,7 +44,7 @@ function load_global_data(item){
 						
 				
 						cur_frm.set_value("po_contract_remaining_estimated_cost", item.po_contract_extimated_cost - cur_frm.doc.payment_cost_value - cur_frm.doc.total_payment_cost_value);
-						cur_frm.set_value("project_external_remaining_estimated", item.scope_item_cost_value-cur_frm.doc.payment_cost_value-cur_frm.doc.total_project_external_expenses);
+						cur_frm.set_value("scope_item_external_remaining_estimated", item.scope_item_cost_value-cur_frm.doc.payment_cost_value-cur_frm.doc.total_project_external_expenses);
 						cur_frm.set_value("project_external_remaining_estimated", item.project_cost_value-cur_frm.doc.payment_cost_value-cur_frm.doc.total_project_external_expenses);
 					}
 					
@@ -76,7 +76,7 @@ function load_global_data(item){
 				
 		
 				cur_frm.set_value("po_contract_remaining_estimated_cost", item.po_contract_extimated_cost - cur_frm.doc.payment_cost_value - cur_frm.doc.total_payment_cost_value);
-				cur_frm.set_value("project_external_remaining_estimated", item.scope_item_cost_value-cur_frm.doc.payment_cost_value-cur_frm.doc.total_project_external_expenses);
+				cur_frm.set_value("scope_item_external_remaining_estimated", item.scope_item_cost_value-cur_frm.doc.payment_cost_value-cur_frm.doc.total_project_external_expenses);
 				cur_frm.set_value("project_external_remaining_estimated", item.project_cost_value-cur_frm.doc.payment_cost_value-cur_frm.doc.total_project_external_expenses);
 			}
 		}
@@ -109,16 +109,24 @@ frappe.ui.form.on('Project Costing Schedule', {
 				if(cur_frm.doc.po_contract_remaining_estimated_cost<0){
 					cur_frm.set_value("po_contract_remaining_estimated_cost", 0);
 				}
+				if(cur_frm.doc.scope_item_external_remaining_estimated<0){
+					cur_frm.set_value("scope_item_external_remaining_estimated", 0);
+				}
 				if(cur_frm.doc.project_external_remaining_estimated<0){
 					cur_frm.set_value("project_external_remaining_estimated", 0);
 				}
-			}	
+				
+			}
+
 
 		}else{
 			cur_frm.set_value("total_payment_cost_value",0);
 			cur_frm.set_value("total_project_external_expenses", 0);
 			cur_frm.set_value("po_contract_remaining_estimated_cost",0);
+			cur_frm.set_value("scope_item_external_remaining_estimated", 0);
 			cur_frm.set_value("project_external_remaining_estimated", 0);
+			
+			
 		}
    }
   });
@@ -144,7 +152,30 @@ frappe.ui.form.on('Project Costing Control', {
 
 		frm.add_custom_button(__("Make a Payment"), function () {
 			console.log('tst')
-    	});
+		});
+		if (cur_frm.doc.type_of_cost == 'External Expenses') {
+            frm.set_df_property('allocation_cost_value', 'hidden', 1)
+        	frm.set_df_property('total_resources_allocation_so_far', 'hidden', 1)
+        	frm.set_df_property('remaining_of_the_project_cost_value', 'hidden', 1)
+        	frm.set_df_property('month', 'hidden', 0)
+        	frm.set_df_property('payment_cost_value', 'hidden', 0)
+        	frm.set_df_property('total_payment_cost_value', 'hidden', 0)
+        	frm.set_df_property('total_project_external_expenses', 'hidden', 0)
+			frm.set_df_property('po_contract_remaining_estimated_cost', 'hidden', 0)
+        	frm.set_df_property('scope_item_external_remaining_estimated', 'hidden', 0)			
+        	frm.set_df_property('project_external_remaining_estimated', 'hidden', 0)
+        } else if (cur_frm.doc.type_of_cost == 'Tawari Services') {
+        	frm.set_df_property('allocation_cost_value', 'hidden', 0)
+        	frm.set_df_property('total_resources_allocation_so_far', 'hidden', 0)
+        	frm.set_df_property('remaining_of_the_project_cost_value', 'hidden', 0)
+        	frm.set_df_property('month', 'hidden', 1)
+        	frm.set_df_property('payment_cost_value', 'hidden', 1)
+        	frm.set_df_property('total_payment_cost_value', 'hidden', 1)
+        	frm.set_df_property('total_project_external_expenses', 'hidden', 1)
+			frm.set_df_property('po_contract_remaining_estimated_cost', 'hidden', 1)
+        	frm.set_df_property('scope_item_external_remaining_estimated', 'hidden', 1)			
+        	frm.set_df_property('project_external_remaining_estimated', 'hidden', 1)
+        }
 	},
 	project_name: function(frm) {
 		$(".grid-add-row").hide();
@@ -200,7 +231,7 @@ frappe.ui.form.on('Project Costing Control', {
 			        });
 		        }else if(d.pr && d.type_of_cost=='External Expenses'){
 		        	cur_frm.set_value("po_contract_remaining_estimated_cost", d.po_contract_extimated_cost-cur_frm.doc.payment_cost_value-cur_frm.doc.total_payment_cost_value);
-					cur_frm.set_value("project_external_remaining_estimated", d.scope_item_cost_value-cur_frm.doc.payment_cost_value-cur_frm.doc.total_project_external_expenses);
+					cur_frm.set_value("scope_item_external_remaining_estimated", d.scope_item_cost_value-cur_frm.doc.payment_cost_value-cur_frm.doc.total_project_external_expenses);
 					cur_frm.set_value("project_external_remaining_estimated", d.project_cost_value-cur_frm.doc.payment_cost_value-cur_frm.doc.total_project_external_expenses);
 		        }
 		    }else if(arr.length==0){
@@ -252,6 +283,11 @@ frappe.ui.form.on('Project Costing Control', {
 		if(cur_frm.doc.project_external_remaining_estimated<0){
 			cur_frm.set_value("project_external_remaining_estimated", 0);
 		}
+		if(cur_frm.doc.scope_item_external_remaining_estimated<0){
+			cur_frm.set_value("scope_item_external_remaining_estimated", 0);
+		}
+		
+		
 	},
 	type_of_cost: function(frm){
 		$(".grid-add-row").hide();
@@ -280,7 +316,8 @@ frappe.ui.form.on('Project Costing Control', {
         	frm.set_df_property('payment_cost_value', 'hidden', 0)
         	frm.set_df_property('total_payment_cost_value', 'hidden', 0)
         	frm.set_df_property('total_project_external_expenses', 'hidden', 0)
-        	frm.set_df_property('po_contract_remaining_estimated_cost', 'hidden', 0)
+			frm.set_df_property('po_contract_remaining_estimated_cost', 'hidden', 0)
+        	frm.set_df_property('scope_item_external_remaining_estimated', 'hidden', 0)			
         	frm.set_df_property('project_external_remaining_estimated', 'hidden', 0)
         } else if (cur_frm.doc.type_of_cost == 'Tawari Services') {
         	frm.set_df_property('allocation_cost_value', 'hidden', 0)
@@ -290,7 +327,8 @@ frappe.ui.form.on('Project Costing Control', {
         	frm.set_df_property('payment_cost_value', 'hidden', 1)
         	frm.set_df_property('total_payment_cost_value', 'hidden', 1)
         	frm.set_df_property('total_project_external_expenses', 'hidden', 1)
-        	frm.set_df_property('po_contract_remaining_estimated_cost', 'hidden', 1)
+			frm.set_df_property('po_contract_remaining_estimated_cost', 'hidden', 1)
+        	frm.set_df_property('scope_item_external_remaining_estimated', 'hidden', 1)			
         	frm.set_df_property('project_external_remaining_estimated', 'hidden', 1)
         }
 
