@@ -43,9 +43,12 @@ class ProjectsProcurementControl(Document):
 				mreq=frappe.get_doc({
 					"doctype":"Material Request",
 					"naming_series": 'MREQ-',
-					# "workflow_state": 'Pending',
+					"workflow_state": 'Created By Project Manager',
 					"material_request_type": 'Purchase',
-					"schedule_date": last_date
+					"schedule_date": last_date,
+					"purchase_workflow": 'Project',
+					"project": self.project_name,
+					"material_requester": "EMP/1005"
 					# "due_date": due_date,
 					# "debit_to": 'Debtors - O',
 					
