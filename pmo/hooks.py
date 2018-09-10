@@ -97,6 +97,10 @@ scheduler_events = {
 		"pmo.project_services.doctype.project_initiation.project_initiation.costing_schedule_notification_expenses"
 	]
 }
+fixtures = [{
+        "dt": "Print Format", 
+        "filters": []
+      }]
 
 # Testing
 # -------
