@@ -109,4 +109,3 @@ scheduler_events = {
 # override_whitelisted_methods = {
 # 	"frappe.desk.doctype.event.event.get_events": "pmo.event.get_events"
 # }
-fixtures = ["Custom Field", "Custom Script"]
