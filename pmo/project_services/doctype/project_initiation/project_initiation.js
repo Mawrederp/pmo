@@ -64,6 +64,72 @@ function refresh_general_pricing(frm) {
     frm.refresh_field("project_financial_detail");
 }
 
+
+
+
+function refresh_parties_contribution_section(frm) {
+
+    frm.clear_table("parties_contribution_on_the_project");
+    var indexing = []
+    var cost_price_ts = 0
+    var selling_price_ts = 0
+    var total_cost_price = 0
+    var total_selling_price = 0
+    for (let i = 0; i <= 15; i++) {
+        if (frm.doc["section_name_" + i] != undefined ) {
+
+            indexing.push(i)
+
+            $.each(frm.doc["items_details_" + i] || [], function (i, d) {
+                cost_price_ts += flt(d.cost_price_ts);
+                selling_price_ts += flt(d.selling_price_ts);
+                total_cost_price += flt(d.total_cost_price);
+                total_selling_price += flt(d.total_selling_price);
+            });
+
+            var d = frm.add_child("parties_contribution_on_the_project");
+
+            d.scope_item = frm.doc["section_name_" + i];
+            d.tawari_services_cost = cost_price_ts
+            d.tawari_services_selling = selling_price_ts
+            d.external_services_cost = total_cost_price
+            d.external_services_selling = total_selling_price
+            
+
+        }
+
+    }
+    frm.refresh_field("parties_contribution_on_the_project");
+
+
+    var tawari_services_cost = 0;
+    var tawari_services_selling = 0;
+    var external_services_cost = 0;
+    var external_services_selling = 0;
+
+    $.each(frm.doc.parties_contribution_on_the_project || [], function (i, d) {
+        tawari_services_cost += flt(d.tawari_services_cost);
+        tawari_services_selling += flt(d.tawari_services_selling);
+        external_services_cost += flt(d.external_services_cost);
+        external_services_selling += flt(d.external_services_selling);
+    });
+    set_value(frm, "tawari_total_cost", tawari_services_cost);
+    set_value(frm, "tawari_total_selling", tawari_services_selling);
+    set_value(frm, "external_total_cost", external_services_cost);
+    set_value(frm, "external_total_selling", external_services_selling);
+
+    if(cur_frm.doc.total_cost_price){
+        set_value(frm, "tawari_cost_contribution_rate", (tawari_services_cost/cur_frm.doc.total_cost_price)*100);
+        set_value(frm, "external_cost_contribution_rate", (external_services_cost/cur_frm.doc.total_cost_price)*100);
+    }
+    if(cur_frm.doc.general_total_selling_price){
+        set_value(frm, "tawari_sales_contribution_rate", (tawari_services_selling/cur_frm.doc.general_total_selling_price)*100);
+        set_value(frm, "external_sales_contribution_rate", (external_services_selling/cur_frm.doc.general_total_selling_price)*100);
+    }
+  
+}
+
+
 frappe.ui.form.on('Project Initiation', {
     refresh_button: function (frm, cdt, cdn) {
         for (let index = 0; index <= 15; index++) {
@@ -416,6 +482,9 @@ frappe.ui.form.on('Project Initiation', {
         if (cur_frm.doc.total_cost_price) {
             set_value(frm, "total_project_cost_scheduled_percent", (total / cur_frm.doc.total_cost_price) * 100);
         }
+
+
+        refresh_parties_contribution_section(frm);
 
 
 
