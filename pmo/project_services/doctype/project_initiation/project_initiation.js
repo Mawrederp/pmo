@@ -1470,6 +1470,7 @@ frappe.ui.form.on('Project Initiation', {
         if (cur_frm.doc.project_manager) {
             set_value(frm, "project_managr_ch", cur_frm.doc.project_manager);
             set_value(frm, "project_manager_name_ch", cur_frm.doc.project_manager_name);
+            set_value(frm, "employee_project_manager", cur_frm.doc.project_manager_name);
         }
     },
     account: function (frm) {
@@ -1736,6 +1737,9 @@ frappe.ui.form.on('Project Initiation', {
         }
         if (cur_frm.doc.project_sponsor_name) {
             set_value(frm, "employee_tawari_sponsor", cur_frm.doc.project_sponsor_name);
+        }
+        if (cur_frm.doc.project_manager) {
+            set_value(frm, "employee_project_manager", cur_frm.doc.project_manager_name);
         }
         if (cur_frm.doc.customer_project_sponsor) {
             set_value(frm, "employee_client_sponsor", cur_frm.doc.customer_project_sponsor);
