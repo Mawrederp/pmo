@@ -1,0 +1,23 @@
+{
+ "content": null, 
+ "creation": "2018-04-09 14:59:03.200894", 
+ "docstatus": 0, 
+ "doctype": "Page", 
+ "idx": 0, 
+ "modified": "2018-04-10 11:58:32.703164", 
+ "modified_by": "Administrator", 
+ "module": "Project Services", 
+ "name": "project-info", 
+ "owner": "Administrator", 
+ "page_name": "Project Info", 
+ "roles": [
+  {
+   "role": "HR Manager"
+  }
+ ], 
+ "script": null, 
+ "standard": "Yes", 
+ "style": null, 
+ "system_page": 0, 
+ "title": "Project Information"
+}

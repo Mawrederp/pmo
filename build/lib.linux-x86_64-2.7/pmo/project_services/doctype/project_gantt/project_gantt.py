@@ -1,0 +1,130 @@
+# -*- coding: utf-8 -*-
+# Copyright (c) 2018, s and contributors
+# For license information, please see license.txt
+from __future__ import unicode_literals
+import json
+import math
+# import frappe.handler
+import frappe
+from frappe.model.document import Document
+import frappe.client
+# from frappe.utils.response import build_response
+from frappe import _
+# from six.moves.urllib.parse import urlparse, urlencode
+from frappe.utils import cint, cstr, date_diff, flt, formatdate, getdate, get_link_to_form, \
+	comma_or, get_fullname, add_years, add_months, add_days, nowdate, format_datetime
+
+class ProjectGantt(Document):
+	pass
+
+
+@frappe.whitelist(allow_guest=True)
+def save_tasks(tasks, project_name):
+
+	data = json.loads(tasks)
+	
+	# data = jdata["data"]
+
+	for task in data:
+		start_date = formatdate(task["start_date"], "yyyy-MM-dd")
+		end_date = formatdate(task["end_date"], "yyyy-MM-dd")
+		start_date = add_days(start_date, 1)
+		end_date = add_days(end_date, 1)
+		# frappe.throw(str(task["start_date"]))
+		# return end_date
+
+		if "doctype" in task and task['doctype'] == "Project" and task["name"] == project_name:
+			# '{0}-{1}-{2}'.format()
+			# frappe.throw(str(task["id"]))
+			project_doc = frappe.get_doc("Project", task["name"])
+			project_doc.update({
+				# "percent_complete": task["progress"]*100,
+				"project_name": task["text"],
+				"expected_start_date": start_date,
+				"expected_end_date": end_date
+				# "expected_end_date": add_days(getdate(task["start_date"]), task["duration"])
+				})
+			project_doc.save(ignore_permissions=True)
+			frappe.db.commit()
+
+		else:
+			if task["parent"] == project_name:
+				parent_task = ""
+			else:
+				parent_task = frappe.get_value("Task", filters={"id": task["parent"]}, fieldname="name")
+
+				# task["parent"]
+			if "progress" in task:
+				progress = round(task["progress"]*100)
+			else:
+				progress = 0
+
+			if task["type"] == "milestone":
+				end_date = start_date
+				# progress = None
+				task["is_group"] = 0
+				is_milestone = 1
+			else:
+				is_milestone = 0
+
+			task_data = {
+				"progress": progress,
+				"type": task["type"],
+				"is_milestone": is_milestone,
+				"exp_start_date": start_date,
+				"exp_end_date": end_date,
+				"act_start_date": start_date,
+				"act_end_date": end_date,
+				"is_group": task["is_group"],
+				"project": project_name,
+				"id": task["id"],
+				"parent_task": parent_task,
+				"subject": task["text"],
+				"priority": task["priority"],
+				"assignee":  task["assignee"]
+				# "expected_end_date": add_days(getdate(task["start_date"]), task["duration"])
+				}
+			if "name" in task:
+				task_doc = frappe.get_doc("Task", task["name"])
+			else:
+				task_doc = frappe.new_doc("Task")
+
+			task_doc.update(task_data)
+			task_doc.save(ignore_permissions=True)
+			frappe.db.commit()
+		# else:
+		# 	pass
+
+
+@frappe.whitelist(allow_guest=True)
+def save_links(links, project_name):
+
+	tasks_links = json.loads(links)
+
+	for link in tasks_links:
+		if "name" not in link:
+			link_doc = frappe.new_doc("Task Depends On")
+			link_doc.update({
+				"task": frappe.get_value("Task", filters={"id": link["source"]}, fieldname="name"),
+				"parent": frappe.get_value("Task", filters={"id": link["target"]}, fieldname="name"),
+				"type": link["type"],
+				"id": link["id"],
+				"parenttype": "Task",
+				"parentfield":"depends_on",
+				"project": project_name,
+				"subject": frappe.get_value("Task", filters={"id": link["source"]}, fieldname="subject"),
+				"idx": frappe.db.sql("select count(*) from `tabTask Depends On` where parent = '{0}'".format(link["target"]))[0][0]+1
+				})
+			link_doc.save(ignore_permissions=True)
+			frappe.db.commit()
+
+@frappe.whitelist(allow_guest=True)
+def get_links(project_name):
+
+	return frappe.get_list("Task Depends On", filters = {"project": project_name}, fields= '*', ignore_permissions=True)
+
+@frappe.whitelist(allow_guest=True)
+def delete_link(link_name):
+
+	if frappe.db.exists("Task Depends On", link_name):
+		return frappe.delete_doc("Task Depends On", link_name)
