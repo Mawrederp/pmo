@@ -9,7 +9,6 @@ from frappe.model.document import Document
 import json
 import datetime
 from datetime import date
-from frappe.utils.password import update_password as _update_password
 
 class ProjectInitiation(Document):
     def validate(self):
@@ -319,30 +318,6 @@ class ProjectInitiation(Document):
         frappe.msgprint("The Po/Contract estimated Cost exceeds the scope item cost value")
 
 
-    def create_customer_user(self):
-        email = self.customer_email
-        password = self.customer_password
-        name = self.customer_project_manager
-        if email and password and name:
-            if not frappe.db.exists("User", {"name": email}):
-                doc = frappe.get_doc({
-                    "doctype": "User",
-                    "email": email,
-                    "first_name":name,
-                    "send_welcome_email": 0
-                })
-                doc.insert(ignore_permissions=True)
-                
-                _update_password(email, password)
-                userr = frappe.get_doc("User", email)
-                userr.add_roles("Customer Project Manager")
-            else:
-                frappe.msgprint("This User Exists!")
-        else:
-            frappe.msgprint("Please Check Email and Password and Project Manager")
-            
-
-
 def payment_schedule_notification():
     from frappe.core.doctype.communication.email import make
     frappe.flags.sent_mail = None
@@ -521,10 +496,6 @@ def get_project_detail(project, company=None):
 
     return details,project_financial_detail,project_payment_schedule,project_costing_schedule,stakeholder,project_major_deliverables,project_high_level_risks,vendor
 
-
-
 @frappe.whitelist()
-def get_employee(doctype, txt, searchfield, start, page_len, filters):
-    emp = frappe.db.sql("select name,employee_name from `tabEmployee`")
-    return emp
-
+def create_customer_user():
+  msgprint("call me")

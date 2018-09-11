@@ -131,6 +131,15 @@ function refresh_parties_contribution_section(frm) {
 
 
 frappe.ui.form.on('Project Initiation', {
+    create_user: function(frm,cdt,cdn){
+        frappe.call({
+            method: "create_customer_user",
+            doc: cur_frm.doc,
+            callback: function(r) { 
+                frappe.msgprint("User: "+ frm.doc.customer_project_manager + " Created")
+            }
+          });
+    },
     refresh_button: function (frm, cdt, cdn) {
         for (let index = 0; index <= 15; index++) {
             frm.refresh_field("section_name_" + index);
@@ -143,6 +152,17 @@ frappe.ui.form.on('Project Initiation', {
 
     },
     onload: function (frm, cdt, cdn) {
+
+        frm.set_query("project_sponsor", function() {
+            return {
+                query: "pmo.project_services.doctype.project_initiation.project_initiation.get_employee",
+                filters: {
+                    employee: frm.doc.employee
+                }
+            };
+        });
+
+
         if (frm.doc.project_quotation === undefined || !frm.doc.project_quotation) {
             set_value(frm, "project_quotation", frm.doc.name);
             if (frm.doc.general_pricing === undefined || !frm.doc.general_pricing) {
