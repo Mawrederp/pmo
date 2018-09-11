@@ -1,0 +1,8 @@
+{
+    "css/pmo.css": [
+        "public/css/dhtmlxgantt.css",
+    ],
+    "js/pmo.min.js": [
+        "public/js/dhtmlxgantt.js",
+    ]
+}
