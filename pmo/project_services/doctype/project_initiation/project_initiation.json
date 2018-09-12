@@ -10113,7 +10113,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2018-09-11 15:20:28.456700", 
+ "modified": "2018-09-12 11:40:50.869758", 
  "modified_by": "Administrator", 
  "module": "Project Services", 
  "name": "Project Initiation", 
@@ -10458,7 +10458,7 @@
    "set_user_permissions": 0, 
    "share": 1, 
    "submit": 0, 
-   "write": 0
+   "write": 1
   }
  ], 
  "quick_entry": 0, 

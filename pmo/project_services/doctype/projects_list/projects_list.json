@@ -301,7 +301,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2018-09-09 13:30:59.813544", 
+ "modified": "2018-09-12 11:33:39.626231", 
  "modified_by": "Administrator", 
  "module": "Project Services", 
  "name": "Projects List", 
@@ -465,8 +465,8 @@
    "role": "Customer Project Manager", 
    "set_user_permissions": 0, 
    "share": 1, 
-   "submit": 0, 
-   "write": 0
+   "submit": 1, 
+   "write": 1
   }
  ], 
  "quick_entry": 0, 

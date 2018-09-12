@@ -368,7 +368,7 @@ class ProjectInitiation(Document):
                     send_email=True, sender="erp@tawari.sa")
 
                 print 'send email done '
-                frappe.msgprint("Notification for Customer has been send")
+                frappe.msgprint("Notification for Customer has been sent")
             except:
                 frappe.msgprint("could not send")
 
@@ -396,7 +396,7 @@ class ProjectInitiation(Document):
                 send_email=True, sender="erp@tawari.sa")
 
             print 'send email done '
-            frappe.msgprint("Notification for CEO has been send")
+            frappe.msgprint("Notification for CEO has been sent")
         except:
             frappe.msgprint("could not send")
 
