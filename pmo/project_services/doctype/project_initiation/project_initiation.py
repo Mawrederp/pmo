@@ -10,6 +10,7 @@ import json
 import datetime
 from datetime import date
 from frappe.utils.password import update_password as _update_password
+from frappe.utils.password import get_decrypted_password
 
 class ProjectInitiation(Document):
     def validate(self):
@@ -25,7 +26,6 @@ class ProjectInitiation(Document):
             if "Rejected" in self.workflow_state:
                 self.docstatus = 1
                 self.docstatus = 2
-
 
             
         # field_array = ["cost","selling_price","risk_contingency", "total_selling_price","profit","markup","margin"]
@@ -63,18 +63,18 @@ class ProjectInitiation(Document):
 
 
         for row in self.project_costing_schedule:
-        	if row.type_of_cost=='External Expenses' and row.scope_item:
-	        	count=0
-	        	for i in self.project_costing_schedule:
-	        		if i.scope_item==row.scope_item:
-		        		count += 1
+            if row.type_of_cost=='External Expenses' and row.scope_item:
+                count=0
+                for i in self.project_costing_schedule:
+                    if i.scope_item==row.scope_item:
+                        count += 1
 
-		        print '************************'
-		        print row.no_contracts,count
-		        print '************************'
-	        	# count = frappe.db.sql("select count(scope_item) from `tabProject Costing Schedule` where scope_item='{0}'".format(row.scope_item))[0][0]
-	        	if str(row.no_contracts) != str(count) :
-	        		frappe.throw("No. of POs/Contracts must equal project costing schedule inputs for scope item {0}".format(row.scope_item))
+                print '************************'
+                print row.no_contracts,count
+                print '************************'
+                # count = frappe.db.sql("select count(scope_item) from `tabProject Costing Schedule` where scope_item='{0}'".format(row.scope_item))[0][0]
+                if str(row.no_contracts) != str(count) :
+                    frappe.throw("No. of POs/Contracts must equal project costing schedule inputs for scope item {0}".format(row.scope_item))
 
 
             
@@ -343,6 +343,66 @@ class ProjectInitiation(Document):
             
 
 
+    def send_customer_access_notification(self):
+        from frappe.core.doctype.communication.email import make
+        frappe.flags.sent_mail = None
+
+        data_password = get_decrypted_password("Project Initiation", self.name, 'customer_password', True)
+
+        if self.customer_email and data_password and frappe.db.exists("User", {"name": self.customer_email}):
+            content_msg="""
+                 Dear {0} :
+
+                    <br>This message is from the Tawari ERP System regarding {1} Project.Please kindly access the system using the following credentials to view the project progress and fulfill all of the related approvals.
+
+                    <br>User name: {2}
+
+                    <br>Password: {3}
+
+                    <br>Thanks
+
+                        """.format(self.customer_project_manager,self.project_name,self.customer_email,data_password)
+
+            try:
+                make(subject = "Customer Access Notification", content=content_msg, recipients= self.customer_email,
+                    send_email=True, sender="erp@tawari.sa")
+
+                print 'send email done '
+                frappe.msgprint("Notification for Customer has been send")
+            except:
+                frappe.msgprint("could not send")
+
+        else:
+            frappe.msgprint("Please be sure that this user is already exist in the system!")
+
+
+
+
+    def send_ceo_charter_approval(self):
+        from frappe.core.doctype.communication.email import make
+        frappe.flags.sent_mail = None
+
+        content_msg="""
+             Dear CEO :
+
+                <br>Please kindly access the ERP PMO module and choose {0} project in order to sign the project charter.
+
+                <br>Thanks.
+
+                    """.format(self.project_name)
+
+        try:
+            make(subject = "CEO charter Approval", content=content_msg, recipients= 'ai.alamri@tawari.sa',
+                send_email=True, sender="erp@tawari.sa")
+
+            print 'send email done '
+            frappe.msgprint("Notification for CEO has been send")
+        except:
+            frappe.msgprint("could not send")
+
+       
+
+
 def payment_schedule_notification():
     from frappe.core.doctype.communication.email import make
     frappe.flags.sent_mail = None
@@ -381,8 +441,8 @@ def payment_schedule_notification():
                             send_email=True, sender="erp@tawari.sa")
 
                         if doc.project_manager_role:
-	                        make(subject = "Project Invoice Notification", content=content_msg, recipients=doc.project_manager_role,
-	                            send_email=True, sender="erp@tawari.sa")
+                            make(subject = "Project Invoice Notification", content=content_msg, recipients=doc.project_manager_role,
+                                send_email=True, sender="erp@tawari.sa")
 
                         print 'send email done '
                     except:
@@ -398,8 +458,8 @@ def payment_schedule_notification():
                             send_email=True, sender="erp@tawari.sa")
 
                         if doc.project_manager_role:
-	                        make(subject = "Project Invoice Notification", content=content_msg, recipients=doc.project_manager_role,
-	                            send_email=True, sender="erp@tawari.sa")
+                            make(subject = "Project Invoice Notification", content=content_msg, recipients=doc.project_manager_role,
+                                send_email=True, sender="erp@tawari.sa")
 
                         print 'send email done '
                     except:

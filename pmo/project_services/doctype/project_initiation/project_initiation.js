@@ -140,6 +140,24 @@ frappe.ui.form.on('Project Initiation', {
             }
           });
     },
+    customer_access_notification: function(frm,cdt,cdn){
+        frappe.call({
+            method: "send_customer_access_notification",
+            doc: cur_frm.doc,
+            callback: function(r) { 
+                // frappe.msgprint("Notification for Customer has been send")
+            }
+          });
+    },
+    ceo_charter_approval: function(frm,cdt,cdn){
+        frappe.call({
+            method: "send_ceo_charter_approval",
+            doc: cur_frm.doc,
+            callback: function(r) { 
+                // frappe.msgprint("Notification for CEO has been send")
+            }
+          });
+    },
     refresh_button: function (frm, cdt, cdn) {
         for (let index = 0; index <= 15; index++) {
             frm.refresh_field("section_name_" + index);
@@ -154,6 +172,22 @@ frappe.ui.form.on('Project Initiation', {
     onload: function (frm, cdt, cdn) {
 
         frm.set_query("project_sponsor", function() {
+            return {
+                query: "pmo.project_services.doctype.project_initiation.project_initiation.get_employee",
+                filters: {
+                    employee: frm.doc.employee
+                }
+            };
+        });
+        frm.set_query("project_owner", function() {
+            return {
+                query: "pmo.project_services.doctype.project_initiation.project_initiation.get_employee",
+                filters: {
+                    employee: frm.doc.employee
+                }
+            };
+        });
+        frm.set_query("project_manager", function() {
             return {
                 query: "pmo.project_services.doctype.project_initiation.project_initiation.get_employee",
                 filters: {
@@ -400,6 +434,15 @@ frappe.ui.form.on('Project Initiation', {
 
 
     validate: function (frm) {
+    	if(!cur_frm.doc.project_sponsor){
+    		set_value(frm, "project_sponsor_name", '');
+    	}
+    	if(!cur_frm.doc.project_owner){
+    		set_value(frm, "project_owner_name", '');
+    	}
+    	if(!cur_frm.doc.project_manager){
+    		set_value(frm, "project_manager_name", '');
+    	}
 
         for (let index = 0; index <= 15; index++) {
 
