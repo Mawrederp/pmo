@@ -163,9 +163,8 @@ class ProjectBillingControl(Document):
 					psoa.flags.ignore_validate = True
 					psoa.flags.ignore_mandatory = True
 					psoa.insert(ignore_permissions=True)
-
-
-					frappe.msgprint("Project Sales Order Approval is created")
+    
+					frappe.msgprint("Project Sales Order Approval is created: <b><a href='#Form/Project Sales Order Approval/{0}'>{0}</a></b>".format(psoa.name))
 				else:
 					frappe.throw('You sould select customer for this project before issue invoice')
 			else:

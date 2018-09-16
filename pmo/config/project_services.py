@@ -39,6 +39,12 @@ def get_data():
                 },
                 {
                     "type": "doctype",
+                    "name": "Project Sales Order Approval",
+                    "label": _("Project Sales Order Approval"),
+                    "description": _("Project Sales Order Approval"),
+                },
+                {
+                    "type": "doctype",
                     "name": "Project Billing Control",
                     "label": _("Projects Billing Control"),
                     "description": _("Project Billing Control."),
@@ -60,6 +66,12 @@ def get_data():
         {
             "label": _("PMO Department"),
             "items": [
+            	{
+                    "type": "doctype",
+                    "name": "Project Items",
+                    "label": _("Project Items"),
+                    "description": _("Project Items")
+                },
                 {
                     "type": "doctype",
                     "name": "Policy and Procedure",
