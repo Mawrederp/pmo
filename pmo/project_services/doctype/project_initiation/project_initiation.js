@@ -169,6 +169,21 @@ frappe.ui.form.on('Project Initiation', {
 
     },
     onload: function (frm, cdt, cdn) {
+    	if(user !='Administrator' && frappe.user.has_role("Customer Project Manager")){
+    		cur_frm.toggle_display("section_6", false);
+    		cur_frm.toggle_display("section_break_0", false);
+    		cur_frm.toggle_display("parties_contribution_section", false);
+    		cur_frm.toggle_display("section_8", false);
+    	}
+
+    	frm.set_query("warehouse", function() {
+            return {
+			    filters: [
+			        ['Warehouse', 'is_group', '=', 0]
+			    ]
+			}
+        });
+
 
         frm.set_query("project_sponsor", function() {
             return {
