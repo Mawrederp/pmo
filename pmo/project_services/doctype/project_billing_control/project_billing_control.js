@@ -1,5 +1,6 @@
 // Copyright (c) 2018, s and contributors
 // For license information, please see license.txt
+cur_frm.add_fetch('Project Initiation','sales_order','sales_order');
 
 var calculate_total_and_save = true;
 frappe.ui.form.on('Project Billing Control', {
@@ -26,164 +27,116 @@ frappe.ui.form.on('Project Billing Control', {
 	},
 	refresh: function(frm,cdt,cdn) {
 		frm.add_custom_button(__("Make Sales Order Approval"), function () {
-			// items = []
-			for(var row= 0;row<cur_frm.doc.project_payment_schedule_control.length;row++){
-				if(cur_frm.doc.project_payment_schedule_control[row].invoice == 1){
-					// items.push(cur_frm.doc.project_payment_schedule_control[row].scope_item)
-					var scope_item = cur_frm.doc.project_payment_schedule_control[row].scope_item
-					if(scope_item){
-						scope_item=scope_item
-					}else{
-						scope_item=''
-					}
+			
+			frappe.call({
+	            "method": "make_project_sales_order_approval",
+	            doc: cur_frm.doc,
+	            callback: function (r) {
+                    console.log(r.message)
 
-					var project_name = cur_frm.doc.project_name
-					if(project_name){
-						project_name=project_name
-					}else{
-						project_name=''
-					}
+                }
+	        });
 
-					var items_value = cur_frm.doc.project_payment_schedule_control[row].items_value
-					if(items_value){
-						items_value=items_value
-					}else{
-						items_value=0
-					}
-
-					var billing_percentage = cur_frm.doc.project_payment_schedule_control[row].billing_percentage
-					if(billing_percentage){
-						billing_percentage=billing_percentage
-					}else{
-						billing_percentage=0
-					}
-
-
-					if(cur_frm.doc.project_payment_schedule_control[row].date_period=='Date'){
-						var due_date = cur_frm.doc.project_payment_schedule_control[row].when
-						if(due_date){
-							due_date=due_date
-						}else{
-							due_date=''
-						}
-					}else if(cur_frm.doc.project_payment_schedule_control[row].date_period=='Period'){
-						var due_date = cur_frm.doc.project_payment_schedule_control[row].to_date
-						if(due_date){
-							due_date=due_date
-						}else{
-							due_date=''
-						}
-					}
-
-					var description_when = cur_frm.doc.project_payment_schedule_control[row].description_when
-					if(description_when){
-						description_when=description_when
-					}else{
-						description_when=''
-					}
-
-					var vat_value = cur_frm.doc.project_payment_schedule_control[row].vat_value
-					if(vat_value){
-						vat_value=vat_value
-					}else{
-						vat_value=0
-					}
-
-					var billing_status = cur_frm.doc.project_payment_schedule_control[row].billing_status
-					if(billing_status){
-						billing_status=billing_status
-					}else{
-						billing_status=0
-					}
-
-					var sales_order = cur_frm.doc.project_payment_schedule_control[row].sales_order
-					if(sales_order){
-						sales_order=sales_order
-					}else{
-						sales_order=''
-					}
-
-
-					frappe.call({
-			            "method": "make_project_sales_order_approval",
-			            doc: cur_frm.doc,
-			            args: { "scope_item": scope_item,"project_name": project_name,
-			            		"items_value": items_value,"billing_percentage": billing_percentage,
-			            		"due_date": due_date,"description_when":description_when,"vat_value":vat_value,
-			            		"billing_state":billing_status,"sales_order":sales_order},
-			            callback: function (r) {
-		                    console.log(r.message)
-
-		     //                invoice_name = r.message
-     		// 				$.each(frm.doc.project_payment_schedule_control || [], function(i, v) {
-     		// 					if(v.invoice){
-	     	// 						frappe.model.set_value(v.doctype, v.name, "sales_order", invoice_name)
-	     	// 						frappe.model.set_value(v.doctype, v.name, "billing_status", 1)
-	     						
-	     	// 						frappe.call({
-							//             "method": "updat_init_payment_table_invoice",
-							//             doc: cur_frm.doc,
-							//             args: {"itm": v.scope_item,"idx": v.idx,"sales_order":invoice_name},
-							//             callback: function (r) {
-							//             	if(r.message){
-							//             		console.log(r.message)
-		     // 								}
-
-						 //                }
-							//         });
-
-							// 	}		
-							// })
-
-		                }
-			        });
-
-
-
-
-					// frappe.call({
-			  //           "method": "make_sales_order",
-			  //           doc: cur_frm.doc,
-			  //           args: { "scope_item": scope_item,"project_name": project_name,
-			  //           		"items_value": items_value,"billing_percentage": billing_percentage,
-			  //           		"due_date": due_date,"description_when":description_when,"vat_value":vat_value,
-			  //           		"billing_state":billing_status,"sales_order":sales_order},
-			  //           callback: function (r) {
-		   //                  console.log(r.message)
-
-		   //                  invoice_name = r.message
-     // 						$.each(frm.doc.project_payment_schedule_control || [], function(i, v) {
-     // 							if(v.invoice){
-	    //  							frappe.model.set_value(v.doctype, v.name, "sales_order", invoice_name)
-	    //  							frappe.model.set_value(v.doctype, v.name, "billing_status", 1)
-	     						
-	    //  							frappe.call({
-					// 		            "method": "updat_init_payment_table_invoice",
-					// 		            doc: cur_frm.doc,
-					// 		            args: {"itm": v.scope_item,"idx": v.idx,"sales_order":invoice_name},
-					// 		            callback: function (r) {
-					// 		            	if(r.message){
-					// 		            		console.log(r.message)
-		   //   								}
-
-					// 	                }
-					// 		        });
-
-
-
-					// 			}		
-					// 		})
-
-
-
-		   //              }
-			  //       });
-
-				}
-			}
     	});
 
 
+
+		// frm.add_custom_button(__("Make Sales Invoice"), function () {
+		// 	// items = []
+		// 	for(var row= 0;row<cur_frm.doc.project_payment_schedule_control.length;row++){
+		// 		if(cur_frm.doc.project_payment_schedule_control[row].invoice == 1){
+		// 			// items.push(cur_frm.doc.project_payment_schedule_control[row].scope_item)
+		// 			var scope_item = cur_frm.doc.project_payment_schedule_control[row].scope_item
+		// 			if(scope_item){
+		// 				scope_item=scope_item
+		// 			}else{
+		// 				scope_item=''
+		// 			}
+
+		// 			var project_name = cur_frm.doc.project_name
+		// 			if(project_name){
+		// 				project_name=project_name
+		// 			}else{
+		// 				project_name=''
+		// 			}
+
+		// 			var items_value = cur_frm.doc.project_payment_schedule_control[row].items_value
+		// 			if(items_value){
+		// 				items_value=items_value
+		// 			}else{
+		// 				items_value=0
+		// 			}
+
+		// 			var billing_percentage = cur_frm.doc.project_payment_schedule_control[row].billing_percentage
+		// 			if(billing_percentage){
+		// 				billing_percentage=billing_percentage
+		// 			}else{
+		// 				billing_percentage=0
+		// 			}
+
+
+		// 			if(cur_frm.doc.project_payment_schedule_control[row].date_period=='Date'){
+		// 				var due_date = cur_frm.doc.project_payment_schedule_control[row].when
+		// 				if(due_date){
+		// 					due_date=due_date
+		// 				}else{
+		// 					due_date=''
+		// 				}
+		// 			}else if(cur_frm.doc.project_payment_schedule_control[row].date_period=='Period'){
+		// 				var due_date = cur_frm.doc.project_payment_schedule_control[row].to_date
+		// 				if(due_date){
+		// 					due_date=due_date
+		// 				}else{
+		// 					due_date=''
+		// 				}
+		// 			}
+
+		// 			var description_when = cur_frm.doc.project_payment_schedule_control[row].description_when
+		// 			if(description_when){
+		// 				description_when=description_when
+		// 			}else{
+		// 				description_when=''
+		// 			}
+
+		// 			var vat_value = cur_frm.doc.project_payment_schedule_control[row].vat_value
+		// 			if(vat_value){
+		// 				vat_value=vat_value
+		// 			}else{
+		// 				vat_value=0
+		// 			}
+
+		// 			var billing_status = cur_frm.doc.project_payment_schedule_control[row].billing_status
+		// 			if(billing_status){
+		// 				billing_status=billing_status
+		// 			}else{
+		// 				billing_status=0
+		// 			}
+
+		// 			var sales_order = cur_frm.doc.project_payment_schedule_control[row].sales_order
+		// 			if(sales_order){
+		// 				sales_order=sales_order
+		// 			}else{
+		// 				sales_order=''
+		// 			}
+
+
+		// 			frappe.call({
+		// 	            "method": "make_project_sales_order_approval",
+		// 	            doc: cur_frm.doc,
+		// 	            args: { "scope_item": scope_item,"project_name": project_name,
+		// 	            		"items_value": items_value,"billing_percentage": billing_percentage,
+		// 	            		"due_date": due_date,"description_when":description_when,"vat_value":vat_value,
+		// 	            		"billing_state":billing_status,"sales_order":sales_order},
+		// 	            callback: function (r) {
+		//                     console.log(r.message)
+
+		//                 }
+		// 	        });
+
+
+		// 		}
+		// 	}
+  //   	});
     	
 
 	},
@@ -212,9 +165,9 @@ frappe.ui.form.on('Project Billing Control', {
 		            d.when = row.when;
 		            d.description_when = row.description_when;
 		            d.billing_status = row.billing_status;
-		            d.sales_order = row.sales_order;
 		            frm.refresh_field("project_payment_schedule_control");
 		        });
+		        cur_frm.set_value("sales_order", tabletransfer.sales_order)
 		    })
 		}
 	}

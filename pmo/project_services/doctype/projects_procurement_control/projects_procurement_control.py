@@ -26,15 +26,15 @@ class ProjectsProcurementControl(Document):
 			frappe.throw("You made Material Request for this item before!")
 		else:
 			if arr and len(arr)==1:
-				if not frappe.db.exists("Item", {"item_name": scope_item }):
-					doc = frappe.new_doc("Item")
-					doc.item_group = 'Project'
-					doc.item_code = scope_item
-					doc.item_name = scope_item
-					doc.is_stock_item = 0
-					doc.flags.ignore_validate = True
-					doc.flags.ignore_mandatory = True
-					doc.insert(ignore_permissions=True)
+				# if not frappe.db.exists("Item", {"item_name": scope_item }):
+				# 	doc = frappe.new_doc("Item")
+				# 	doc.item_group = 'Project'
+				# 	doc.item_code = scope_item
+				# 	doc.item_name = scope_item
+				# 	doc.is_stock_item = 0
+				# 	doc.flags.ignore_validate = True
+				# 	doc.flags.ignore_mandatory = True
+				# 	doc.insert(ignore_permissions=True)
 
 				item_name = frappe.get_value("Item", filters = {"item_name": scope_item}, fieldname = "name")    
 
