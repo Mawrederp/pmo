@@ -133,7 +133,7 @@ frappe.ui.form.on('Project Costing Schedule', {
 
 frappe.ui.form.on('Project Costing Control', {
 	refresh: function(frm) {
-		$(".grid-add-row").hide();
+		// $(".grid-add-row").hide();
 
 		frappe.meta.get_docfield("Project Costing Schedule","type_of_cost", cur_frm.doc.name).read_only = 1;
 		frappe.meta.get_docfield("Project Costing Schedule","description_comments", cur_frm.doc.name).read_only = 1;
@@ -178,7 +178,7 @@ frappe.ui.form.on('Project Costing Control', {
         }
 	},
 	project_name: function(frm) {
-		$(".grid-add-row").hide();
+		// $(".grid-add-row").hide();
 
 		frappe.meta.get_docfield("Project Costing Schedule","type_of_cost", cur_frm.doc.name).read_only = 1;
 		frappe.meta.get_docfield("Project Costing Schedule","description_comments", cur_frm.doc.name).read_only = 1;
@@ -290,7 +290,7 @@ frappe.ui.form.on('Project Costing Control', {
 		
 	},
 	type_of_cost: function(frm){
-		$(".grid-add-row").hide();
+		// $(".grid-add-row").hide();
 
 		frappe.meta.get_docfield("Project Costing Schedule","type_of_cost", cur_frm.doc.name).read_only = 1;
 		frappe.meta.get_docfield("Project Costing Schedule","description_comments", cur_frm.doc.name).read_only = 1;

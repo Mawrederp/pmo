@@ -9,7 +9,7 @@ from frappe.model.document import Document
 class ProjectCostingControl(Document):
     def validate(self):
         self.validate_mp()
-
+        self.employee_percentage()
 
     def validate_mp(self):
         arr=[]
@@ -19,6 +19,12 @@ class ProjectCostingControl(Document):
 
         if arr and len(arr)>1:
             frappe.throw("You should check one MP")
+
+
+    def employee_percentage(self):
+    	for i in self.project_costing_employee:
+    		pass
+
 
 
     def validate_allocation_cost_value(self):
