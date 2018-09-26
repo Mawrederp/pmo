@@ -59,10 +59,18 @@ class ProjectSalesOrderApproval(Document):
 
                 for row in self.project_payment_schedule_control:
                     item_name = frappe.get_value("Project Items", filters = {"name": row.scope_item}, fieldname = "item")
+                    
+                    project_item_doc = frappe.get_doc("Project Items", row.scope_item)
+                    if project_item_doc:
+                        for i in project_item_doc.project_details:
+                            if i.project == self.project_name:
+                                description = i.project_details
+                            else:
+                                description = row.description_when
 
                     sinv.append("items", {
                         "item_code": item_name,
-                        "description": row.description_when,
+                        "description": description,
                         "qty": flt(flt(row.billing_percentage)/100),
                         "rate": row.items_value
                     })
