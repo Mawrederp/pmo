@@ -447,7 +447,9 @@ frappe.ui.form.on("Project Costing Employee", "total", function (frm, cdt, cdn) 
     // code for calculate total and set on parent field.
     var total_allocation = 0;
     $.each(frm.doc.project_costing_employee || [], function (i, d) {
-        total_allocation += flt(d.total);
+    	if(d.total!=NaN){
+        	total_allocation += flt(d.total);
+        }
     });
     cur_frm.set_value("allocation_cost_value", total_allocation);
 });
@@ -456,7 +458,9 @@ frappe.ui.form.on("Project Costing Employee", "percentage", function (frm, cdt, 
     // code for calculate total and set on parent field.
     var total_allocation = 0;
     $.each(frm.doc.project_costing_employee || [], function (i, d) {
-        total_allocation += flt(d.total);
+    	if(d.total!=NaN){
+        	total_allocation += flt(d.total);
+        }
     });
     cur_frm.set_value("allocation_cost_value", total_allocation);
 });

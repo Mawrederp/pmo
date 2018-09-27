@@ -81,6 +81,7 @@ class ProjectCostingControl(Document):
 
         result = doc.net_pay
         self.net_pay = result
+        self.gross_pay = result
     
         doc.delete()
 
