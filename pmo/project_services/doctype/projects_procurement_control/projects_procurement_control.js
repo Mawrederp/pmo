@@ -70,7 +70,7 @@ frappe.ui.form.on('Projects Procurement Control', {
 			            callback: function (r) {
 			            	material_request_name = r.message
      						$.each(frm.doc.project_costing_schedule_control || [], function(i, v) {
-     							if(v.pr){
+     							if(v.pr && material_request_name){
 	     							
 	     							frappe.model.set_value(v.doctype, v.name, "material_request", material_request_name)
 	     							frappe.model.set_value(v.doctype, v.name, "cost_status", 1)
