@@ -154,63 +154,81 @@ class ProjectBillingControl(Document):
 
                 resources_details_name = frappe.db.sql("select name from `tabResources Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,scope_item))
     
-                if customer:
-                    sinv=frappe.get_doc({
-                        "doctype":"Sales Invoice",
-                        "customer": customer[0][0],
-                        "customer_name": customer[0][0],
-                        "project": project_name,
-                        "naming_series": 'SINV-',
-                        "delivery_date": due_date,
-                        "items": [
-                              {
-                                "doctype": "Sales Invoice Item",
-                                "item_code": item_name,
-                                "description": description_when,
-                                "qty": flt(flt(billing_percentage)/100),
-                                "rate": items_value
-                              }
-                            ],
-                        "taxes": [
-                              {
-                                "doctype": "Sales Taxes and Charges",
-                                "charge_type": 'Actual',
-                                "description": description_when,
-                                "tax_amount": vat_value
-                              }
-                            ],
-                        "taxes_and_charges": "VAT"
-                    })
+                status = 1
+                for row in self.project_payment_schedule_control:
+                    if row.invoice==1:
+                        doc = frappe.get_doc("Project Items", row.scope_item)
+                        if doc.status != 'Active':
+                            frappe.msgprint("Project Item {0} in row {1} doesnt link to Items,please check: <b><a href='#Form/Project Items/{0}'>{0}</a></b>".format(row.scope_item,row.idx))
+                            status = 0
 
-                    # for resource in resources_details_name:
-                    #     doc = frappe.get_doc("Resources Details",resource[0])
-
-                    #     sinv.append("items", {
-                    #         "item_code": doc.resources,
-                    #         "description": description_when,
-                    #         "qty": flt(flt(billing_percentage)/100),
-                    #         "rate": items_value
-                    #     })
-
-                    #     sinv.append("taxes", {
-                    #         "charge_type": 'Actual',
-                    #         "description": description_when,
-                    #         "tax_amount": vat_value
-                    #     })
-
-                    # sinv.flags.ignore_validate = True
-                    sinv.flags.ignore_mandatory = True
-                    sinv.insert(ignore_permissions=True)
+                description=''
+                project_item_doc = frappe.get_doc("Project Items", scope_item)
+                if project_item_doc:
+                    for i in project_item_doc.project_details:
+                        if i.project == self.project_name:
+                            description = i.project_details
+                        else:
+                            description = description_when
 
 
-                    frappe.msgprint("Sales Invoice is created: <b><a href='#Form/Sales Invoice/{0}'>{0}</a></b>".format(sinv.name))
-                else:
-                    frappe.throw('You sould select customer for this project before issue an invoice')
+                if status==1:
+
+                    if customer:
+                        sinv=frappe.get_doc({
+                            "doctype":"Sales Invoice",
+                            "customer": customer[0][0],
+                            "customer_name": customer[0][0],
+                            "project": project_name,
+                            "naming_series": 'SINV-',
+                            "delivery_date": due_date,
+                            "items": [
+                                  {
+                                    "doctype": "Sales Invoice Item",
+                                    "item_code": item_name,
+                                    "description": description,
+                                    "qty": flt(flt(billing_percentage)/100),
+                                    "rate": items_value
+                                  }
+                                ],
+                            "taxes": [
+                                  {
+                                    "doctype": "Sales Taxes and Charges",
+                                    "charge_type": 'Actual',
+                                    "description": description,
+                                    "tax_amount": vat_value
+                                  }
+                                ],
+                            "taxes_and_charges": "VAT"
+                        })
+
+                        # for resource in resources_details_name:
+                        #     doc = frappe.get_doc("Resources Details",resource[0])
+
+                        #     sinv.append("items", {
+                        #         "item_code": doc.resources,
+                        #         "description": description,
+                        #         "qty": flt(flt(billing_percentage)/100),
+                        #         "rate": items_value
+                        #     })
+
+                        #     sinv.append("taxes", {
+                        #         "charge_type": 'Actual',
+                        #         "description": description,
+                        #         "tax_amount": vat_value
+                        #     })
+
+                        # sinv.flags.ignore_validate = True
+                        sinv.flags.ignore_mandatory = True
+                        sinv.insert(ignore_permissions=True)
+                        return sinv.name
+
+                        frappe.msgprint("Sales Invoice is created: <b><a href='#Form/Sales Invoice/{0}'>{0}</a></b>".format(sinv.name))
+                    else:
+                        frappe.throw('You sould select customer for this project before issue an invoice')
             else:
                 frappe.throw("You should check one invoice")
 
-        return sinv.name
-        
 
 
 

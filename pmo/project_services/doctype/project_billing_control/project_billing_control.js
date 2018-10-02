@@ -29,7 +29,6 @@ frappe.ui.form.on('Project Billing Control', {
 	            "method": "make_project_sales_order_approval",
 	            doc: cur_frm.doc,
 	            callback: function (r) {
-                    console.log(r.message)
 
                 }
 	        });
@@ -138,29 +137,27 @@ frappe.ui.form.on('Project Billing Control', {
 			            		"due_date": due_date,"description_when":description_when,"vat_value":vat_value,
 			            		"billing_state":billing_status,"sales_invoice":sales_invoice},
 			            callback: function (r) {
-			            	console.log("here0")
-			            	console.log(r.message)
 		                    invoice_name = r.message
 		                    $.each(frm.doc.project_payment_schedule_control || [], function(i, v) {
 		                    	if(v.invoice){
-		                    		console.log("here")
 
 		                    		frappe.model.set_value(v.doctype, v.name, "sales_invoice", invoice_name)
 	     							frappe.model.set_value(v.doctype, v.name, "billing_status", 1)
 
-				                    frappe.call({
-							            "method": "updat_init_payment_table_invoice",
-							            doc: cur_frm.doc,
-							            args: {"sales_invoice":invoice_name,"scope_item": scope_item,
-							        		   "billing_percentage": billing_percentage,"total_billing_value": total_billing_value,
-							        		   "remaining_billing_value": remaining_billing_value},
-							            callback: function (r) {
-							            	if(r.message){
-							            		console.log("here 2")
-							            		console.log(r.message)
-											}
-						                }
-							        });
+	     							if(invoice_name){
+					                    frappe.call({
+								            "method": "updat_init_payment_table_invoice",
+								            doc: cur_frm.doc,
+								            args: {"sales_invoice":invoice_name,"scope_item": scope_item,
+								        		   "billing_percentage": billing_percentage,"total_billing_value": total_billing_value,
+								        		   "remaining_billing_value": remaining_billing_value},
+								            callback: function (r) {
+								            	if(r.message){
+
+												}
+							                }
+								        });
+								    }
 							    }
 
 		               	     })
