@@ -139,25 +139,23 @@ frappe.ui.form.on('Project Billing Control', {
 			            callback: function (r) {
 		                    invoice_name = r.message
 		                    $.each(frm.doc.project_payment_schedule_control || [], function(i, v) {
-		                    	if(v.invoice){
+		                    	if(v.invoice && invoice_name){
 
 		                    		frappe.model.set_value(v.doctype, v.name, "sales_invoice", invoice_name)
 	     							frappe.model.set_value(v.doctype, v.name, "billing_status", 1)
 
-	     							if(invoice_name){
-					                    frappe.call({
-								            "method": "updat_init_payment_table_invoice",
-								            doc: cur_frm.doc,
-								            args: {"sales_invoice":invoice_name,"scope_item": scope_item,
-								        		   "billing_percentage": billing_percentage,"total_billing_value": total_billing_value,
-								        		   "remaining_billing_value": remaining_billing_value},
-								            callback: function (r) {
-								            	if(r.message){
+				                    frappe.call({
+							            "method": "updat_init_payment_table_invoice",
+							            doc: cur_frm.doc,
+							            args: {"sales_invoice":invoice_name,"scope_item": scope_item,
+							        		   "billing_percentage": billing_percentage,"total_billing_value": total_billing_value,
+							        		   "remaining_billing_value": remaining_billing_value},
+							            callback: function (r) {
+							            	if(r.message){
 
-												}
-							                }
-								        });
-								    }
+											}
+						                }
+							        });
 							    }
 
 		               	     })
