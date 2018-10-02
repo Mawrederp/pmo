@@ -464,3 +464,52 @@ frappe.ui.form.on("Project Costing Employee", "percentage", function (frm, cdt, 
     });
     cur_frm.set_value("allocation_cost_value", total_allocation);
 });
+
+
+
+
+
+
+frappe.ui.form.on('Project Costing Employee', {
+    employee: function (frm, cdt, cdn) {
+    	var row = locals[cdt][cdn];
+    	arr=[]
+		$.each(frm.doc.project_costing_employee || [], function (i, d) {
+	    	arr.push(d.employee)
+	    });
+		frm.fields_dict.project_costing_employee.grid.get_field('employee').get_query =
+			function() {
+				return {
+				filters: {
+					"employee": ["not in", arr]
+				}
+			}
+		}
+    },
+    percentage: function (frm, cdt, cdn) {
+    	var row = locals[cdt][cdn];
+    	if(row.percentage>100 || row.percentage<0){
+    		frappe.model.set_value(cdt, cdn, 'percentage', 0);
+    		frappe.model.set_value(cdt, cdn, 'total', 0);
+    	}
+    }
+
+})
+
+
+
+// frappe.ui.form.on('Project Costing Employee', "employee", function(frm) {
+// 	arr=[]
+// 	$.each(frm.doc.project_costing_employee || [], function (i, d) {
+//     	arr.push(d.employee)
+//     });
+// 	console.log(arr)
+// 	frm.fields_dict.project_costing_employee.grid.get_field('employee').get_query =
+// 		function() {
+// 			return {
+// 			filters: {
+// 				"employee": ["not in", arr]
+// 			}
+// 		}
+// 	}
+// });
