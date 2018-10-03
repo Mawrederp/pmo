@@ -137,14 +137,14 @@ class ProjectBillingControl(Document):
 
 
 
-    def make_sales_invoice(self,project_name,scope_item,items_value,billing_percentage,due_date,description_when,vat_value,billing_state,sales_invoice):
+    def make_delivery_note(self,project_name,scope_item,items_value,billing_percentage,due_date,description_when,vat_value,billing_state,delivery_note):
         arr=[]
         for row in self.project_payment_schedule_control:
             if row.invoice==1:
                 arr.append(row.name)
 
-        if sales_invoice and billing_state==1:
-            frappe.throw("You made Sales Invoice for this item before")
+        if delivery_note and billing_state==1:
+            frappe.throw("You made Delivery Note for this item before")
         else:
             if arr and len(arr)==1:
 
@@ -162,29 +162,26 @@ class ProjectBillingControl(Document):
                             frappe.msgprint("Project Item {0} in row {1} doesnt link to Items,please check: <b><a href='#Form/Project Items/{0}'>{0}</a></b>".format(row.scope_item,row.idx))
                             status = 0
 
-                description=''
+                description=description_when
                 project_item_doc = frappe.get_doc("Project Items", scope_item)
                 if project_item_doc:
                     for i in project_item_doc.project_details:
                         if i.project == self.project_name:
                             description = i.project_details
-                        else:
-                            description = description_when
-
 
                 if status==1:
 
                     if customer:
-                        sinv=frappe.get_doc({
-                            "doctype":"Sales Invoice",
+                        dnote=frappe.get_doc({
+                            "doctype":"Delivery Note",
                             "customer": customer[0][0],
                             "customer_name": customer[0][0],
                             "project": project_name,
-                            "naming_series": 'SINV-',
-                            "delivery_date": due_date,
+                            "naming_series": 'DN-',
+                            "posting_date": due_date,
                             "items": [
                                   {
-                                    "doctype": "Sales Invoice Item",
+                                    "doctype": "Delivery Note Item",
                                     "item_code": item_name,
                                     "description": description,
                                     "qty": flt(flt(billing_percentage)/100),
@@ -205,25 +202,25 @@ class ProjectBillingControl(Document):
                         # for resource in resources_details_name:
                         #     doc = frappe.get_doc("Resources Details",resource[0])
 
-                        #     sinv.append("items", {
+                        #     dnote.append("items", {
                         #         "item_code": doc.resources,
                         #         "description": description,
                         #         "qty": flt(flt(billing_percentage)/100),
                         #         "rate": items_value
                         #     })
 
-                        #     sinv.append("taxes", {
+                        #     dnote.append("taxes", {
                         #         "charge_type": 'Actual',
                         #         "description": description,
                         #         "tax_amount": vat_value
                         #     })
 
-                        # sinv.flags.ignore_validate = True
-                        sinv.flags.ignore_mandatory = True
-                        sinv.insert(ignore_permissions=True)
-                        return sinv.name
+                        # dnote.flags.ignore_validate = True
+                        dnote.flags.ignore_mandatory = True
+                        dnote.insert(ignore_permissions=True)
+                        return dnote.name
 
-                        frappe.msgprint("Sales Invoice is created: <b><a href='#Form/Sales Invoice/{0}'>{0}</a></b>".format(sinv.name))
+                        frappe.msgprint("Delivery Note is created: <b><a href='#Form/Delivery Note/{0}'>{0}</a></b>".format(dnote.name))
                     else:
                         frappe.throw('You sould select customer for this project before issue an invoice')
             else:
@@ -321,8 +318,8 @@ class ProjectBillingControl(Document):
 
 
 
-    def updat_init_payment_table_invoice(self,sales_invoice,scope_item,billing_percentage,total_billing_value,remaining_billing_value):
-    	init_payment_name = ''
+    def updat_init_payment_table_delivery_note(self,delivery_note,scope_item,billing_percentage,total_billing_value,remaining_billing_value):
+        init_payment_name = ''
         init_payment_name = frappe.db.sql("""
         select payment.name from `tabProject Payment Schedule` payment join `tabProject Initiation` init on payment.parent=init.name
         where payment.parenttype='Project Initiation' and init.name='{0}' and payment.scope_item='{1}'
@@ -333,7 +330,7 @@ class ProjectBillingControl(Document):
 
         doc = frappe.get_doc("Project Payment Schedule",init_payment_name)
         if doc.scope_item==scope_item and doc.billing_percentage==billing_percentage and doc.total_billing_value==total_billing_value and doc.remaining_billing_value==remaining_billing_value:
-            doc.sales_invoice = sales_invoice
+            doc.delivery_note = delivery_note
             doc.billing_status = 1
             doc.flags.ignore_mandatory = True
             doc.save(ignore_permissions=True)

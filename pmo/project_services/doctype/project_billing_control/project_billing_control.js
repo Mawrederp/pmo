@@ -37,7 +37,7 @@ frappe.ui.form.on('Project Billing Control', {
 
 
 
-		frm.add_custom_button(__("Make Sales Invoice"), function () {
+		frm.add_custom_button(__("Make Delivery Note"), function () {
 			// items = []
 			for(var row= 0;row<cur_frm.doc.project_payment_schedule_control.length;row++){
 				if(cur_frm.doc.project_payment_schedule_control[row].invoice == 1){
@@ -107,11 +107,11 @@ frappe.ui.form.on('Project Billing Control', {
 						billing_status=0
 					}
 
-					var sales_invoice = cur_frm.doc.project_payment_schedule_control[row].sales_invoice
-					if(sales_invoice){
-						sales_invoice=sales_invoice
+					var delivery_note = cur_frm.doc.project_payment_schedule_control[row].delivery_note
+					if(delivery_note){
+						delivery_note=delivery_note
 					}else{
-						sales_invoice=''
+						delivery_note=''
 					}
 
 					var total_billing_value = cur_frm.doc.project_payment_schedule_control[row].total_billing_value
@@ -130,24 +130,25 @@ frappe.ui.form.on('Project Billing Control', {
 
 
 					frappe.call({
-			            "method": "make_sales_invoice",
+			            "method": "make_delivery_note",
 			            doc: cur_frm.doc,
 			            args: { "scope_item": scope_item,"project_name": project_name,
 			            		"items_value": items_value,"billing_percentage": billing_percentage,
 			            		"due_date": due_date,"description_when":description_when,"vat_value":vat_value,
-			            		"billing_state":billing_status,"sales_invoice":sales_invoice},
+			            		"billing_state":billing_status,"delivery_note":delivery_note},
 			            callback: function (r) {
-		                    invoice_name = r.message
+		                    delivery_note_name = r.message
 		                    $.each(frm.doc.project_payment_schedule_control || [], function(i, v) {
-		                    	if(v.invoice && invoice_name){
+		                    	if(v.invoice && delivery_note_name){
 
-		                    		frappe.model.set_value(v.doctype, v.name, "sales_invoice", invoice_name)
+		                    		frappe.model.set_value(v.doctype, v.name, "delivery_note", delivery_note_name)
 	     							frappe.model.set_value(v.doctype, v.name, "billing_status", 1)
-
+	     							cur_frm.save()
+	     							
 				                    frappe.call({
-							            "method": "updat_init_payment_table_invoice",
+							            "method": "updat_init_payment_table_delivery_note",
 							            doc: cur_frm.doc,
-							            args: {"sales_invoice":invoice_name,"scope_item": scope_item,
+							            args: {"delivery_note":delivery_note_name,"scope_item": scope_item,
 							        		   "billing_percentage": billing_percentage,"total_billing_value": total_billing_value,
 							        		   "remaining_billing_value": remaining_billing_value},
 							            callback: function (r) {
@@ -194,7 +195,7 @@ frappe.ui.form.on('Project Billing Control', {
 		            d.when = row.when;
 		            d.description_when = row.description_when;
 		            d.billing_status = row.billing_status;
-		            d.sales_invoice = row.sales_invoice;
+		            d.delivery_note = row.delivery_note;
 		            frm.refresh_field("project_payment_schedule_control");
 		        });
 		        cur_frm.set_value("sales_order", tabletransfer.sales_order)
