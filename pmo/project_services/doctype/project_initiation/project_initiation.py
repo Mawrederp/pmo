@@ -14,6 +14,8 @@ from frappe.utils.password import get_decrypted_password
 
 class ProjectInitiation(Document):
     def validate(self):
+        self.check_project_itemlink()
+
         if self.customer:
             self.add_customer_to_project()
     
@@ -245,6 +247,13 @@ class ProjectInitiation(Document):
     #     pp = frappe.get_value("Project Planning", filters = {"project_name": self.project_name}, fieldname = "name")
 
     #     frappe.msgprint(_("""Project Planning have been created: <b><a href="#Form/Project Planning/{pp}">{pp}</a></b>""".format(pp = pp)))
+
+    def check_project_itemlink(self):
+        for row in self.resources_details_0:
+            doc = frappe.get_doc("Project Items", row.resources)
+            if doc.status != 'Active':
+                frappe.msgprint("Project Item {0} under section {1} row {2} doesnt link to Items,please check: <b><a href='#Form/Project Items/{0}'>{0}</a></b>".format(row.resources,row.section_name,row.idx))
+
 
     def make_project_planning(self):
         frappe.get_doc({

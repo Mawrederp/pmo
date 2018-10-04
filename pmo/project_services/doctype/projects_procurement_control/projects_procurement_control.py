@@ -42,6 +42,14 @@ class ProjectsProcurementControl(Document):
 
                     resources_details_name = frappe.db.sql("select name from `tabResources Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,scope_item))
 
+                    project_item = frappe.get_doc("Project Items", scope_item)
+
+                    description=description_comments
+                    if project_item:
+                        for i in project_item.project_details:
+                            if i.project == self.project_name:
+                                description = i.project_details
+
                     mreq=frappe.get_doc({
                         "doctype":"Material Request",
                         "naming_series": 'MREQ-',
@@ -50,29 +58,38 @@ class ProjectsProcurementControl(Document):
                         "schedule_date": last_date,
                         "purchase_workflow": 'Project',
                         "project": self.project_name,
-                        "material_requester": "EMP/1005"
+                        "material_requester": "EMP/1005",
                         # "due_date": due_date,
                         # "debit_to": 'Debtors - O',
                         
-                        # "items": [
-                        #     {
-                        #       "doctype": "Material Request Item",
-                        #       "item_code": item_name,
-                        #       "description": description_comments,
-                        #       # "qty": 50,
-                        #       "schedule_date": last_date
-                        #     }
-                        #   ]
+                        "items": [
+                            {
+                              "doctype": "Material Request Item",
+                              "item_code": project_item.item,
+                              "description": description,
+                              "qty": 1
+                              # "schedule_date": last_date
+                            }
+                          ]
                     })
 
-                    for resource in resources_details_name:
-                        doc = frappe.get_doc("Resources Details",resource[0])
+                    # for resource in resources_details_name:
+                    #     doc = frappe.get_doc("Resources Details",resource[0])
 
-                        mreq.append("items", {
-                            "item_code": doc.resources,
-                            "description": description_comments,
-                            "schedule_date": last_date
-                        })
+                    #     project_item = frappe.get_doc("Project Items",doc.resources)
+
+                    #     description=description_comments
+                    #     if project_item:
+                    #         for i in project_item.project_details:
+                    #             if i.project == self.project_name:
+                    #                 description = i.project_details
+
+                    #     mreq.append("items", {
+                    #         "item_code": project_item.item,
+                    #         "description": description,
+                    #         "qty": 1,
+                    #         "schedule_date": last_date
+                    #     })
 
 
                     # mreq.flags.ignore_validate = True

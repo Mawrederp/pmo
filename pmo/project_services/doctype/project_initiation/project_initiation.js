@@ -569,24 +569,24 @@ frappe.ui.form.on('Project Initiation', {
 
 });
 
-cur_frm.set_query("resources", "resources_details_0", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item', 'item_group', '=', d.group_code]
-        ]
-    }
-});
+// cur_frm.set_query("resources", "resources_details_0", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item', 'item_group', '=', d.group_code]
+//         ]
+//     }
+// });
 
 
-cur_frm.set_query("group_code", "resources_details_0", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item Group', 'parent_item_group', '=', 'Project']
-        ]
-    }
-});
+// cur_frm.set_query("group_code", "resources_details_0", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item Group', 'parent_item_group', '=', 'Project']
+//         ]
+//     }
+// });
 
 
 cur_frm.cscript.total_overhead_expenses_0 = function (frm, cdt, cdn) {
@@ -985,23 +985,23 @@ frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
 
 
 
-cur_frm.set_query("resources", "resources_details_1", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item', 'item_group', '=', d.group_code]
-        ]
-    }
-});
+// cur_frm.set_query("resources", "resources_details_1", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item', 'item_group', '=', d.group_code]
+//         ]
+//     }
+// });
 
-cur_frm.set_query("group_code", "resources_details_1", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item Group', 'parent_item_group', '=', 'Project']
-        ]
-    }
-});
+// cur_frm.set_query("group_code", "resources_details_1", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item Group', 'parent_item_group', '=', 'Project']
+//         ]
+//     }
+// });
 
 cur_frm.cscript.total_overhead_expenses_1 = function (frm, cdt, cdn) {
     $.each(cur_frm.doc.items_details_1 || [], function (i, d) {
@@ -1013,22 +1013,22 @@ cur_frm.cscript.total_overhead_expenses_1 = function (frm, cdt, cdn) {
 
 
 
-cur_frm.set_query("resources", "resources_details_2", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item', 'item_group', '=', d.group_code]
-        ]
-    }
-});
-cur_frm.set_query("group_code", "resources_details_2", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item Group', 'parent_item_group', '=', 'Project']
-        ]
-    }
-});
+// cur_frm.set_query("resources", "resources_details_2", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item', 'item_group', '=', d.group_code]
+//         ]
+//     }
+// });
+// cur_frm.set_query("group_code", "resources_details_2", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item Group', 'parent_item_group', '=', 'Project']
+//         ]
+//     }
+// });
 cur_frm.cscript.total_overhead_expenses_2 = function (frm, cdt, cdn) {
     $.each(cur_frm.doc.items_details_2 || [], function (i, d) {
         set_value_model("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_2);
@@ -1038,22 +1038,22 @@ cur_frm.cscript.total_overhead_expenses_2 = function (frm, cdt, cdn) {
 }
 
 
-cur_frm.set_query("resources", "resources_details_3", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item', 'item_group', '=', d.group_code]
-        ]
-    }
-});
-cur_frm.set_query("group_code", "resources_details_3", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item Group', 'parent_item_group', '=', 'Project']
-        ]
-    }
-});
+// cur_frm.set_query("resources", "resources_details_3", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item', 'item_group', '=', d.group_code]
+//         ]
+//     }
+// });
+// cur_frm.set_query("group_code", "resources_details_3", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item Group', 'parent_item_group', '=', 'Project']
+//         ]
+//     }
+// });
 cur_frm.cscript.total_overhead_expenses_3 = function (frm, cdt, cdn) {
     $.each(cur_frm.doc.items_details_3 || [], function (i, d) {
         set_value_model("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_3);
@@ -1065,22 +1065,22 @@ cur_frm.cscript.total_overhead_expenses_3 = function (frm, cdt, cdn) {
 
 
 
-cur_frm.set_query("resources", "resources_details_4", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item', 'item_group', '=', d.group_code]
-        ]
-    }
-});
-cur_frm.set_query("group_code", "resources_details_4", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item Group', 'parent_item_group', '=', 'Project']
-        ]
-    }
-});
+// cur_frm.set_query("resources", "resources_details_4", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item', 'item_group', '=', d.group_code]
+//         ]
+//     }
+// });
+// cur_frm.set_query("group_code", "resources_details_4", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item Group', 'parent_item_group', '=', 'Project']
+//         ]
+//     }
+// });
 cur_frm.cscript.total_overhead_expenses_4 = function (frm, cdt, cdn) {
     $.each(cur_frm.doc.items_details_4 || [], function (i, d) {
         set_value_model("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_4);
@@ -1093,22 +1093,22 @@ cur_frm.cscript.total_overhead_expenses_4 = function (frm, cdt, cdn) {
 
 
 
-cur_frm.set_query("resources", "resources_details_5", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item', 'item_group', '=', d.group_code]
-        ]
-    }
-});
-cur_frm.set_query("group_code", "resources_details_5", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item Group', 'parent_item_group', '=', 'Project']
-        ]
-    }
-});
+// cur_frm.set_query("resources", "resources_details_5", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item', 'item_group', '=', d.group_code]
+//         ]
+//     }
+// });
+// cur_frm.set_query("group_code", "resources_details_5", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item Group', 'parent_item_group', '=', 'Project']
+//         ]
+//     }
+// });
 cur_frm.cscript.total_overhead_expenses_5 = function (frm, cdt, cdn) {
     $.each(cur_frm.doc.items_details_5 || [], function (i, d) {
         set_value_model("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_5);
@@ -1119,22 +1119,22 @@ cur_frm.cscript.total_overhead_expenses_5 = function (frm, cdt, cdn) {
 
 
 
-cur_frm.set_query("resources", "resources_details_6", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item', 'item_group', '=', d.group_code]
-        ]
-    }
-});
-cur_frm.set_query("group_code", "resources_details_6", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item Group', 'parent_item_group', '=', 'Project']
-        ]
-    }
-});
+// cur_frm.set_query("resources", "resources_details_6", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item', 'item_group', '=', d.group_code]
+//         ]
+//     }
+// });
+// cur_frm.set_query("group_code", "resources_details_6", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item Group', 'parent_item_group', '=', 'Project']
+//         ]
+//     }
+// });
 cur_frm.cscript.total_overhead_expenses_6 = function (frm, cdt, cdn) {
     $.each(cur_frm.doc.items_details_6 || [], function (i, d) {
         set_value_model("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_6);
@@ -1145,22 +1145,22 @@ cur_frm.cscript.total_overhead_expenses_6 = function (frm, cdt, cdn) {
 
 
 
-cur_frm.set_query("resources", "resources_details_7", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item', 'item_group', '=', d.group_code]
-        ]
-    }
-});
-cur_frm.set_query("group_code", "resources_details_7", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item Group', 'parent_item_group', '=', 'Project']
-        ]
-    }
-});
+// cur_frm.set_query("resources", "resources_details_7", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item', 'item_group', '=', d.group_code]
+//         ]
+//     }
+// });
+// cur_frm.set_query("group_code", "resources_details_7", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item Group', 'parent_item_group', '=', 'Project']
+//         ]
+//     }
+// });
 cur_frm.cscript.total_overhead_expenses_7 = function (frm, cdt, cdn) {
     $.each(cur_frm.doc.items_details_7 || [], function (i, d) {
         set_value_model("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_7);
@@ -1171,22 +1171,22 @@ cur_frm.cscript.total_overhead_expenses_7 = function (frm, cdt, cdn) {
 
 
 
-cur_frm.set_query("resources", "resources_details_8", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item', 'item_group', '=', d.group_code]
-        ]
-    }
-});
-cur_frm.set_query("group_code", "resources_details_8", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item Group', 'parent_item_group', '=', 'Project']
-        ]
-    }
-});
+// cur_frm.set_query("resources", "resources_details_8", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item', 'item_group', '=', d.group_code]
+//         ]
+//     }
+// });
+// cur_frm.set_query("group_code", "resources_details_8", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item Group', 'parent_item_group', '=', 'Project']
+//         ]
+//     }
+// });
 cur_frm.cscript.total_overhead_expenses_8 = function (frm, cdt, cdn) {
     $.each(cur_frm.doc.items_details_8 || [], function (i, d) {
         set_value_model("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_8);
@@ -1195,22 +1195,22 @@ cur_frm.cscript.total_overhead_expenses_8 = function (frm, cdt, cdn) {
 
 }
 
-cur_frm.set_query("resources", "resources_details_9", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item', 'item_group', '=', d.group_code]
-        ]
-    }
-});
-cur_frm.set_query("group_code", "resources_details_9", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item Group', 'parent_item_group', '=', 'Project']
-        ]
-    }
-});
+// cur_frm.set_query("resources", "resources_details_9", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item', 'item_group', '=', d.group_code]
+//         ]
+//     }
+// });
+// cur_frm.set_query("group_code", "resources_details_9", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item Group', 'parent_item_group', '=', 'Project']
+//         ]
+//     }
+// });
 cur_frm.cscript.total_overhead_expenses_9 = function (frm, cdt, cdn) {
     $.each(cur_frm.doc.items_details_9 || [], function (i, d) {
         set_value_model("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_9);
@@ -1221,22 +1221,22 @@ cur_frm.cscript.total_overhead_expenses_9 = function (frm, cdt, cdn) {
 
 
 
-cur_frm.set_query("resources", "resources_details_10", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item', 'item_group', '=', d.group_code]
-        ]
-    }
-});
-cur_frm.set_query("group_code", "resources_details_10", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item Group', 'parent_item_group', '=', 'Project']
-        ]
-    }
-});
+// cur_frm.set_query("resources", "resources_details_10", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item', 'item_group', '=', d.group_code]
+//         ]
+//     }
+// });
+// cur_frm.set_query("group_code", "resources_details_10", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item Group', 'parent_item_group', '=', 'Project']
+//         ]
+//     }
+// });
 cur_frm.cscript.total_overhead_expenses_10 = function (frm, cdt, cdn) {
     $.each(cur_frm.doc.items_details_10 || [], function (i, d) {
         set_value_model("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_10);
@@ -1247,22 +1247,22 @@ cur_frm.cscript.total_overhead_expenses_10 = function (frm, cdt, cdn) {
 
 
 
-cur_frm.set_query("resources", "resources_details_11", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item', 'item_group', '=', d.group_code]
-        ]
-    }
-});
-cur_frm.set_query("group_code", "resources_details_11", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item Group', 'parent_item_group', '=', 'Project']
-        ]
-    }
-});
+// cur_frm.set_query("resources", "resources_details_11", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item', 'item_group', '=', d.group_code]
+//         ]
+//     }
+// });
+// cur_frm.set_query("group_code", "resources_details_11", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item Group', 'parent_item_group', '=', 'Project']
+//         ]
+//     }
+// });
 cur_frm.cscript.total_overhead_expenses_11 = function (frm, cdt, cdn) {
     $.each(cur_frm.doc.items_details_11 || [], function (i, d) {
         set_value_model("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_11);
@@ -1273,22 +1273,22 @@ cur_frm.cscript.total_overhead_expenses_11 = function (frm, cdt, cdn) {
 
 
 
-cur_frm.set_query("resources", "resources_details_12", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item', 'item_group', '=', d.group_code]
-        ]
-    }
-});
-cur_frm.set_query("group_code", "resources_details_12", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item Group', 'parent_item_group', '=', 'Project']
-        ]
-    }
-});
+// cur_frm.set_query("resources", "resources_details_12", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item', 'item_group', '=', d.group_code]
+//         ]
+//     }
+// });
+// cur_frm.set_query("group_code", "resources_details_12", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item Group', 'parent_item_group', '=', 'Project']
+//         ]
+//     }
+// });
 cur_frm.cscript.total_overhead_expenses_12 = function (frm, cdt, cdn) {
     $.each(cur_frm.doc.items_details_12 || [], function (i, d) {
         set_value_model("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_12);
@@ -1300,22 +1300,22 @@ cur_frm.cscript.total_overhead_expenses_12 = function (frm, cdt, cdn) {
 
 
 
-cur_frm.set_query("resources", "resources_details_13", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item', 'item_group', '=', d.group_code]
-        ]
-    }
-});
-cur_frm.set_query("group_code", "resources_details_13", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item Group', 'parent_item_group', '=', 'Project']
-        ]
-    }
-});
+// cur_frm.set_query("resources", "resources_details_13", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item', 'item_group', '=', d.group_code]
+//         ]
+//     }
+// });
+// cur_frm.set_query("group_code", "resources_details_13", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item Group', 'parent_item_group', '=', 'Project']
+//         ]
+//     }
+// });
 cur_frm.cscript.total_overhead_expenses_13 = function (frm, cdt, cdn) {
     $.each(cur_frm.doc.items_details_13 || [], function (i, d) {
         set_value_model("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_13);
@@ -1326,22 +1326,22 @@ cur_frm.cscript.total_overhead_expenses_13 = function (frm, cdt, cdn) {
 
 
 
-cur_frm.set_query("resources", "resources_details_14", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item', 'item_group', '=', d.group_code]
-        ]
-    }
-});
-cur_frm.set_query("group_code", "resources_details_14", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item Group', 'parent_item_group', '=', 'Project']
-        ]
-    }
-});
+// cur_frm.set_query("resources", "resources_details_14", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item', 'item_group', '=', d.group_code]
+//         ]
+//     }
+// });
+// cur_frm.set_query("group_code", "resources_details_14", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item Group', 'parent_item_group', '=', 'Project']
+//         ]
+//     }
+// });
 cur_frm.cscript.total_overhead_expenses_14 = function (frm, cdt, cdn) {
     $.each(cur_frm.doc.items_details_14 || [], function (i, d) {
         set_value_model("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_14);
@@ -1402,22 +1402,22 @@ frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
 
 
 
-cur_frm.set_query("resources", "resources_details_15", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item', 'item_group', '=', d.group_code]
-        ]
-    }
-});
-cur_frm.set_query("group_code", "resources_details_15", function (doc, cdt, cdn) {
-    var d = locals[cdt][cdn];
-    return {
-        filters: [
-            ['Item Group', 'parent_item_group', '=', 'Project']
-        ]
-    }
-});
+// cur_frm.set_query("resources", "resources_details_15", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item', 'item_group', '=', d.group_code]
+//         ]
+//     }
+// });
+// cur_frm.set_query("group_code", "resources_details_15", function (doc, cdt, cdn) {
+//     var d = locals[cdt][cdn];
+//     return {
+//         filters: [
+//             ['Item Group', 'parent_item_group', '=', 'Project']
+//         ]
+//     }
+// });
 cur_frm.cscript.total_overhead_expenses_15 = function (frm, cdt, cdn) {
     $.each(cur_frm.doc.items_details_15 || [], function (i, d) {
         set_value_model("Items Details", d.name, 'tawaris_services', cur_frm.doc.total_overhead_expenses_15);
