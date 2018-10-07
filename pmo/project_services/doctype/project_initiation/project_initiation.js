@@ -514,6 +514,12 @@ frappe.ui.form.on('Project Initiation', {
             });
         }
 
+        for (var index = 0; index <= 15; index++) {
+            $.each(cur_frm.doc["items_details_" + index] || [], function (i, d) {
+                frappe.model.set_value("Items Details", d.name, 'section_name', cur_frm.doc["section_name_" + index]);
+            });
+        }
+
         refresh_general_pricing(frm);
 
         var grand_total = 0;

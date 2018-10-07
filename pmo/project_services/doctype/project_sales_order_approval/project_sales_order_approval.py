@@ -58,31 +58,40 @@ class ProjectSalesOrderApproval(Document):
                 })
 
                 for row in self.project_payment_schedule_control:
-                    item_name = frappe.get_value("Project Items", filters = {"name": row.scope_item}, fieldname = "item")
-                    
-                    project_item_doc = frappe.get_doc("Project Items", row.scope_item)
-                    if project_item_doc:
-                        for i in project_item_doc.project_details:
-                            if i.project == self.project_name:
-                                description = i.project_details
-                            else:
-                                description = row.description_when
+                    resources_details_name = frappe.db.sql("select name from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,row.scope_item))
+                    for resource in resources_details_name:
 
-                    sinv.append("items", {
-                        "item_code": item_name,
-                        "description": description,
-                        "qty": flt(flt(row.billing_percentage)/100),
-                        "rate": row.items_value
-                    })
+                        doc = frappe.get_doc("Items Details",resource[0])
+                        proj_item = frappe.get_doc("Project Items", doc.items)
+                        item = frappe.get_doc("Item", proj_item.item)
 
-                    sinv.append("taxes", {
-                        "charge_type": 'Actual',
-                        "description": row.description_when,
-                        "tax_amount": row.vat_value
-                    })
+                        description = item.description
+                        if proj_item:
+                            for i in proj_item.project_details:
+                                if i.project == self.project_name:
+                                    description = i.project_details
+
+                        rate = doc.final_selling_price
+                        qty = 1
+                        if flt(doc.quantity)>0:
+                            rate = doc.final_selling_price/flt(doc.quantity)
+                            qty = doc.quantity
+
+
+                        sinv.append("items", {
+                            "item_code": proj_item.item,
+                            "description": description,
+                            "qty": flt(qty)*flt(flt(row.billing_percentage)/100),
+                            "rate": rate
+                        })
+
+                        sinv.append("taxes", {
+                            "charge_type": 'Actual',
+                            "description": description,
+                            "tax_amount": (doc.final_selling_price*0.05)*flt(flt(row.billing_percentage)/100)
+                        })
 
                 
-                # sinv.flags.ignore_validate = True
                 sinv.flags.ignore_mandatory = True
                 sinv.insert(ignore_permissions=True)
 

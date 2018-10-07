@@ -109,12 +109,18 @@ class ProjectBillingControl(Document):
 
     def make_project_sales_order_approval(self):
         sales_approval = frappe.db.sql("select name from `tabProject Sales Order Approval` where project_name='{0}' and docstatus=0".format(self.project_name))
+
         status = 1
         for row in self.project_payment_schedule_control:
-            doc = frappe.get_doc("Project Items", row.scope_item)
-            if doc.status != 'Active':
-                frappe.msgprint("Project Item {0} in row {1} doesnt link to Items,please check: <b><a href='#Form/Project Items/{0}'>{0}</a></b>".format(row.scope_item,row.idx))
-                status = 0
+            resources_details_name = frappe.db.sql("select name from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,row.scope_item))
+            for resource in resources_details_name:
+                item_row = frappe.get_doc("Items Details",resource[0])
+                doc = frappe.get_doc("Project Items", item_row.items)
+                
+                if doc.status != 'Active':
+                    frappe.msgprint("Project Item {0} under section {1} in row {2} doesnt link to Items,please check: <b><a href='#Form/Project Items/{0}'>{0}</a></b>".format(item_row.items,row.scope_item,row.idx))
+                    status = 0
+
 
         if status==1:
             if not sales_approval:
@@ -152,22 +158,19 @@ class ProjectBillingControl(Document):
 
                 customer = frappe.db.sql("select customer from `tabProject Initiation` where name='{0}' ".format(self.project_name))
 
-                resources_details_name = frappe.db.sql("select name from `tabResources Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,scope_item))
+                resources_details_name = frappe.db.sql("select name from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,scope_item))
     
                 status = 1
                 for row in self.project_payment_schedule_control:
                     if row.invoice==1:
-                        doc = frappe.get_doc("Project Items", row.scope_item)
-                        if doc.status != 'Active':
-                            frappe.msgprint("Project Item {0} in row {1} doesnt link to Items,please check: <b><a href='#Form/Project Items/{0}'>{0}</a></b>".format(row.scope_item,row.idx))
-                            status = 0
+                        for resource in resources_details_name:
+                            item_row = frappe.get_doc("Items Details",resource[0])
+                            doc = frappe.get_doc("Project Items", item_row.items)
+                            
+                            if doc.status != 'Active':
+                                frappe.msgprint("Project Item {0} under section {1} in row {2} doesnt link to Items,please check: <b><a href='#Form/Project Items/{0}'>{0}</a></b>".format(item_row.items,row.scope_item,row.idx))
+                                status = 0
 
-                description=description_when
-                project_item_doc = frappe.get_doc("Project Items", scope_item)
-                if project_item_doc:
-                    for i in project_item_doc.project_details:
-                        if i.project == self.project_name:
-                            description = i.project_details
 
                 if status==1:
 
@@ -179,41 +182,57 @@ class ProjectBillingControl(Document):
                             "project": project_name,
                             "naming_series": 'DN-',
                             "posting_date": due_date,
-                            "items": [
-                                  {
-                                    "doctype": "Delivery Note Item",
-                                    "item_code": item_name,
-                                    "description": description,
-                                    "qty": flt(flt(billing_percentage)/100),
-                                    "rate": items_value
-                                  }
-                                ],
-                            "taxes": [
-                                  {
-                                    "doctype": "Sales Taxes and Charges",
-                                    "charge_type": 'Actual',
-                                    "description": description,
-                                    "tax_amount": vat_value
-                                  }
-                                ],
+                            # "items": [
+                            #       {
+                            #         "doctype": "Delivery Note Item",
+                            #         "item_code": item_name,
+                            #         "description": description,
+                            #         "qty": flt(flt(billing_percentage)/100),
+                            #         "rate": items_value
+                            #       }
+                            #     ],
+                            # "taxes": [
+                            #       {
+                            #         "doctype": "Sales Taxes and Charges",
+                            #         "charge_type": 'Actual',
+                            #         "description": description,
+                            #         "tax_amount": vat_value
+                            #       }
+                            #     ],
                             "taxes_and_charges": "VAT"
                         })
 
-                        # for resource in resources_details_name:
-                        #     doc = frappe.get_doc("Resources Details",resource[0])
+                        for resource in resources_details_name:
+                            
 
-                        #     dnote.append("items", {
-                        #         "item_code": doc.resources,
-                        #         "description": description,
-                        #         "qty": flt(flt(billing_percentage)/100),
-                        #         "rate": items_value
-                        #     })
+                            doc = frappe.get_doc("Items Details",resource[0])
+                            proj_item = frappe.get_doc("Project Items", doc.items)
+                            item = frappe.get_doc("Item", proj_item.item)
 
-                        #     dnote.append("taxes", {
-                        #         "charge_type": 'Actual',
-                        #         "description": description,
-                        #         "tax_amount": vat_value
-                        #     })
+                            description=item.description
+                            if proj_item:
+                                for i in proj_item.project_details:
+                                    if i.project == self.project_name:
+                                        description = i.project_details
+
+                            rate = doc.final_selling_price
+                            qty = 1
+                            if flt(doc.quantity)>0:
+                                rate = doc.final_selling_price/flt(doc.quantity)
+                                qty = doc.quantity
+
+                            dnote.append("items", {
+                                "item_code": proj_item.item,
+                                "description": description,
+                                "qty": qty*flt(flt(billing_percentage)/100),
+                                "rate": rate
+                            })
+
+                            dnote.append("taxes", {
+                                "charge_type": 'Actual',
+                                "description": description,
+                                "tax_amount": (doc.final_selling_price*0.05)*flt(flt(billing_percentage)/100)
+                            })
 
                         # dnote.flags.ignore_validate = True
                         dnote.flags.ignore_mandatory = True

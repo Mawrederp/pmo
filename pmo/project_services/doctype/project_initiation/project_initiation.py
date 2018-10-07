@@ -70,10 +70,6 @@ class ProjectInitiation(Document):
                 for i in self.project_costing_schedule:
                     if i.scope_item==row.scope_item:
                         count += 1
-
-                print '************************'
-                print row.no_contracts,count
-                print '************************'
                 # count = frappe.db.sql("select count(scope_item) from `tabProject Costing Schedule` where scope_item='{0}'".format(row.scope_item))[0][0]
                 if str(row.no_contracts) != str(count) :
                     frappe.throw("No. of POs/Contracts must equal project costing schedule inputs for scope item {0}".format(row.scope_item))
@@ -249,10 +245,18 @@ class ProjectInitiation(Document):
     #     frappe.msgprint(_("""Project Planning have been created: <b><a href="#Form/Project Planning/{pp}">{pp}</a></b>""".format(pp = pp)))
 
     def check_project_itemlink(self):
-        for row in self.resources_details_0:
-            doc = frappe.get_doc("Project Items", row.resources)
-            if doc.status != 'Active':
-                frappe.msgprint("Project Item {0} under section {1} row {2} doesnt link to Items,please check: <b><a href='#Form/Project Items/{0}'>{0}</a></b>".format(row.resources,row.section_name,row.idx))
+        for i in range(16):
+            for row in getattr(self, 'resources_details_' +str(i)):
+                doc = frappe.get_doc("Project Items", row.resources)
+                if doc.status != 'Active':
+                    frappe.msgprint("Project Item {0} under section {1} row {2} doesnt link to Items,please check: <b><a href='#Form/Project Items/{0}'>{0}</a></b>".format(row.resources,row.section_name,row.idx))
+
+        for j in range(16):
+            for row in getattr(self, 'items_details_' +str(j)):
+                doc = frappe.get_doc("Project Items", row.items)
+                if doc.status != 'Active':
+                    frappe.msgprint("Project Item {0} under section {1} row {2} doesnt link to Items,please check: <b><a href='#Form/Project Items/{0}'>{0}</a></b>".format(row.items,row.section_name,row.idx))
+
 
 
     def make_project_planning(self):
