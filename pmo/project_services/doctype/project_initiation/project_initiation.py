@@ -14,7 +14,7 @@ from frappe.utils.password import get_decrypted_password
 
 class ProjectInitiation(Document):
     def validate(self):
-        self.check_project_itemlink()
+        # self.check_project_itemlink()
 
         if self.customer:
             self.add_customer_to_project()

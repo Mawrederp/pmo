@@ -110,36 +110,36 @@ class ProjectBillingControl(Document):
     def make_project_sales_order_approval(self):
         sales_approval = frappe.db.sql("select name from `tabProject Sales Order Approval` where project_name='{0}' and docstatus=0".format(self.project_name))
 
-        status = 1
-        for row in self.project_payment_schedule_control:
-            resources_details_name = frappe.db.sql("select name from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,row.scope_item))
-            for resource in resources_details_name:
-                item_row = frappe.get_doc("Items Details",resource[0])
-                doc = frappe.get_doc("Project Items", item_row.items)
+        # status = 1
+        # for row in self.project_payment_schedule_control:
+        #     resources_details_name = frappe.db.sql("select name from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,row.scope_item))
+        #     for resource in resources_details_name:
+        #         item_row = frappe.get_doc("Items Details",resource[0])
+        #         doc = frappe.get_doc("Project Items", item_row.items)
                 
-                if doc.status != 'Active':
-                    frappe.msgprint("Project Item {0} under section {1} in row {2} doesnt link to Items,please check: <b><a href='#Form/Project Items/{0}'>{0}</a></b>".format(item_row.items,row.scope_item,row.idx))
-                    status = 0
+        #         if doc.status != 'Active':
+        #             frappe.msgprint("Project Item {0} under section {1} in row {2} doesnt link to Items,please check: <b><a href='#Form/Project Items/{0}'>{0}</a></b>".format(item_row.items,row.scope_item,row.idx))
+        #             status = 0
 
 
-        if status==1:
-            if not sales_approval:
-                psoa=frappe.get_doc({
-                    "doctype":"Project Sales Order Approval",
-                    "project_name": self.project_name,
-                    "project_payment_schedule_control": self.project_payment_schedule_control,
-                    "workflow_state": "Pending"
-                })
-            
-                psoa.flags.ignore_validate = True
-                psoa.flags.ignore_mandatory = True
-                psoa.insert(ignore_permissions=True)
-            
-                frappe.msgprint("Project Sales Order Approval is created: <b><a href='#Form/Project Sales Order Approval/{0}'>{0}</a></b>".format(psoa.name))
+        # if status==1:
+        if not sales_approval:
+            psoa=frappe.get_doc({
+                "doctype":"Project Sales Order Approval",
+                "project_name": self.project_name,
+                "project_payment_schedule_control": self.project_payment_schedule_control,
+                "workflow_state": "Pending"
+            })
+        
+            psoa.flags.ignore_validate = True
+            psoa.flags.ignore_mandatory = True
+            psoa.insert(ignore_permissions=True)
+        
+            frappe.msgprint("Project Sales Order Approval is created: <b><a href='#Form/Project Sales Order Approval/{0}'>{0}</a></b>".format(psoa.name))
 
-                return psoa.name
-            else:
-                frappe.msgprint("Project Sales Order Approval is already exist for this project, please check: <b><a href='#Form/Project Sales Order Approval/{0}'>{0}</a></b>".format(sales_approval[0][0]))
+            return psoa.name
+        else:
+            frappe.msgprint("Project Sales Order Approval is already exist for this project, please check: <b><a href='#Form/Project Sales Order Approval/{0}'>{0}</a></b>".format(sales_approval[0][0]))
 
 
 
@@ -160,88 +160,83 @@ class ProjectBillingControl(Document):
 
                 resources_details_name = frappe.db.sql("select name from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,scope_item))
     
-                status = 1
-                for row in self.project_payment_schedule_control:
-                    if row.invoice==1:
-                        for resource in resources_details_name:
-                            item_row = frappe.get_doc("Items Details",resource[0])
-                            doc = frappe.get_doc("Project Items", item_row.items)
+                # status = 1
+                # for row in self.project_payment_schedule_control:
+                #     if row.invoice==1:
+                #         for resource in resources_details_name:
+                #             item_row = frappe.get_doc("Items Details",resource[0])
+                #             doc = frappe.get_doc("Project Items", item_row.items)
                             
-                            if doc.status != 'Active':
-                                frappe.msgprint("Project Item {0} under section {1} in row {2} doesnt link to Items,please check: <b><a href='#Form/Project Items/{0}'>{0}</a></b>".format(item_row.items,row.scope_item,row.idx))
-                                status = 0
+                #             if doc.status != 'Active':
+                #                 frappe.msgprint("Project Item {0} under section {1} in row {2} doesnt link to Items,please check: <b><a href='#Form/Project Items/{0}'>{0}</a></b>".format(item_row.items,row.scope_item,row.idx))
+                #                 status = 0
 
 
-                if status==1:
+                # if status==1:
 
-                    if customer:
-                        dnote=frappe.get_doc({
-                            "doctype":"Delivery Note",
-                            "customer": customer[0][0],
-                            "customer_name": customer[0][0],
-                            "project": project_name,
-                            "naming_series": 'DN-',
-                            "posting_date": due_date,
-                            # "items": [
-                            #       {
-                            #         "doctype": "Delivery Note Item",
-                            #         "item_code": item_name,
-                            #         "description": description,
-                            #         "qty": flt(flt(billing_percentage)/100),
-                            #         "rate": items_value
-                            #       }
-                            #     ],
-                            # "taxes": [
-                            #       {
-                            #         "doctype": "Sales Taxes and Charges",
-                            #         "charge_type": 'Actual',
-                            #         "description": description,
-                            #         "tax_amount": vat_value
-                            #       }
-                            #     ],
-                            "taxes_and_charges": "VAT"
+                if customer:
+                    dnote=frappe.get_doc({
+                        "doctype":"Delivery Note",
+                        "customer": customer[0][0],
+                        "customer_name": customer[0][0],
+                        "project": project_name,
+                        "naming_series": 'DN-',
+                        "posting_date": due_date,
+                        # "items": [
+                        #       {
+                        #         "doctype": "Delivery Note Item",
+                        #         "item_code": item_name,
+                        #         "description": description,
+                        #         "qty": flt(flt(billing_percentage)/100),
+                        #         "rate": items_value
+                        #       }
+                        #     ],
+                        # "taxes": [
+                        #       {
+                        #         "doctype": "Sales Taxes and Charges",
+                        #         "charge_type": 'Actual',
+                        #         "description": description,
+                        #         "tax_amount": vat_value
+                        #       }
+                        #     ],
+                        "taxes_and_charges": "VAT"
+                    })
+
+                    for resource in resources_details_name:
+                        
+                        doc = frappe.get_doc("Items Details",resource[0])
+                        # proj_item = frappe.get_doc("Project Items", doc.items)
+                        item = frappe.get_doc("Item", doc.items)
+
+                        description=item.description
+
+                        rate = doc.final_selling_price
+                        qty = 1
+                        if flt(doc.quantity)>0:
+                            rate = doc.final_selling_price/flt(doc.quantity)
+                            qty = doc.quantity
+
+                        dnote.append("items", {
+                            "item_code": doc.items,
+                            "description": description,
+                            "qty": flt(qty)*flt(flt(billing_percentage)/100),
+                            "rate": rate
                         })
 
-                        for resource in resources_details_name:
-                            
+                        dnote.append("taxes", {
+                            "charge_type": 'Actual',
+                            "description": description,
+                            "tax_amount": (doc.final_selling_price*0.05)*flt(flt(billing_percentage)/100)
+                        })
 
-                            doc = frappe.get_doc("Items Details",resource[0])
-                            proj_item = frappe.get_doc("Project Items", doc.items)
-                            item = frappe.get_doc("Item", proj_item.item)
+                    # dnote.flags.ignore_validate = True
+                    dnote.flags.ignore_mandatory = True
+                    dnote.insert(ignore_permissions=True)
+                    return dnote.name
 
-                            description=item.description
-                            if proj_item:
-                                for i in proj_item.project_details:
-                                    if i.project == self.project_name:
-                                        description = i.project_details
-
-                            rate = doc.final_selling_price
-                            qty = 1
-                            if flt(doc.quantity)>0:
-                                rate = doc.final_selling_price/flt(doc.quantity)
-                                qty = doc.quantity
-
-                            dnote.append("items", {
-                                "item_code": proj_item.item,
-                                "description": description,
-                                "qty": qty*flt(flt(billing_percentage)/100),
-                                "rate": rate
-                            })
-
-                            dnote.append("taxes", {
-                                "charge_type": 'Actual',
-                                "description": description,
-                                "tax_amount": (doc.final_selling_price*0.05)*flt(flt(billing_percentage)/100)
-                            })
-
-                        # dnote.flags.ignore_validate = True
-                        dnote.flags.ignore_mandatory = True
-                        dnote.insert(ignore_permissions=True)
-                        return dnote.name
-
-                        frappe.msgprint("Delivery Note is created: <b><a href='#Form/Delivery Note/{0}'>{0}</a></b>".format(dnote.name))
-                    else:
-                        frappe.throw('You sould select customer for this project before issue an invoice')
+                    frappe.msgprint("Delivery Note is created: <b><a href='#Form/Delivery Note/{0}'>{0}</a></b>".format(dnote.name))
+                else:
+                    frappe.throw('You sould select customer for this project before issue an invoice')
             else:
                 frappe.throw("You should check one invoice")
 

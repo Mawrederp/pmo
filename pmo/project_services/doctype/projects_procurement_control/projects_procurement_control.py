@@ -5,6 +5,8 @@
 from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
+from frappe.utils import cint, cstr, date_diff, flt, formatdate, getdate, get_link_to_form, \
+    comma_or, get_fullname
 
 class ProjectsProcurementControl(Document):
     def before_save(self):
@@ -22,85 +24,78 @@ class ProjectsProcurementControl(Document):
             if row.pr==1:
                 arr.append(row.name)
 
-        status = 1
-        for row in self.project_costing_schedule_control:
-            doc = frappe.get_doc("Project Items", row.scope_item)
-            if doc.status != 'Active':
-                frappe.msgprint("Project Item {0} in row {1} doesnt link to Items,please check: <b><a href='#Form/Project Items/{0}'>{0}</a></b>".format(row.scope_item,row.idx))
-                status = 0
+        # status = 1
+        # for row in self.project_costing_schedule_control:
+        #     doc = frappe.get_doc("Project Items", row.scope_item)
+        #     if doc.status != 'Active':
+        #         frappe.msgprint("Project Item {0} in row {1} doesnt link to Items,please check: <b><a href='#Form/Project Items/{0}'>{0}</a></b>".format(row.scope_item,row.idx))
+        #         status = 0
 
         material_request_name = ''
-        if status==1:
+        # if status==1:
            
 
-            if cost_status==1:
-                frappe.throw("You made Material Request for this item before!")
-            else:
-                if arr and len(arr)==1:
+        if cost_status==1:
+            frappe.throw("You made Material Request for this item before!")
+        else:
+            if arr and len(arr)==1:
 
-                    item_name = frappe.get_value("Item", filters = {"item_name": scope_item}, fieldname = "name")    
+                item_name = frappe.get_value("Item", filters = {"item_name": scope_item}, fieldname = "name")    
 
-                    resources_details_name = frappe.db.sql("select name from `tabResources Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,scope_item))
+                resources_details_name = frappe.db.sql("select name from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,scope_item))
 
-                    project_item = frappe.get_doc("Project Items", scope_item)
+                mreq=frappe.get_doc({
+                    "doctype":"Material Request",
+                    "naming_series": 'MREQ-',
+                    "workflow_state": 'Created By Project Manager',
+                    "material_request_type": 'Purchase',
+                    # "schedule_date": last_date,
+                    "purchase_workflow": 'Project',
+                    "project": self.project_name,
+                    "material_requester": "EMP/1005"
+                    
+                    # "items": [
+                    #     {
+                    #       "doctype": "Material Request Item",
+                    #       "item_code": project_item.item,
+                    #       "description": description,
+                    #       "qty": 1
+                    #     }
+                    #   ]
+                })
 
-                    description=description_comments
-                    if project_item:
-                        for i in project_item.project_details:
-                            if i.project == self.project_name:
-                                description = i.project_details
 
-                    mreq=frappe.get_doc({
-                        "doctype":"Material Request",
-                        "naming_series": 'MREQ-',
-                        "workflow_state": 'Created By Project Manager',
-                        "material_request_type": 'Purchase',
-                        "schedule_date": last_date,
-                        "purchase_workflow": 'Project',
-                        "project": self.project_name,
-                        "material_requester": "EMP/1005",
-                        # "due_date": due_date,
-                        # "debit_to": 'Debtors - O',
+                for resource in resources_details_name:
                         
-                        "items": [
-                            {
-                              "doctype": "Material Request Item",
-                              "item_code": project_item.item,
-                              "description": description,
-                              "qty": 1
-                              # "schedule_date": last_date
-                            }
-                          ]
+                    doc = frappe.get_doc("Items Details",resource[0])
+                    # proj_item = frappe.get_doc("Project Items", doc.items)
+                    item = frappe.get_doc("Item", doc.items)
+
+                    description=item.description
+
+                    qty = 1
+                    if flt(doc.quantity)>0:
+                        qty = doc.quantity
+
+
+                    mreq.append("items", {
+                        "item_code": doc.items,
+                        "description": description,
+                        "qty": qty
                     })
 
-                    # for resource in resources_details_name:
-                    #     doc = frappe.get_doc("Resources Details",resource[0])
-
-                    #     project_item = frappe.get_doc("Project Items",doc.resources)
-
-                    #     description=description_comments
-                    #     if project_item:
-                    #         for i in project_item.project_details:
-                    #             if i.project == self.project_name:
-                    #                 description = i.project_details
-
-                    #     mreq.append("items", {
-                    #         "item_code": project_item.item,
-                    #         "description": description,
-                    #         "qty": 1,
-                    #         "schedule_date": last_date
-                    #     })
 
 
-                    # mreq.flags.ignore_validate = True
-                    mreq.flags.ignore_mandatory = True
-                    mreq.insert(ignore_permissions=True)
-                    frappe.msgprint("Material Request is created")
-                    
-                else:
-                    frappe.throw("You should check one PR to make Material Request, or this item may have already Material Request")
 
-            material_request_name = mreq.name
+                # mreq.flags.ignore_validate = True
+                mreq.flags.ignore_mandatory = True
+                mreq.insert(ignore_permissions=True)
+                frappe.msgprint("Material Request is created")
+                
+            else:
+                frappe.throw("You should check one PR to make Material Request, or this item may have already Material Request")
+
+        material_request_name = mreq.name
         return material_request_name
 
 

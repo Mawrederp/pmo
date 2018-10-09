@@ -62,14 +62,9 @@ class ProjectSalesOrderApproval(Document):
                     for resource in resources_details_name:
 
                         doc = frappe.get_doc("Items Details",resource[0])
-                        proj_item = frappe.get_doc("Project Items", doc.items)
-                        item = frappe.get_doc("Item", proj_item.item)
-
+                        # proj_item = frappe.get_doc("Project Items", doc.items)
+                        item = frappe.get_doc("Item", doc.items)
                         description = item.description
-                        if proj_item:
-                            for i in proj_item.project_details:
-                                if i.project == self.project_name:
-                                    description = i.project_details
 
                         rate = doc.final_selling_price
                         qty = 1
@@ -79,7 +74,7 @@ class ProjectSalesOrderApproval(Document):
 
 
                         sinv.append("items", {
-                            "item_code": proj_item.item,
+                            "item_code": doc.items,
                             "description": description,
                             "qty": flt(qty)*flt(flt(row.billing_percentage)/100),
                             "rate": rate
