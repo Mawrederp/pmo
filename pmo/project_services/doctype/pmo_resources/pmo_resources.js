@@ -46,7 +46,14 @@ frappe.ui.form.on('PMO Resources', {
 	        });
 
 
-
+		frm.set_query("employee", function() {
+        return {
+                query: "pmo.project_services.doctype.pmo_resources.pmo_resources.get_employee",
+                filters: {
+                    employee: frm.doc.employee
+                }
+            };
+        });
 		
 	},
 	// onload: function(frm) {
