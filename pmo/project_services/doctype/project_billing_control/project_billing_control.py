@@ -181,6 +181,7 @@ class ProjectBillingControl(Document):
                         "customer_name": customer[0][0],
                         "project": project_name,
                         "naming_series": 'DN-',
+                        "workflow_state": 'Pending',
                         "posting_date": due_date,
                         # "items": [
                         #       {
