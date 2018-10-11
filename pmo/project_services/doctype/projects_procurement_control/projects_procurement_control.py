@@ -7,6 +7,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import cint, cstr, date_diff, flt, formatdate, getdate, get_link_to_form, \
     comma_or, get_fullname
+from frappe import utils
 
 class ProjectsProcurementControl(Document):
     def before_save(self):
@@ -84,12 +85,31 @@ class ProjectsProcurementControl(Document):
                         "qty": qty
                     })
 
+                    mreq.main_project_procurement = doc.section_name
+                   
+                    product_bundle = frappe.db.sql("""select t1.item_code, t1.qty, t1.uom, t1.description
+                        from `tabProduct Bundle Item` t1, `tabProduct Bundle` t2
+                        where t2.new_item_code=%s and t1.parent = t2.name order by t1.idx""", doc.items, as_dict=1)
+
+                    if product_bundle:
+                        for bundle in product_bundle:
+                            mreq.append("items", {
+                                "item_code": bundle.item_code,
+                                "item_name": bundle.item_name,
+                                "description": bundle.description,
+                                "qty": flt(bundle.qty)*flt(qty),
+                                "schedule_date": frappe.utils.get_last_day(utils.today()),
+                                "is_product_bundle_item": 1 ,
+                                "product_bundle": doc.items
+                            })
 
 
 
                 # mreq.flags.ignore_validate = True
                 mreq.flags.ignore_mandatory = True
                 mreq.insert(ignore_permissions=True)
+
+
                 frappe.msgprint("Material Request is created")
                 
             else:
