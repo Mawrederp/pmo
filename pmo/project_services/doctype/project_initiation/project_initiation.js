@@ -2186,6 +2186,30 @@ frappe.ui.form.on('Project Payment Schedule', {
             set_value_model(cdt, cdn, "remaining_billing_percent", (row.remaining_billing_value / row.items_value) * 100);
         }
     },
+    qty: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+
+        var total_qty = 0;
+        $.each(frm.doc.project_payment_schedule || [], function (i, d) {
+            total_qty += flt(d.qty);
+        });
+
+        if(row.qty){
+            frappe.call({
+                "method": "get_section_item_qty",
+                args: {
+                    'qty': row.qty,'section_name': row.scope_item,'total_qty': total_qty
+                },
+                doc: cur_frm.doc,
+                callback: function (r) {
+                    if (r.message && r.message==1) {
+                        frappe.model.set_value(cdt, cdn, "qty", ); 
+                    }
+                }
+            });
+        }
+
+    }
 
 
 })

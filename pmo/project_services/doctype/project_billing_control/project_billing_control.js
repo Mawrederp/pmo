@@ -183,6 +183,7 @@ frappe.ui.form.on('Project Billing Control', {
 		            d.from_date = row.from_date;
 		            d.items_value = row.items_value;
 		            d.billing_percentage = row.billing_percentage;
+		            d.qty = row.qty;
 		            d.number_of_invoices = row.number_of_invoices;
 		            d.vat = row.vat;
 		            d.vat_value = row.vat_value;
