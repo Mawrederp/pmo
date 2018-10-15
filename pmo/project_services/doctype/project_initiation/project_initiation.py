@@ -332,15 +332,15 @@ class ProjectInitiation(Document):
         frappe.msgprint("The Po/Contract estimated Cost exceeds the scope item cost value")
 
 
-    def get_section_item_qty(self,qty,section_name,total_qty):
-        result = 0
-        item_section_qty = frappe.db.sql("select quantity from `tabItems Details` where section_name='{0}' and parent='{1}'".format(section_name,self.project))
-        if item_section_qty:
-            total = int(item_section_qty[0][0])-int(total_qty)
-            if qty>total:
-                frappe.msgprint("Quantity must be less than {0}".format(total))
-                result = 1
-        return result
+    # def get_section_item_qty(self,qty,section_name,total_qty):
+    #     result = 0
+    #     item_section_qty = frappe.db.sql("select quantity from `tabItems Details` where section_name='{0}' and parent='{1}'".format(section_name,self.project))
+    #     if item_section_qty:
+    #         total = int(item_section_qty[0][0])-int(total_qty)
+    #         if qty>total:
+    #             frappe.msgprint("Quantity must be less than {0}".format(total))
+    #             result = 1
+    #     return result
 
 
     def create_customer_user(self):
