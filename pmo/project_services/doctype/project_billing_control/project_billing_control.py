@@ -176,13 +176,13 @@ class ProjectBillingControl(Document):
 
                 if customer:
 
-                    customer = frappe.get_doc("Customer", customer[0][0])
+                    customer_doc = frappe.get_doc("Customer", customer[0][0])
 
                     dnote=frappe.get_doc({
                         "doctype":"Delivery Note",
                         "customer": customer[0][0],
-                        "customer_name": customer.customer_name,
-                        "customer_name_in_arabic": customer.customer_name_in_arabic,
+                        "customer_name": customer_doc.customer_name,
+                        "customer_name_in_arabic": customer_doc.customer_name_in_arabic,
                         "project": project_name,
                         "project_items": scope_item,
                         "naming_series": 'DN-',
