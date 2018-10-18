@@ -175,11 +175,16 @@ class ProjectBillingControl(Document):
                 # if status==1:
 
                 if customer:
+
+                    customer = frappe.get_doc("Customer", customer[0][0])
+
                     dnote=frappe.get_doc({
                         "doctype":"Delivery Note",
                         "customer": customer[0][0],
-                        "customer_name": customer[0][0],
+                        "customer_name": customer.customer_name,
+                        "customer_name_in_arabic": customer.customer_name_in_arabic,
                         "project": project_name,
+                        "project_items": scope_item,
                         "naming_series": 'DN-',
                         "workflow_state": 'Pending',
                         "posting_date": due_date,
