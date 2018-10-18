@@ -11,6 +11,7 @@ import datetime
 from datetime import date
 from frappe.utils.password import update_password as _update_password
 from frappe.utils.password import get_decrypted_password
+import re
 
 class ProjectInitiation(Document):
     def validate(self):
@@ -293,6 +294,26 @@ class ProjectInitiation(Document):
             frappe.msgprint("It is not allowed to enter a billing percentage that is higher than {0}".format(remaining_percent))
 
 
+    # def validate_bundle_qty_number(self,total,qty):
+        
+    #     result = 0
+    #     remain_qty = total + int(qty)
+    #     print '***************************'
+    #     print total
+    #     print remain_qty
+    #     print '***************************'
+    #     if total<0 or qty>total or qty<0:
+    #         frappe.msgprint("Quantity must be less than {0}".format(remain_qty))
+    #         result = 1
+
+    #     return result
+
+    def validate_bundle_qty_number(self,total):
+        frappe.msgprint("Quantity must be less than {0}".format(total))
+    
+
+
+
     def existing_project_controlling(self):
         project_name = frappe.get_value("Project Implementation Monitoring and Controlling", filters = {"project_name": self.project_name}, fieldname = "name")
         if project_name:
@@ -330,17 +351,6 @@ class ProjectInitiation(Document):
 
     def validate_po_contract_extimated_cost(self):
         frappe.msgprint("The Po/Contract estimated Cost exceeds the scope item cost value")
-
-
-    # def get_section_item_qty(self,qty,section_name,total_qty):
-    #     result = 0
-    #     item_section_qty = frappe.db.sql("select quantity from `tabItems Details` where section_name='{0}' and parent='{1}'".format(section_name,self.project))
-    #     if item_section_qty:
-    #         total = int(item_section_qty[0][0])-int(total_qty)
-    #         if qty>total:
-    #             frappe.msgprint("Quantity must be less than {0}".format(total))
-    #             result = 1
-    #     return result
 
 
     def create_customer_user(self):
@@ -399,6 +409,22 @@ class ProjectInitiation(Document):
         else:
             frappe.msgprint("Please be sure that this user is already exist in the system!")
 
+
+    def get_payment_schedule_bundle_qty(self):
+        for row in self.project_payment_schedule:
+            resources_details_name = frappe.db.sql("select name from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,row.scope_item))
+
+
+            for resource in resources_details_name:
+                doc = frappe.get_doc("Items Details",resource[0])
+
+                self.append("project_payment_schedule_bundle_qty", {
+                    "scope_item": row.scope_item,
+                    "item": doc.items,
+                    "item_name": doc.item_name,
+                    "parent_qty": doc.quantity,
+                    "parent_name": row.name
+                })
 
 
 

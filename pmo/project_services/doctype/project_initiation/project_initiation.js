@@ -570,6 +570,18 @@ frappe.ui.form.on('Project Initiation', {
         refresh_parties_contribution_section(frm);
 
 
+    },
+    refresh_table: function (frm) {
+        cur_frm.doc.project_payment_schedule_bundle_qty = []
+
+        frappe.call({
+            "method": "get_payment_schedule_bundle_qty",
+            doc: cur_frm.doc,
+            callback: function (r) {
+                frm.refresh_field("project_payment_schedule_bundle_qty");
+            }
+        });
+
 
     }
 
@@ -1832,6 +1844,8 @@ frappe.ui.form.on('Project Initiation', {
 
 });
 
+
+
 cur_frm.cscript.custom_validate = function (frm) {
     var total_cost_price = 0;
     var final_selling_price = 0;
@@ -1942,6 +1956,71 @@ frappe.ui.form.on("Project Payment Schedule", "total_billing_value", function (f
     });
     set_value(frm, "total_billing_vat", billing_total_vat);
 });
+
+
+
+
+
+frappe.ui.form.on('Project Payment Schedule Bundle QTY', {
+    qty: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+
+        var total = 0;
+        $.each(frm.doc.project_payment_schedule_bundle_qty || [], function (i, d) {
+            if(d.scope_item==row.scope_item && d.item==row.item){
+                total += flt(d.qty);
+            }
+        });
+        total_qty = row.parent_qty-total
+        remaining_qty = row.qty+total_qty
+
+        console.log(row.qty)
+        console.log(total_qty)
+
+        if(total_qty<0 || row.qty>row.parent_qty || row.qty<0){
+            frappe.call({
+                "method": "validate_bundle_qty_number",
+                args: {
+                    'total': remaining_qty,
+                },
+                doc: cur_frm.doc,
+            });
+            set_value_model(cdt, cdn, "qty", );
+        }
+    }
+
+});
+
+
+// qty: function (frm, cdt, cdn) {
+//         var row = locals[cdt][cdn];
+
+//         var total = 0;
+//         $.each(frm.doc.project_payment_schedule_bundle_qty || [], function (i, d) {
+//             if(d.scope_item==row.scope_item && d.item==row.item){
+//                 total += flt(d.qty);
+//             }
+//         });
+
+//         total_qty = row.parent_qty-total
+
+//         frappe.call({
+//             "method": "validate_bundle_qty_number",
+//             args: {
+//                 'total': total_qty,'qty':row.qty
+//             },
+//             doc: cur_frm.doc,
+//             callback: function (r) {
+//                 if (r.message==1) {
+//                     set_value_model(cdt, cdn, "qty", );
+//             	}
+//             }
+//         });
+        
+//     }
+
+
+
 
 
 frappe.ui.form.on('Project Financial Details', {
@@ -2185,31 +2264,7 @@ frappe.ui.form.on('Project Payment Schedule', {
         if (row.items_value && row.items_value != 0) {
             set_value_model(cdt, cdn, "remaining_billing_percent", (row.remaining_billing_value / row.items_value) * 100);
         }
-    },
-    // qty: function (frm, cdt, cdn) {
-    //     var row = locals[cdt][cdn];
-
-    //     var total_qty = 0;
-    //     $.each(frm.doc.project_payment_schedule || [], function (i, d) {
-    //         total_qty += flt(d.qty);
-    //     });
-
-    //     if(row.qty){
-    //         frappe.call({
-    //             "method": "get_section_item_qty",
-    //             args: {
-    //                 'qty': row.qty,'section_name': row.scope_item,'total_qty': total_qty
-    //             },
-    //             doc: cur_frm.doc,
-    //             callback: function (r) {
-    //                 if (r.message && r.message==1) {
-    //                     frappe.model.set_value(cdt, cdn, "qty", ); 
-    //                 }
-    //             }
-    //         });
-    //     }
-
-    // }
+    }
 
 
 })
