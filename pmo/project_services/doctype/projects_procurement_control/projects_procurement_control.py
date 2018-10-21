@@ -93,11 +93,14 @@ class ProjectsProcurementControl(Document):
 
                     if product_bundle:
                         for bundle in product_bundle:
+                            item_bundle = frappe.get_doc("Item", bundle.item_code)
+
                             mreq.append("items", {
                                 "item_code": bundle.item_code,
                                 "item_name": bundle.item_name,
                                 "description": bundle.description,
                                 "qty": flt(bundle.qty)*flt(qty),
+                                "warehouse": item_bundle.default_warehouse,
                                 "schedule_date": frappe.utils.get_last_day(utils.today()),
                                 "is_product_bundle_item": 1 ,
                                 "product_bundle": doc.items
