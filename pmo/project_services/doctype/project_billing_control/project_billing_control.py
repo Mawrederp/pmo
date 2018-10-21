@@ -8,6 +8,8 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import cint, cstr, date_diff, flt, formatdate, getdate, get_link_to_form, \
     comma_or, get_fullname
+from frappe import utils
+
 
 class ProjectBillingControl(Document):
     def before_save(self):
@@ -242,6 +244,28 @@ class ProjectBillingControl(Document):
                             "description": description,
                             "tax_amount": (doc.final_selling_price*0.05)*flt(flt(billing_percentage)/100)
                         })
+
+
+                        product_bundle = frappe.db.sql("""select t1.item_code, t1.qty, t1.uom, t1.description
+                            from `tabProduct Bundle Item` t1, `tabProduct Bundle` t2
+                            where t2.new_item_code=%s and t1.parent = t2.name order by t1.idx""", doc.items, as_dict=1)
+
+                        for bundle in product_bundle:
+                            item_bundle = frappe.get_doc("Item", bundle.item_code)
+
+                            dnote.append("items", {
+                                "item_code": bundle.item_code,
+                                "item_name": bundle.item_name,
+                                "description": bundle.description,
+                                "uom": bundle.uom,
+                                "qty": flt(bundle.qty)*flt(required_qty),
+                                "project": project_name,
+                                "warehouse": item_bundle.default_warehouse,
+                                "schedule_date": frappe.utils.get_last_day(utils.today()),
+                                "is_product_bundle_item": 1 ,
+                                "product_bundle": doc.items
+                            })
+
 
                     # dnote.flags.ignore_validate = True
                     dnote.flags.ignore_mandatory = True
