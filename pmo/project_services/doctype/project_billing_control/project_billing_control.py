@@ -221,21 +221,21 @@ class ProjectBillingControl(Document):
                         rate = doc.final_selling_price
                         # qty = 1
 
-                        required_qty = frappe.db.sql("select qty from `tabProject Payment Schedule Bundle QTY` where parenttype='Project Billing Control' and parent='{0}' and parent_name='{1}' ".format(self.name,schedule_bundle_qty_name))[0][0]
+                        # required_qty = frappe.db.sql("select qty from `tabProject Payment Schedule Bundle QTY` where parenttype='Project Billing Control' and parent='{0}' and parent_name='{1}' ".format(self.name,schedule_bundle_qty_name))[0][0]
 
                         # if flt(doc.quantity)>0:
                         #     rate = doc.final_selling_price/flt(doc.quantity)
                         #     qty = doc.quantity
-                        print '*************'
-                        print required_qty
-                        print '*************'
+
+
                         rate = doc.final_selling_price/flt(doc.quantity)
 
                         dnote.append("items", {
                             "item_code": doc.items,
                             "description": description,
                             # "qty": flt(qty)*flt(flt(billing_percentage)/100),
-                            "qty": flt(required_qty),
+                            # "qty": flt(required_qty),
+                            "qty": 0,
                             "rate": rate
                         })
 

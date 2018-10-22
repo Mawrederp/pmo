@@ -294,24 +294,10 @@ class ProjectInitiation(Document):
             frappe.msgprint("It is not allowed to enter a billing percentage that is higher than {0}".format(remaining_percent))
 
 
-    # def validate_bundle_qty_number(self,total,qty):
-        
-    #     result = 0
-    #     remain_qty = total + int(qty)
-    #     print '***************************'
-    #     print total
-    #     print remain_qty
-    #     print '***************************'
-    #     if total<0 or qty>total or qty<0:
-    #         frappe.msgprint("Quantity must be less than {0}".format(remain_qty))
-    #         result = 1
 
-    #     return result
-
-    def validate_bundle_qty_number(self,total):
-        frappe.msgprint("Quantity must be less than {0}".format(total))
+    # def validate_bundle_qty_number(self,total):
+    #     frappe.msgprint("Quantity must be less than {0}".format(total))
     
-
 
 
     def existing_project_controlling(self):
