@@ -39,9 +39,13 @@ frappe.ui.form.on('Projects Procurement Control', {
 						description_comments=''
 					}
 
-					var last_date = cur_frm.doc.project_costing_schedule_control[row].last_date
-					if(last_date){
-						last_date=last_date
+					var last_date=''
+					var delivery_date = cur_frm.doc.project_costing_schedule_control[row].delivery_date
+					var delivery_period_to_date = cur_frm.doc.project_costing_schedule_control[row].delivery_period_to_date
+					if(delivery_date){
+						last_date=delivery_date
+					}else if(delivery_period_to_date){
+						last_date=delivery_period_to_date
 					}else{
 						last_date=''
 					}

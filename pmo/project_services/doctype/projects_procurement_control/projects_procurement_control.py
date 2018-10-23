@@ -12,7 +12,7 @@ from frappe import utils
 class ProjectsProcurementControl(Document):
     def before_save(self):
         for row in self.project_costing_schedule_control:
-            if not row.last_date:
+            if not row.delivery_date and not row.delivery_period_to_date:
                 frappe.throw("Mandatory field: Last Date in table row {0}".format(row.idx))
 
             if not row.scope_item:
@@ -50,7 +50,6 @@ class ProjectsProcurementControl(Document):
                     "naming_series": 'MREQ-',
                     "workflow_state": 'Created By Project Manager',
                     "material_request_type": 'Purchase',
-                    # "schedule_date": last_date,
                     "purchase_workflow": 'Project',
                     "project": self.project_name,
                     "material_requester": "EMP/1005"
@@ -81,7 +80,9 @@ class ProjectsProcurementControl(Document):
 
                     mreq.append("items", {
                         "item_code": doc.items,
+                        "warehouse": item.default_warehouse,
                         "description": description,
+                        "schedule_date": last_date,
                         "qty": qty
                     })
 
