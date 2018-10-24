@@ -62,11 +62,19 @@ frappe.ui.form.on('Projects Procurement Control', {
 					}
 
 
+					var po_contract_extimated_cost = cur_frm.doc.project_costing_schedule_control[row].po_contract_extimated_cost
+					if(po_contract_extimated_cost){
+						po_contract_extimated_cost=po_contract_extimated_cost
+					}else{
+						po_contract_extimated_cost=0
+					}
+
+
 					frappe.call({
 			            "method": "make_material_request",
 			            doc: cur_frm.doc,
 			            args: { "scope_item": scope_item,"description_comments":description_comments,
-			            		"last_date":last_date,"material_request":material_request,"cost_status":cost_status},
+			            		"last_date":last_date,"material_request":material_request,"cost_status":cost_status,"po_contract_extimated_cost":po_contract_extimated_cost},
 			            callback: function (r) {
 			            	material_request_name = r.message
      						$.each(frm.doc.project_costing_schedule_control || [], function(i, v) {

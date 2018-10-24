@@ -19,7 +19,7 @@ class ProjectsProcurementControl(Document):
                 frappe.throw("Mandatory field: Scope Item in table row {0}".format(row.idx))
     
 
-    def make_material_request(self,scope_item,description_comments,last_date,material_request,cost_status):
+    def make_material_request(self,scope_item,description_comments,last_date,material_request,cost_status,po_contract_extimated_cost):
         arr=[]
         for row in self.project_costing_schedule_control:
             if row.pr==1:
@@ -53,6 +53,7 @@ class ProjectsProcurementControl(Document):
                     # "schedule_date": last_date,
                     "purchase_workflow": 'Project',
                     "project": self.project_name,
+                    "suggested_grand_total": po_contract_extimated_cost,
                     "material_requester": "EMP/1005"
                     
                     # "items": [
