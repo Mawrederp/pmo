@@ -84,6 +84,8 @@ class ProjectsProcurementControl(Document):
                         "warehouse": item.default_warehouse,
                         "description": description,
                         "schedule_date": last_date,
+                        "suggested_price_per_unit": doc.total_cost_price,
+                        "suggested_total_price": flt(doc.total_cost_price)*flt(qty),
                         "qty": qty
                     })
 
