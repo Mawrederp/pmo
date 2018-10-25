@@ -52,7 +52,7 @@ class ProjectsProcurementControl(Document):
                     "material_request_type": 'Purchase',
                     "purchase_workflow": 'Project',
                     "project": self.project_name,
-                    "suggested_grand_total": po_contract_extimated_cost,
+                    # "suggested_grand_total": po_contract_extimated_cost,
                     "material_requester": "EMP/1005"
                     
                     # "items": [
@@ -84,8 +84,8 @@ class ProjectsProcurementControl(Document):
                         "warehouse": item.default_warehouse,
                         "description": description,
                         "schedule_date": last_date,
-                        "suggested_price_per_unit": doc.total_cost_price,
-                        "suggested_total_price": flt(doc.total_cost_price)*flt(qty),
+                        "suggested_price_per_unit": doc.cost_price,
+                        "suggested_total_price": flt(doc.cost_price)*flt(qty),
                         "qty": qty
                     })
 
