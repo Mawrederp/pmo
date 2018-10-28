@@ -26,6 +26,9 @@ frappe.ui.form.on('Project Billing Control', {
 		var df = frappe.meta.get_docfield("Project Payment Schedule Bundle QTY","qty", cur_frm.doc.name);
     	df.read_only = 1;
 
+    	var df = frappe.meta.get_docfield("Project Payment Schedule","is_advance", cur_frm.doc.name);
+    	df.read_only = 1;
+
 
 		frm.add_custom_button(__("Make Sales Order Approval"), function () {
 			
@@ -139,6 +142,13 @@ frappe.ui.form.on('Project Billing Control', {
 						schedule_bundle_qty_name=1
 					}
 
+					var is_advance = cur_frm.doc.project_payment_schedule_control[row].is_advance
+					if(is_advance){
+						is_advance=is_advance
+					}else{
+						is_advance=0
+					}
+
 
 					frappe.call({
 			            "method": "make_delivery_note",
@@ -146,7 +156,9 @@ frappe.ui.form.on('Project Billing Control', {
 			            args: { "scope_item": scope_item,"project_name": project_name,
 			            		"items_value": items_value,"billing_percentage": billing_percentage,
 			            		"due_date": due_date,"description_when":description_when,"vat_value":vat_value,
-			            		"billing_state":billing_status,"delivery_note":delivery_note,"schedule_bundle_qty_name":schedule_bundle_qty_name},
+			            		"billing_state":billing_status,"delivery_note":delivery_note,"schedule_bundle_qty_name":schedule_bundle_qty_name,
+			            		"is_advance" : is_advance
+			            	},
 			            callback: function (r) {
 		                    delivery_note_name = r.message
 		                    $.each(frm.doc.project_payment_schedule_control || [], function(i, v) {
@@ -180,6 +192,170 @@ frappe.ui.form.on('Project Billing Control', {
     	});
     	
 
+	
+
+
+
+
+
+		frm.add_custom_button(__("Make Sales Invoice"), function () {
+			// items = []
+			for(var row= 0;row<cur_frm.doc.project_payment_schedule_control.length;row++){
+				if(cur_frm.doc.project_payment_schedule_control[row].invoice == 1){
+					var scope_item = cur_frm.doc.project_payment_schedule_control[row].scope_item
+					if(scope_item){
+						scope_item=scope_item
+					}else{
+						scope_item=''
+					}
+
+					var project_name = cur_frm.doc.project_name
+					if(project_name){
+						project_name=project_name
+					}else{
+						project_name=''
+					}
+
+					var items_value = cur_frm.doc.project_payment_schedule_control[row].items_value
+					if(items_value){
+						items_value=items_value
+					}else{
+						items_value=0
+					}
+
+					var billing_percentage = cur_frm.doc.project_payment_schedule_control[row].billing_percentage
+					if(billing_percentage){
+						billing_percentage=billing_percentage
+					}else{
+						billing_percentage=0
+					}
+
+
+					if(cur_frm.doc.project_payment_schedule_control[row].date_period=='Date'){
+						var due_date = cur_frm.doc.project_payment_schedule_control[row].when
+						if(due_date){
+							due_date=due_date
+						}else{
+							due_date=''
+						}
+					}else if(cur_frm.doc.project_payment_schedule_control[row].date_period=='Period'){
+						var due_date = cur_frm.doc.project_payment_schedule_control[row].to_date
+						if(due_date){
+							due_date=due_date
+						}else{
+							due_date=''
+						}
+					}
+
+					var description_when = cur_frm.doc.project_payment_schedule_control[row].description_when
+					if(description_when){
+						description_when=description_when
+					}else{
+						description_when=''
+					}
+
+					var vat_value = cur_frm.doc.project_payment_schedule_control[row].vat_value
+					if(vat_value){
+						vat_value=vat_value
+					}else{
+						vat_value=0
+					}
+
+					var billing_status = cur_frm.doc.project_payment_schedule_control[row].billing_status
+					if(billing_status){
+						billing_status=billing_status
+					}else{
+						billing_status=0
+					}
+
+					var delivery_note = cur_frm.doc.project_payment_schedule_control[row].delivery_note
+					if(delivery_note){
+						delivery_note=delivery_note
+					}else{
+						delivery_note=''
+					}
+
+					var total_billing_value = cur_frm.doc.project_payment_schedule_control[row].total_billing_value
+					if(total_billing_value){
+						total_billing_value=total_billing_value
+					}else{
+						total_billing_value=0
+					}
+
+					var remaining_billing_value = cur_frm.doc.project_payment_schedule_control[row].remaining_billing_value
+					if(remaining_billing_value){
+						remaining_billing_value=remaining_billing_value
+					}else{
+						remaining_billing_value=0
+					}
+
+					var schedule_bundle_qty_name = cur_frm.doc.project_payment_schedule_control[row].old_name
+					if(schedule_bundle_qty_name){
+						schedule_bundle_qty_name=schedule_bundle_qty_name
+					}else{
+						schedule_bundle_qty_name=1
+					}
+
+					var is_advance = cur_frm.doc.project_payment_schedule_control[row].is_advance
+					if(is_advance){
+						is_advance=is_advance
+					}else{
+						is_advance=0
+					}
+
+
+					var sales_invoice = cur_frm.doc.project_payment_schedule_control[row].sales_invoice
+					if(sales_invoice){
+						sales_invoice=sales_invoice
+					}else{
+						sales_invoice=''
+					}
+
+
+					frappe.call({
+			            "method": "make_sales_invoice",
+			            doc: cur_frm.doc,
+			            args: { "scope_item": scope_item,"project_name": project_name,
+			            		"items_value": items_value,"billing_percentage": billing_percentage,
+			            		"due_date": due_date,"description_when":description_when,"vat_value":vat_value,
+			            		"billing_state":billing_status,"delivery_note":delivery_note,"schedule_bundle_qty_name":schedule_bundle_qty_name,
+			            		"is_advance":is_advance,"sales_invoice":sales_invoice
+			            	},
+			            callback: function (r) {
+		                    sales_invoice_name = r.message
+		                    $.each(frm.doc.project_payment_schedule_control || [], function(i, v) {
+		                    	if(v.invoice && sales_invoice_name){
+
+		                    		frappe.model.set_value(v.doctype, v.name, "sales_invoice", sales_invoice_name)
+	     							frappe.model.set_value(v.doctype, v.name, "billing_status", 1)
+	     							cur_frm.save()
+	     							
+				                    frappe.call({
+							            "method": "updat_init_payment_table_sales_invoice",
+							            doc: cur_frm.doc,
+							            args: {"sales_invoice":sales_invoice_name,"scope_item": scope_item,
+							        		   "billing_percentage": billing_percentage,"total_billing_value": total_billing_value,
+							        		   "remaining_billing_value": remaining_billing_value},
+							            callback: function (r) {
+							            	if(r.message){
+
+											}
+						                }
+							        });
+							    }
+
+		               	     })
+			            }
+
+			        });
+
+				}
+			}
+    	});
+    	
+
+
+
 
 
 	},
@@ -209,7 +385,9 @@ frappe.ui.form.on('Project Billing Control', {
 		            d.when = row.when;
 		            d.description_when = row.description_when;
 		            d.billing_status = row.billing_status;
+		            d.is_advance = row.is_advance;
 		            d.delivery_note = row.delivery_note;
+		            d.sales_invoice = row.sales_invoice;
 		            d.old_name = row.name;
 		            frm.refresh_field("project_payment_schedule_control");
 		        });
