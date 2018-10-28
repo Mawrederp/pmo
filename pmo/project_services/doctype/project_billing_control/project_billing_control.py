@@ -332,6 +332,7 @@ class ProjectBillingControl(Document):
                             "workflow_state": 'Pending',
                             "posting_date": due_date,
                             "delivery_date": due_date,
+                            "is_advance": is_advance,
                             # "items": [
                             #       {
                             #         "doctype": "Delivery Note Item",

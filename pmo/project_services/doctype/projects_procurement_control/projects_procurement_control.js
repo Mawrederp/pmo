@@ -163,6 +163,8 @@ frappe.ui.form.on('Projects Procurement Control', {
 			            d.delivery_period_to_date = row.delivery_period_to_date;
 			            d.material_request = row.material_request;
 			            d.cost_status = row.cost_status;
+			            d.pr_status = row.pr_status;
+			            d.specified_pr_item = row.specified_pr_item;
 			            frm.refresh_field("project_costing_schedule_control");
 			        }
 		        });
