@@ -2326,10 +2326,9 @@ frappe.ui.form.on('Project Costing Schedule', {
         var row = locals[cdt][cdn];
         
         if (row.pr_status == 'Specified') {
-
-            frm.fields_dict["specified_pr_item"].grid.set_column_disp("specified_pr_item", true);
+            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("specified_pr_item", true);
         } else {
-            frm.fields_dict["specified_pr_item"].grid.set_column_disp("specified_pr_item", false);
+            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("specified_pr_item", false);
             
         }
 
@@ -2364,6 +2363,7 @@ frappe.ui.form.on('Project Costing Schedule', {
 
     },
     scope_item: function (frm, cdt, cdn) {
+    	var row = locals[cdt][cdn];
     	if (row.scope_item) {
             frm.fields_dict["project_costing_schedule"].grid.set_column_disp("pr_status", true);
         } else {
@@ -2371,7 +2371,6 @@ frappe.ui.form.on('Project Costing Schedule', {
         }
 
 
-        var row = locals[cdt][cdn];
         if (!row || row === undefined) {
             return
         }
