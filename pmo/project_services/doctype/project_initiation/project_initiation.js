@@ -2309,28 +2309,14 @@ frappe.ui.form.on('Project Costing Schedule', {
         });
 
 
-        if (row.type_of_cost == 'External Expenses') {
-            // var df = frappe.meta.get_docfield("Project Costing Schedule", 'vendor' , cur_frm.doc.name);
-            // df.hidden = 0; 
-            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("vendor", true);
-        } else {
-            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("vendor", false);
-            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("pr_status", false);
-            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("specified_pr_item", false);
+        // if (row.type_of_cost == 'External Expenses') {
+        //     // var df = frappe.meta.get_docfield("Project Costing Schedule", 'vendor' , cur_frm.doc.name);
+        //     // df.hidden = 0; 
+        //     frm.fields_dict["project_costing_schedule"].grid.set_column_disp("vendor", true);
+        // } else {
+        //     frm.fields_dict["project_costing_schedule"].grid.set_column_disp("vendor", false);
 
-        }
-
-
-    },
-    pr_status: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
-        
-        if (row.pr_status == 'Specified') {
-            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("specified_pr_item", true);
-        } else {
-            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("specified_pr_item", false);
-            
-        }
+        // }
 
 
     },
@@ -2364,13 +2350,7 @@ frappe.ui.form.on('Project Costing Schedule', {
     },
     scope_item: function (frm, cdt, cdn) {
     	var row = locals[cdt][cdn];
-    	if (row.scope_item) {
-            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("pr_status", true);
-        } else {
-            frm.fields_dict["project_costing_schedule"].grid.set_column_disp("pr_status", false);
-        }
-
-
+    
         if (!row || row === undefined) {
             return
         }

@@ -40,6 +40,12 @@ class ProjectsProcurementControl(Document):
             frappe.throw("You made Material Request for this item before!")
         else:
             if arr and len(arr)==1:
+                unspecified_item=[]
+
+                for i in self.specified_item:
+                    if i.select==0:
+                        unspecified_item.append(i.item)
+
 
                 item_name = frappe.get_value("Item", filters = {"item_name": scope_item}, fieldname = "name")    
 
@@ -79,36 +85,37 @@ class ProjectsProcurementControl(Document):
                         qty = doc.quantity
 
 
-                    mreq.append("items", {
-                        "item_code": doc.items,
-                        "warehouse": item.default_warehouse,
-                        "description": description,
-                        "schedule_date": last_date,
-                        "suggested_price_per_unit": doc.cost_price,
-                        "suggested_total_price": flt(doc.cost_price)*flt(qty),
-                        "qty": qty
-                    })
+                    if doc.items not in unspecified_item:
+                        mreq.append("items", {
+                            "item_code": doc.items,
+                            "warehouse": item.default_warehouse,
+                            "description": description,
+                            "schedule_date": last_date,
+                            "suggested_price_per_unit": doc.cost_price,
+                            "suggested_total_price": flt(doc.cost_price)*flt(qty),
+                            "qty": qty
+                        })
 
-                    mreq.main_project_procurement = doc.section_name
-                   
-                    product_bundle = frappe.db.sql("""select t1.item_code, t1.qty, t1.uom, t1.description
-                        from `tabProduct Bundle Item` t1, `tabProduct Bundle` t2
-                        where t2.new_item_code=%s and t1.parent = t2.name order by t1.idx""", doc.items, as_dict=1)
+                        mreq.main_project_procurement = doc.section_name
+                       
+                        product_bundle = frappe.db.sql("""select t1.item_code, t1.qty, t1.uom, t1.description
+                            from `tabProduct Bundle Item` t1, `tabProduct Bundle` t2
+                            where t2.new_item_code=%s and t1.parent = t2.name order by t1.idx""", doc.items, as_dict=1)
 
-                    if product_bundle:
-                        for bundle in product_bundle:
-                            item_bundle = frappe.get_doc("Item", bundle.item_code)
+                        if product_bundle:
+                            for bundle in product_bundle:
+                                item_bundle = frappe.get_doc("Item", bundle.item_code)
 
-                            mreq.append("items", {
-                                "item_code": bundle.item_code,
-                                "item_name": bundle.item_name,
-                                "description": bundle.description,
-                                "qty": flt(bundle.qty)*flt(qty),
-                                "warehouse": item_bundle.default_warehouse,
-                                "schedule_date": frappe.utils.get_last_day(utils.today()),
-                                "is_product_bundle_item": 1 ,
-                                "product_bundle": doc.items
-                            })
+                                mreq.append("items", {
+                                    "item_code": bundle.item_code,
+                                    "item_name": bundle.item_name,
+                                    "description": bundle.description,
+                                    "qty": flt(bundle.qty)*flt(qty),
+                                    "warehouse": item_bundle.default_warehouse,
+                                    "schedule_date": frappe.utils.get_last_day(utils.today()),
+                                    "is_product_bundle_item": 1 ,
+                                    "product_bundle": doc.items
+                                })
 
 
 
@@ -147,5 +154,21 @@ class ProjectsProcurementControl(Document):
             doc.save(ignore_permissions=True)
 
         return material_costing_name
-
         
+
+
+
+    def get_po_specified_items(self,section_name):
+        resources_details_name = frappe.db.sql("select name from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,section_name))
+
+        for resource in resources_details_name:
+            doc = frappe.get_doc("Items Details",resource[0])
+
+            self.append("specified_item", {
+                "item": doc.items,
+                "item_name": doc.item_name,
+                "cost_price": doc.cost_price
+            })
+
+
+

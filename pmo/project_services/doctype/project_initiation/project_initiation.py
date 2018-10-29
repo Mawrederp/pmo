@@ -73,7 +73,7 @@ class ProjectInitiation(Document):
                         count += 1
                 # count = frappe.db.sql("select count(scope_item) from `tabProject Costing Schedule` where scope_item='{0}'".format(row.scope_item))[0][0]
                 if str(row.no_contracts) != str(count) :
-                    frappe.throw("No. of POs/Contracts must equal project costing schedule inputs for scope item {0}".format(row.scope_item))
+                    frappe.throw("No. of Expected POs/Contracts must equal project costing schedule inputs for scope item {0}".format(row.scope_item))
 
 
             
@@ -570,13 +570,11 @@ def costing_schedule_notification_expenses():
 
                     <br>PO/Contract estimated Cost: {5}
 
-                    <br>Vendore: {6}
+                    <br>Delivery Date/Period: {6}
 
-                    <br>Delivery Date/Period: {7}
+                    <br>Last Date to issue a PR Date/Period: {7}
 
-                    <br>Last Date to issue a PR Date/Period: {8}
-
-                        """.format(doc.name,row.type_of_cost,row.scope_item,row.scope_item_cost_value,row.no_contracts,row.po_contract_extimated_cost,row.vendor,row.delivery_date,row.last_date)
+                        """.format(doc.name,row.type_of_cost,row.scope_item,row.scope_item_cost_value,row.no_contracts,row.po_contract_extimated_cost,row.delivery_date,row.last_date)
 
            
             if row.type_of_cost=='External Expenses':

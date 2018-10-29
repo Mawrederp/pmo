@@ -2,7 +2,27 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Projects Procurement Control', {
+	validate: function(frm){
+		var total = 0;
+        $.each(frm.doc.specified_item || [], function (i, d) {
+        	if(d.select==1){
+            	total += flt(d.cost_price);
+            }
+        });
+        frm.set_value("po_contract_extimated_cost", total)
+
+	},
 	refresh: function(frm) {
+		if(cur_frm.doc.po_status == 'Specified'){
+			cur_frm.toggle_display("section_break_4", true);
+		}else{
+			cur_frm.toggle_display("section_break_4", false);
+			cur_frm.doc.specified_item=[]
+			frm.set_value("po_contract_extimated_cost", 0)
+
+		}
+
+
 		$(".grid-add-row").hide();
 
 		frappe.meta.get_docfield("Project Costing Schedule","type_of_cost", cur_frm.doc.name).read_only = 1;
@@ -10,7 +30,7 @@ frappe.ui.form.on('Projects Procurement Control', {
 		frappe.meta.get_docfield("Project Costing Schedule","scope_item", cur_frm.doc.name).read_only = 1;
 		frappe.meta.get_docfield("Project Costing Schedule","no_contracts", cur_frm.doc.name).read_only = 1;
 		frappe.meta.get_docfield("Project Costing Schedule","po_contract_extimated_cost", cur_frm.doc.name).read_only = 1;
-		frappe.meta.get_docfield("Project Costing Schedule","vendor", cur_frm.doc.name).read_only = 1;
+		// frappe.meta.get_docfield("Project Costing Schedule","vendor", cur_frm.doc.name).read_only = 1;
 		frappe.meta.get_docfield("Project Costing Schedule","last_date_period", cur_frm.doc.name).read_only = 1;
 		frappe.meta.get_docfield("Project Costing Schedule","last_date", cur_frm.doc.name).read_only = 1;
 		frappe.meta.get_docfield("Project Costing Schedule","last_period_from", cur_frm.doc.name).read_only = 1;
@@ -127,7 +147,7 @@ frappe.ui.form.on('Projects Procurement Control', {
 		frappe.meta.get_docfield("Project Costing Schedule","scope_item", cur_frm.doc.name).read_only = 1;
 		frappe.meta.get_docfield("Project Costing Schedule","no_contracts", cur_frm.doc.name).read_only = 1;
 		frappe.meta.get_docfield("Project Costing Schedule","po_contract_extimated_cost", cur_frm.doc.name).read_only = 1;
-		frappe.meta.get_docfield("Project Costing Schedule","vendor", cur_frm.doc.name).read_only = 1;
+		// frappe.meta.get_docfield("Project Costing Schedule","vendor", cur_frm.doc.name).read_only = 1;
 		frappe.meta.get_docfield("Project Costing Schedule","last_date_period", cur_frm.doc.name).read_only = 1;
 		frappe.meta.get_docfield("Project Costing Schedule","last_date", cur_frm.doc.name).read_only = 1;
 		frappe.meta.get_docfield("Project Costing Schedule","last_period_from", cur_frm.doc.name).read_only = 1;
@@ -163,14 +183,89 @@ frappe.ui.form.on('Projects Procurement Control', {
 			            d.delivery_period_to_date = row.delivery_period_to_date;
 			            d.material_request = row.material_request;
 			            d.cost_status = row.cost_status;
-			            d.pr_status = row.pr_status;
-			            d.specified_pr_item = row.specified_pr_item;
 			            frm.refresh_field("project_costing_schedule_control");
 			        }
 		        });
 		    })
 		}
+	},
+	po_status: function(frm) {
+		if(cur_frm.doc.po_status == 'Specified'){
+			cur_frm.toggle_display("section_break_4", true);
+		}else{
+			cur_frm.toggle_display("section_break_4", false);
+			cur_frm.doc.specified_item=[]
+			frm.set_value("po_contract_extimated_cost", 0)
+
+		}
+
 	}
+	
+
+});
+
+
+
+
+
+frappe.ui.form.on('Project Costing Schedule', {
+    pr: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+        
+        if(row.pr){
+
+        	cur_frm.set_value("specified_item", )
+			cur_frm.set_value("po_contract_extimated_cost", 0)
+
+
+	        frappe.call({
+	            "method": "get_po_specified_items",
+	            doc: cur_frm.doc,
+	            args: {
+	                'section_name': row.scope_item
+	            },
+	            callback: function (r) {
+	                if (r.message) {
+	                	frm.refresh_field("specified_item");
+	            	}
+	            }
+	        	
+	    	});
+
+	    }else{
+	    	cur_frm.set_value("specified_item", )
+			cur_frm.set_value("po_contract_extimated_cost", 0)
+	    }
+
+	   	frm.refresh_field("specified_item");
+
+
+    }
 
 
 });
+
+
+
+
+
+
+// frappe.ui.form.on('Specified Item', {
+//     select: function (frm, cdt, cdn) {
+//         var row = locals[cdt][cdn];
+        
+//         if(row.select){
+//         	var total = 0;
+// 	        $.each(frm.doc.specified_item || [], function (i, d) {
+// 	        	if(d.select==1){
+// 	            	total += flt(d.total_cost_price);
+// 	            }
+// 	        });
+// 	        frm.set_value("po_contract_extimated_cost", total)
+
+//         }
+
+//     }
+
+
+// });
