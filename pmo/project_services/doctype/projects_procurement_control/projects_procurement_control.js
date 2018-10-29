@@ -246,26 +246,3 @@ frappe.ui.form.on('Project Costing Schedule', {
 });
 
 
-
-
-
-
-// frappe.ui.form.on('Specified Item', {
-//     select: function (frm, cdt, cdn) {
-//         var row = locals[cdt][cdn];
-        
-//         if(row.select){
-//         	var total = 0;
-// 	        $.each(frm.doc.specified_item || [], function (i, d) {
-// 	        	if(d.select==1){
-// 	            	total += flt(d.total_cost_price);
-// 	            }
-// 	        });
-// 	        frm.set_value("po_contract_extimated_cost", total)
-
-//         }
-
-//     }
-
-
-// });
