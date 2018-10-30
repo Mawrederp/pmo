@@ -2370,6 +2370,7 @@ frappe.ui.form.on('Project Costing Schedule', {
             args: {
                 'type_of_cost': row.type_of_cost,
                 'section_number': section_number,
+                'section_name': row.scope_item
             },
             callback: function (r) {
                 if (r.message) {

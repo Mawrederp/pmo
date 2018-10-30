@@ -19,7 +19,7 @@ class ProjectsProcurementControl(Document):
                 frappe.throw("Mandatory field: Scope Item in table row {0}".format(row.idx))
     
 
-    def make_material_request(self,scope_item,description_comments,last_date,material_request,cost_status,po_contract_extimated_cost):
+    def make_material_request(self,scope_item,description_comments,last_date,material_request,cost_status,po_contract_extimated_cost,scope_item_cost_value):
         arr=[]
         for row in self.project_costing_schedule_control:
             if row.pr==1:
@@ -59,7 +59,8 @@ class ProjectsProcurementControl(Document):
                     "purchase_workflow": 'Project',
                     "project": self.project_name,
                     "description": self.description,
-                    # "suggested_grand_total": po_contract_extimated_cost,
+                    # "suggested_grand_total": scope_item_cost_value,
+                    "suggested_grand_total": self.po_contract_extimated_cost,
                     "material_requester": "EMP/1005"
                     
                     # "items": [
@@ -123,7 +124,7 @@ class ProjectsProcurementControl(Document):
                 # mreq.flags.ignore_validate = True
                 mreq.flags.ignore_mandatory = True
                 mreq.insert(ignore_permissions=True)
-
+                mreq.save()
 
                 frappe.msgprint("Material Request is created")
                 
@@ -168,7 +169,7 @@ class ProjectsProcurementControl(Document):
             self.append("specified_item", {
                 "item": doc.items,
                 "item_name": doc.item_name,
-                "cost_price": doc.cost_price
+                "total_cost_price": doc.total_cost_price
             })
 
 
@@ -184,6 +185,6 @@ class ProjectsProcurementControl(Document):
                 for resource in resources_details_name:
                     doc = frappe.get_doc("Items Details",resource[0])
                     
-                    total = total + doc.cost_price
+                    total = total + doc.total_cost_price
 
         return total

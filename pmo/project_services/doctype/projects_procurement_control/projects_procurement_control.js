@@ -6,25 +6,25 @@ frappe.ui.form.on('Projects Procurement Control', {
 		var total = 0;
         $.each(frm.doc.specified_item || [], function (i, d) {
         	if(d.select==1){
-            	total += flt(d.cost_price);
+            	total += flt(d.total_cost_price);
             }
         });
         frm.set_value("po_contract_extimated_cost", total)
 
+        if(cur_frm.doc.po_status=='All'){
+	        frappe.call({
+	            "method": "get_estimated_cost_for_all",
+	            doc: cur_frm.doc,
+	            callback: function (r) {
+	            	if(r.message){
+						frm.set_value("po_contract_extimated_cost", r.message)
+						frm.refresh_field("po_contract_extimated_cost");
 
-        frappe.call({
-            "method": "get_estimated_cost_for_all",
-            doc: cur_frm.doc,
-            callback: function (r) {
-            	if(r.message){
-					frm.set_value("po_contract_extimated_cost", r.message)
-					frm.refresh_field("po_contract_extimated_cost");
+					}
 
-				}
-
-            }
-        });
-
+	            }
+	        });
+	    }
 
 	},
 	refresh: function(frm) {
@@ -108,11 +108,31 @@ frappe.ui.form.on('Projects Procurement Control', {
 					}
 
 
+					if(cur_frm.doc.po_status=='All'){
+						var scope_item_cost_value = cur_frm.doc.project_costing_schedule_control[row].scope_item_cost_value
+						if(scope_item_cost_value){
+							scope_item_cost_value=scope_item_cost_value
+						}else{
+							scope_item_cost_value=0
+						}
+					}else if(cur_frm.doc.po_status=='Specified'){
+						var scope_item_cost_value = 0;
+				        $.each(frm.doc.specified_item || [], function (i, d) {
+				        	if(d.select==1){
+				            	scope_item_cost_value += flt(d.total_cost_price);
+				            }
+				        });
+					}
+
+
+
 					frappe.call({
 			            "method": "make_material_request",
 			            doc: cur_frm.doc,
 			            args: { "scope_item": scope_item,"description_comments":description_comments,
-			            		"last_date":last_date,"material_request":material_request,"cost_status":cost_status,"po_contract_extimated_cost":po_contract_extimated_cost},
+			            		"last_date":last_date,"material_request":material_request,"cost_status":cost_status,"po_contract_extimated_cost":po_contract_extimated_cost,
+			            		"scope_item_cost_value":scope_item_cost_value
+			            	},
 			            callback: function (r) {
 			            	material_request_name = r.message
      						$.each(frm.doc.project_costing_schedule_control || [], function(i, v) {
