@@ -58,6 +58,7 @@ class ProjectsProcurementControl(Document):
                     "material_request_type": 'Purchase',
                     "purchase_workflow": 'Project',
                     "project": self.project_name,
+                    "description": self.description,
                     # "suggested_grand_total": po_contract_extimated_cost,
                     "material_requester": "EMP/1005"
                     
@@ -172,3 +173,17 @@ class ProjectsProcurementControl(Document):
 
 
 
+
+
+    def get_estimated_cost_for_all(self):
+        total = 0
+        for row in self.project_costing_schedule_control:
+            if row.pr:
+                resources_details_name = frappe.db.sql("select name from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,row.scope_item))
+
+                for resource in resources_details_name:
+                    doc = frappe.get_doc("Items Details",resource[0])
+                    
+                    total = total + doc.cost_price
+
+        return total

@@ -11,6 +11,21 @@ frappe.ui.form.on('Projects Procurement Control', {
         });
         frm.set_value("po_contract_extimated_cost", total)
 
+
+        frappe.call({
+            "method": "get_estimated_cost_for_all",
+            doc: cur_frm.doc,
+            callback: function (r) {
+            	if(r.message){
+					frm.set_value("po_contract_extimated_cost", r.message)
+					frm.refresh_field("po_contract_extimated_cost");
+
+				}
+
+            }
+        });
+
+
 	},
 	refresh: function(frm) {
 		if(cur_frm.doc.po_status == 'Specified'){
@@ -18,7 +33,6 @@ frappe.ui.form.on('Projects Procurement Control', {
 		}else{
 			cur_frm.toggle_display("section_break_4", false);
 			cur_frm.doc.specified_item=[]
-			frm.set_value("po_contract_extimated_cost", 0)
 
 		}
 
@@ -194,8 +208,7 @@ frappe.ui.form.on('Projects Procurement Control', {
 			cur_frm.toggle_display("section_break_4", true);
 		}else{
 			cur_frm.toggle_display("section_break_4", false);
-			cur_frm.doc.specified_item=[]
-			frm.set_value("po_contract_extimated_cost", 0)
+			frm.set_value("specified_item", )
 
 		}
 
