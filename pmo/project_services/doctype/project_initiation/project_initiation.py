@@ -72,8 +72,8 @@ class ProjectInitiation(Document):
                     if i.scope_item==row.scope_item:
                         count += 1
                 # count = frappe.db.sql("select count(scope_item) from `tabProject Costing Schedule` where scope_item='{0}'".format(row.scope_item))[0][0]
-                if str(row.no_contracts) != str(count) :
-                    frappe.throw("No. of Expected POs/Contracts must equal project costing schedule inputs for scope item {0}".format(row.scope_item))
+                # if str(row.no_contracts) != str(count) :
+                #     frappe.throw("No. of Expected POs/Contracts must equal project costing schedule inputs for scope item {0}".format(row.scope_item))
 
 
             
