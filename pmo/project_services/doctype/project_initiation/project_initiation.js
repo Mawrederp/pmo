@@ -570,20 +570,20 @@ frappe.ui.form.on('Project Initiation', {
         refresh_parties_contribution_section(frm);
 
 
+    },
+    refresh_table: function (frm) {
+        cur_frm.doc.project_payment_schedule_bundle_qty = []
+
+        frappe.call({
+            "method": "get_payment_schedule_bundle_qty",
+            doc: cur_frm.doc,
+            callback: function (r) {
+                frm.refresh_field("project_payment_schedule_bundle_qty");
+            }
+        });
+
+
     }
-    // refresh_table: function (frm) {
-    //     cur_frm.doc.project_payment_schedule_bundle_qty = []
-
-    //     frappe.call({
-    //         "method": "get_payment_schedule_bundle_qty",
-    //         doc: cur_frm.doc,
-    //         callback: function (r) {
-    //             frm.refresh_field("project_payment_schedule_bundle_qty");
-    //         }
-    //     });
-
-
-    // }
 
 });
 
@@ -1961,35 +1961,35 @@ frappe.ui.form.on("Project Payment Schedule", "total_billing_value", function (f
 
 
 
-// frappe.ui.form.on('Project Payment Schedule Bundle QTY', {
-//     qty: function (frm, cdt, cdn) {
-//         var row = locals[cdt][cdn];
+frappe.ui.form.on('Project Payment Schedule Bundle QTY', {
+    qty: function (frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
 
-//         var total = 0;
-//         $.each(frm.doc.project_payment_schedule_bundle_qty || [], function (i, d) {
-//             if(d.scope_item==row.scope_item && d.item==row.item){
-//                 total += flt(d.qty);
-//             }
-//         });
-//         total_qty = row.parent_qty-total
-//         remaining_qty = row.qty+total_qty
+        var total = 0;
+        $.each(frm.doc.project_payment_schedule_bundle_qty || [], function (i, d) {
+            if(d.scope_item==row.scope_item && d.item==row.item){
+                total += flt(d.qty);
+            }
+        });
+        total_qty = row.parent_qty-total
+        remaining_qty = row.qty+total_qty
 
-//         console.log(row.qty)
-//         console.log(total_qty)
+        console.log(row.qty)
+        console.log(total_qty)
 
-//         if(total_qty<0 || row.qty>row.parent_qty || row.qty<0){
-//             frappe.call({
-//                 "method": "validate_bundle_qty_number",
-//                 args: {
-//                     'total': remaining_qty,
-//                 },
-//                 doc: cur_frm.doc,
-//             });
-//             set_value_model(cdt, cdn, "qty", );
-//         }
-//     }
+        if(total_qty<0 || row.qty>row.parent_qty || row.qty<0){
+            frappe.call({
+                "method": "validate_bundle_qty_number",
+                args: {
+                    'total': remaining_qty,
+                },
+                doc: cur_frm.doc,
+            });
+            set_value_model(cdt, cdn, "qty", );
+        }
+    }
 
-// });
+});
 
 
 

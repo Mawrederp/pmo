@@ -226,7 +226,7 @@ class ProjectBillingControl(Document):
                             rate = doc.final_selling_price
                             # qty = 1
 
-                            # required_qty = frappe.db.sql("select qty from `tabProject Payment Schedule Bundle QTY` where parenttype='Project Billing Control' and parent='{0}' and parent_name='{1}' ".format(self.name,schedule_bundle_qty_name))[0][0]
+                            required_qty = frappe.db.sql("select qty from `tabProject Payment Schedule Bundle QTY` where parenttype='Project Billing Control' and parent='{0}' and parent_name='{1}' and item='{2}'".format(self.name,schedule_bundle_qty_name,doc.items))[0][0]
 
                             # if flt(doc.quantity)>0:
                             #     rate = doc.final_selling_price/flt(doc.quantity)
@@ -239,8 +239,8 @@ class ProjectBillingControl(Document):
                                 "item_code": doc.items,
                                 "description": description,
                                 # "qty": flt(qty)*flt(flt(billing_percentage)/100),
-                                # "qty": flt(required_qty),
-                                "qty": 0,
+                                "qty": flt(required_qty),
+                                # "qty": 0,
                                 "rate": rate
                             })
 
@@ -264,8 +264,8 @@ class ProjectBillingControl(Document):
                                     "item_name": bundle.item_name,
                                     "description": bundle.description,
                                     "uom": bundle.uom,
-                                    # "qty": flt(bundle.qty)*flt(required_qty),
-                                    "qty": flt(bundle.qty),
+                                    "qty": flt(bundle.qty)*flt(required_qty),
+                                    # "qty": flt(bundle.qty),
                                     "project": project_name,
                                     "warehouse": item_bundle.default_warehouse,
                                     "schedule_date": frappe.utils.get_last_day(utils.today()),
@@ -364,7 +364,7 @@ class ProjectBillingControl(Document):
                             rate = doc.final_selling_price
                             # qty = 1
 
-                            # required_qty = frappe.db.sql("select qty from `tabProject Payment Schedule Bundle QTY` where parenttype='Project Billing Control' and parent='{0}' and parent_name='{1}' ".format(self.name,schedule_bundle_qty_name))[0][0]
+                            required_qty = frappe.db.sql("select qty from `tabProject Payment Schedule Bundle QTY` where parenttype='Project Billing Control' and parent='{0}' and parent_name='{1}' and item='{2}'".format(self.name,schedule_bundle_qty_name,doc.items))[0][0]
 
                             # if flt(doc.quantity)>0:
                             #     rate = doc.final_selling_price/flt(doc.quantity)
@@ -377,8 +377,8 @@ class ProjectBillingControl(Document):
                                 "item_code": doc.items,
                                 "description": description,
                                 # "qty": flt(qty)*flt(flt(billing_percentage)/100),
-                                # "qty": flt(required_qty),
-                                "qty": 0,
+                                "qty": flt(required_qty),
+                                # "qty": 0,
                                 "rate": rate
                             })
 
@@ -402,8 +402,8 @@ class ProjectBillingControl(Document):
                                     "item_name": bundle.item_name,
                                     "description": bundle.description,
                                     "uom": bundle.uom,
-                                    # "qty": flt(bundle.qty)*flt(required_qty),
-                                    "qty": flt(bundle.qty),
+                                    "qty": flt(bundle.qty)*flt(required_qty),
+                                    # "qty": flt(bundle.qty),
                                     "project": project_name,
                                     "warehouse": item_bundle.default_warehouse,
                                     "schedule_date": frappe.utils.get_last_day(utils.today()),

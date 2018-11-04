@@ -295,8 +295,8 @@ class ProjectInitiation(Document):
 
 
 
-    # def validate_bundle_qty_number(self,total):
-    #     frappe.msgprint("Quantity must be less than {0}".format(total))
+    def validate_bundle_qty_number(self,total):
+        frappe.msgprint("Quantity must be less than {0}".format(total))
     
 
 
