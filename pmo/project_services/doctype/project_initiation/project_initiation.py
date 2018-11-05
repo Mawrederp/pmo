@@ -12,6 +12,8 @@ from datetime import date
 from frappe.utils.password import update_password as _update_password
 from frappe.utils.password import get_decrypted_password
 import re
+from frappe.utils import cint, cstr, flt, nowdate, comma_and, date_diff, getdate
+
 
 class ProjectInitiation(Document):
     def validate(self):
@@ -404,13 +406,24 @@ class ProjectInitiation(Document):
             for resource in resources_details_name:
                 doc = frappe.get_doc("Items Details",resource[0])
 
-                self.append("project_payment_schedule_bundle_qty", {
-                    "scope_item": row.scope_item,
-                    "item": doc.items,
-                    "item_name": doc.item_name,
-                    "parent_qty": doc.quantity,
-                    "parent_name": row.name
-                })
+                if flt(row.billing_percentage)==100:
+	                self.append("project_payment_schedule_bundle_qty", {
+	                    "scope_item": row.scope_item,
+	                    "item": doc.items,
+	                    "item_name": doc.item_name,
+	                    "parent_qty": doc.quantity,
+	                    "qty": doc.quantity,
+	                    "parent_name": row.name
+	                })
+
+                else:
+	                self.append("project_payment_schedule_bundle_qty", {
+	                    "scope_item": row.scope_item,
+	                    "item": doc.items,
+	                    "item_name": doc.item_name,
+	                    "parent_qty": doc.quantity,
+	                    "parent_name": row.name
+	                })
 
 
 
