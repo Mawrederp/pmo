@@ -312,6 +312,22 @@ frappe.ui.form.on('Project Billing Control', {
 					}
 
 
+					var advanced_item = cur_frm.doc.project_payment_schedule_control[row].advanced_item
+					if(advanced_item){
+						advanced_item=advanced_item
+					}else{
+						advanced_item=''
+					}
+
+
+					var billing_value = cur_frm.doc.project_payment_schedule_control[row].billing_value
+					if(billing_value){
+						billing_value=billing_value
+					}else{
+						billing_value=0
+					}
+
+
 					frappe.call({
 			            "method": "make_sales_invoice",
 			            doc: cur_frm.doc,
@@ -319,7 +335,7 @@ frappe.ui.form.on('Project Billing Control', {
 			            		"items_value": items_value,"billing_percentage": billing_percentage,
 			            		"due_date": due_date,"description_when":description_when,"vat_value":vat_value,
 			            		"billing_state":billing_status,"delivery_note":delivery_note,"schedule_bundle_qty_name":schedule_bundle_qty_name,
-			            		"is_advance":is_advance,"sales_invoice":sales_invoice
+			            		"is_advance":is_advance,"sales_invoice":sales_invoice,"advanced_item":advanced_item,"billing_value":billing_value
 			            	},
 			            callback: function (r) {
 		                    sales_invoice_name = r.message
@@ -386,6 +402,7 @@ frappe.ui.form.on('Project Billing Control', {
 		            d.description_when = row.description_when;
 		            d.billing_status = row.billing_status;
 		            d.is_advance = row.is_advance;
+		            d.advanced_item = row.advanced_item;
 		            d.delivery_note = row.delivery_note;
 		            d.sales_invoice = row.sales_invoice;
 		            d.old_name = row.name;

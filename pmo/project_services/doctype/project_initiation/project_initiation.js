@@ -2430,56 +2430,14 @@ frappe.ui.form.on('Project Costing Schedule', {
 
 
 
-// frappe.ui.form.on("Project Costing Schedule", "project_cost_value", function (frm, cdt, cdn) {
-// 	sleep(1000);
-//     // code for calculate total and set on parent field.
-//     var total = 0;
-//     $.each(frm.doc.project_costing_schedule || [], function (i, d) {
-//     	if(d.type_of_cost=='Tawari Services'){
-//         	total += flt(d.project_cost_value);
-//     	}else if(d.type_of_cost=='External Expenses'){
-//     		total += flt(d.scope_item_cost_value);
-//     	}
-//     });
-
-//     set_value(frm, "total_project_cost_scheduled", total);
-// });
-
-// frappe.ui.form.on("Project Costing Schedule", "scope_item_cost_value", function (frm, cdt, cdn) {
-// 	sleep(1000);
-//     // code for calculate total and set on parent field.
-//     var total = 0;
-//     $.each(frm.doc.project_costing_schedule || [], function (i, d) {
-//     	if(d.type_of_cost=='External Expenses'){
-//         	total += flt(d.scope_item_cost_value);
-//     	}
-//     });
-//     set_value(frm, "total_project_cost_scheduled", total);
-// });
+cur_frm.set_query("advanced_item", "project_payment_schedule", function(doc, cdt, cdn) {
+    var d = locals[cdt][cdn];
+    return{
+        filters: [
+            ['Item', 'is_advance_item', '=', 1]
+        ]
+    }
+});
 
 
 
-
-
-// frappe.ui.form.on("Project Costing Schedule", "project_cost_value", function (frm, cdt, cdn) {
-// 	sleep(1000);
-//     // code for calculate total and set on parent field.
-//     var total = 0;
-//     $.each(frm.doc.project_costing_schedule || [], function (i, d) {
-//     	if(d.type_of_cost=='Tawari Services'){
-//         	total += flt(d.project_cost_value);
-//     	}else if(d.type_of_cost=='External Expenses'){
-//     		total += flt(d.scope_item_cost_value);
-//     	}
-//     });
-
-//     set_value(frm, "total_project_cost_scheduled", total);
-// });
-
-
-
-// function sleep(miliseconds) {
-//     var currentTime = new Date().getTime();
-//     while (currentTime + miliseconds >= new Date().getTime()) {
-//     }
-// }
