@@ -193,7 +193,7 @@ class ProjectBillingControl(Document):
                             "project": project_name,
                             "project_items": scope_item,
                             "naming_series": 'DN-',
-                            "workflow_state": 'Pending',
+                            # "workflow_state": 'Pending',
                             "posting_date": due_date,
                             # "items": [
                             #       {
@@ -329,7 +329,7 @@ class ProjectBillingControl(Document):
                             "project": project_name,
                             "project_items": scope_item,
                             "naming_series": 'SINV-',
-                            "workflow_state": 'Pending',
+                            "workflow_state": 'Pending(f)',
                             "posting_date": due_date,
                             "delivery_date": due_date,
                             "is_advance": is_advance,
