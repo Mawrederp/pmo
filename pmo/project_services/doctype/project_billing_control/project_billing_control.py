@@ -133,6 +133,28 @@ class ProjectBillingControl(Document):
                 "workflow_state": "Pending"
             })
         
+            arr=[]
+            for row in self.project_payment_schedule_control:
+                resources_details_name = frappe.db.sql("select name from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,row.scope_item))
+                for resource in resources_details_name:
+
+                    doc = frappe.get_doc("Items Details",resource[0])
+                    
+                    # psoa.append("project_sales_order_approval_item", {
+                    #     "project_items": row.scope_item,
+                    #     "item": doc.items
+                    # })
+
+
+                    if str(doc.items)+str(row.scope_item) not in arr:
+                        psoa.append("project_sales_order_approval_item", {
+                            "project_items": row.scope_item,
+                            "item": doc.items
+                        })
+
+                        arr.append(str(doc.items)+str(row.scope_item))
+
+            
             psoa.flags.ignore_validate = True
             psoa.flags.ignore_mandatory = True
             psoa.insert(ignore_permissions=True)

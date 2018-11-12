@@ -26,7 +26,12 @@ class ProjectSalesOrderApproval(Document):
             frappe.throw("You make Sales Order for this project before")
         else:
             doc = frappe.get_doc("Project Initiation", self.project_name)
-            
+            vat_account=''
+            vat_account_field = frappe.db.sql("select account_head from `tabSales Taxes and Charges` where parent='VAT'")
+            if vat_account_field:
+                vat_account = vat_account_field[0][0]
+ 
+
             if doc.customer:
                 sinv=frappe.get_doc({
                     "doctype":"Sales Order",
@@ -82,6 +87,7 @@ class ProjectSalesOrderApproval(Document):
 
                         sinv.append("taxes", {
                             "charge_type": 'Actual',
+                            "account_head": vat_account,
                             "description": description,
                             "tax_amount": (doc.final_selling_price*0.05)*flt(flt(row.billing_percentage)/100)
                         })
