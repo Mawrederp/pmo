@@ -499,55 +499,57 @@ class ProjectBillingControl(Document):
 
                         for item in items:
                             if item[10]==1:
-                                resources_details_name = frappe.db.sql("select name from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,item[0]))
+                                # resources_details_name = frappe.db.sql("select name from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,item[0]))
 
-                                for resource in resources_details_name:
+                                # for resource in resources_details_name:
                                     
-                                    doc = frappe.get_doc("Items Details",resource[0])
-                                    item_name = frappe.get_doc("Item", doc.items)
+                                    # doc = frappe.get_doc("Items Details",resource[0])
+                                    # item_name = frappe.get_doc("Item", doc.items)
 
-                                    description=item_name.description
+                                    # description=item_name.description
 
-                                    rate = doc.final_selling_price
+                                    # rate = doc.final_selling_price
 
-                                    required_qty = frappe.db.sql("select qty from `tabProject Payment Schedule Bundle QTY` where parenttype='Project Billing Control' and parent='{0}' and parent_name='{1}' and item='{2}'".format(self.name,item[9],doc.items))[0][0]
+                                    # required_qty = frappe.db.sql("select qty from `tabProject Payment Schedule Bundle QTY` where parenttype='Project Billing Control' and parent='{0}' and parent_name='{1}' and item='{2}'".format(self.name,item[9],doc.items))[0][0]
 
-                                    rate = doc.final_selling_price/flt(doc.quantity)
+                                    # rate = doc.final_selling_price/flt(doc.quantity)
+
+                                required_qty = 1
+
+                                dnote.append("items", {
+                                    "item_code": item[12],
+                                    "description": item[5],
+                                    "qty": flt(flt(item[3])/100),
+                                    "rate": item[13]
+                                })
+
+                                dnote.append("taxes", {
+                                    "charge_type": 'Actual',
+                                    "account_head": vat_account,
+                                    "description": item[5],
+                                    "tax_amount": item[6]
+                                })
+
+
+                                product_bundle = frappe.db.sql("""select t1.item_code, t1.qty, t1.uom, t1.description
+                                    from `tabProduct Bundle Item` t1, `tabProduct Bundle` t2
+                                    where t2.new_item_code=%s and t1.parent = t2.name order by t1.idx""", item[12], as_dict=1)
+
+                                for bundle in product_bundle:
+                                    item_bundle = frappe.get_doc("Item", bundle.item_code)
 
                                     dnote.append("items", {
-                                        "item_code": item[12],
-                                        "description": item[5],
-                                        "qty": flt(flt(item[3])/100),
-                                        "rate": item[13]
+                                        "item_code": bundle.item_code,
+                                        "item_name": bundle.item_name,
+                                        "description": bundle.description,
+                                        "uom": bundle.uom,
+                                        "qty": flt(bundle.qty)*flt(required_qty),
+                                        "project": item[1],
+                                        "warehouse": item_bundle.default_warehouse,
+                                        "schedule_date": frappe.utils.get_last_day(utils.today()),
+                                        "is_product_bundle_item": 1 ,
+                                        "product_bundle": doc.items
                                     })
-
-                                    dnote.append("taxes", {
-                                        "charge_type": 'Actual',
-                                        "account_head": vat_account,
-                                        "description": item[5],
-                                        "tax_amount": item[6]
-                                    })
-
-
-                                    product_bundle = frappe.db.sql("""select t1.item_code, t1.qty, t1.uom, t1.description
-                                        from `tabProduct Bundle Item` t1, `tabProduct Bundle` t2
-                                        where t2.new_item_code=%s and t1.parent = t2.name order by t1.idx""", doc.items, as_dict=1)
-
-                                    for bundle in product_bundle:
-                                        item_bundle = frappe.get_doc("Item", bundle.item_code)
-
-                                        dnote.append("items", {
-                                            "item_code": bundle.item_code,
-                                            "item_name": bundle.item_name,
-                                            "description": bundle.description,
-                                            "uom": bundle.uom,
-                                            "qty": flt(bundle.qty)*flt(required_qty),
-                                            "project": item[1],
-                                            "warehouse": item_bundle.default_warehouse,
-                                            "schedule_date": frappe.utils.get_last_day(utils.today()),
-                                            "is_product_bundle_item": 1 ,
-                                            "product_bundle": doc.items
-                                        })
 
                             else:
                                 frappe.throw("This is Not an Advance Payment, Please click Make Delivery Note instead")
@@ -632,53 +634,55 @@ class ProjectBillingControl(Document):
 
                         if item[10]==1:
 
-                            for resource in resources_details_name:
+                            # for resource in resources_details_name:
                                 
-                                doc = frappe.get_doc("Items Details",resource[0])
-                                item_name = frappe.get_doc("Item", doc.items)
+                            #     doc = frappe.get_doc("Items Details",resource[0])
+                            #     item_name = frappe.get_doc("Item", doc.items)
 
-                                description=item_name.description
+                            #     description=item_name.description
 
-                                rate = doc.final_selling_price
+                            #     rate = doc.final_selling_price
 
-                                required_qty = frappe.db.sql("select qty from `tabProject Payment Schedule Bundle QTY` where parenttype='Project Billing Control' and parent='{0}' and parent_name='{1}' and item='{2}'".format(self.name,item[9],doc.items))[0][0]
+                            #     required_qty = frappe.db.sql("select qty from `tabProject Payment Schedule Bundle QTY` where parenttype='Project Billing Control' and parent='{0}' and parent_name='{1}' and item='{2}'".format(self.name,item[9],doc.items))[0][0]
 
-                                rate = doc.final_selling_price/flt(doc.quantity)
+                            #     rate = doc.final_selling_price/flt(doc.quantity)
+
+                            required_qty = 1
+
+                            dnote.append("items", {
+                                "item_code": item[12],
+                                "description": item[5],
+                                "qty": flt(flt(item[3])/100),
+                                "rate": item[13]
+                            })
+
+                            dnote.append("taxes", {
+                                "charge_type": 'Actual',
+                                "account_head": vat_account,
+                                "description": item[5],
+                                "tax_amount": item[6]
+                            })
+
+
+                            product_bundle = frappe.db.sql("""select t1.item_code, t1.qty, t1.uom, t1.description
+                                from `tabProduct Bundle Item` t1, `tabProduct Bundle` t2
+                                where t2.new_item_code=%s and t1.parent = t2.name order by t1.idx""", item[12], as_dict=1)
+
+                            for bundle in product_bundle:
+                                item_bundle = frappe.get_doc("Item", bundle.item_code)
 
                                 dnote.append("items", {
-                                    "item_code": item[12],
-                                    "description": item[5],
-                                    "qty": flt(flt(item[3])/100),
-                                    "rate": item[13]
+                                    "item_code": bundle.item_code,
+                                    "item_name": bundle.item_name,
+                                    "description": bundle.description,
+                                    "uom": bundle.uom,
+                                    "qty": flt(bundle.qty)*flt(required_qty),
+                                    "project": item[1],
+                                    "warehouse": item_bundle.default_warehouse,
+                                    "schedule_date": frappe.utils.get_last_day(utils.today()),
+                                    "is_product_bundle_item": 1 ,
+                                    "product_bundle": doc.items
                                 })
-
-                                dnote.append("taxes", {
-                                    "charge_type": 'Actual',
-                                    "account_head": vat_account,
-                                    "description": item[5],
-                                    "tax_amount": item[6]
-                                })
-
-
-                                product_bundle = frappe.db.sql("""select t1.item_code, t1.qty, t1.uom, t1.description
-                                    from `tabProduct Bundle Item` t1, `tabProduct Bundle` t2
-                                    where t2.new_item_code=%s and t1.parent = t2.name order by t1.idx""", doc.items, as_dict=1)
-
-                                for bundle in product_bundle:
-                                    item_bundle = frappe.get_doc("Item", bundle.item_code)
-
-                                    dnote.append("items", {
-                                        "item_code": bundle.item_code,
-                                        "item_name": bundle.item_name,
-                                        "description": bundle.description,
-                                        "uom": bundle.uom,
-                                        "qty": flt(bundle.qty)*flt(required_qty),
-                                        "project": item[1],
-                                        "warehouse": item_bundle.default_warehouse,
-                                        "schedule_date": frappe.utils.get_last_day(utils.today()),
-                                        "is_product_bundle_item": 1 ,
-                                        "product_bundle": doc.items
-                                    })
                         else:
                     
                             for resource in resources_details_name:
