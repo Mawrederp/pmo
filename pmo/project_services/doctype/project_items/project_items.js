@@ -5,6 +5,13 @@ frappe.ui.form.on('Project Items', {
 	refresh: function(frm) {
 
 	},
+	onload: function(frm){
+		cur_frm.set_query("advanced_section", function() {
+            return {
+                query: "pmo.project_services.doctype.project_items.project_items.get_section_name"
+            };
+        });
+	},
 	validate: function(frm) {
 		if(cur_frm.doc.item){
 			frm.set_value('status', "Active");
