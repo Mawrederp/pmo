@@ -332,7 +332,7 @@ class ProjectBillingControl(Document):
         # item[10] = is_advance
         # item[11] = total_billing_value
         # item[12] = remaining_billing_value
-        
+        # item[13] = project_payment_schedule
 
         arr=[]
         for row in self.project_payment_schedule_control:
@@ -391,6 +391,7 @@ class ProjectBillingControl(Document):
                                     dnote.append("items", {
                                         "item_code": doc.items,
                                         "description": description,
+                                        "project_payment_schedule": item[13],
                                         "qty": flt(required_qty),
                                         "rate": rate
                                     })
@@ -457,6 +458,8 @@ class ProjectBillingControl(Document):
         # item[13] = billing_value
         # item[14] = total_billing_value
         # item[15] = remaining_billing_value
+        # item[16] = project_schedule_name
+        # item[17] = advance_project_items
 
         arr=[]
         for row in self.project_payment_schedule_control:
@@ -499,6 +502,13 @@ class ProjectBillingControl(Document):
 
                         for item in items:
                             if item[10]==1:
+
+                                for payment_item in self.project_payment_schedule_control:
+                                    if payment_item.scope_item == item[17]:
+                                        if payment_item.billing_status!=1 and payment_item.is_advance!=1:
+                                            frappe.throw("You must make invoice with linked advance item before")
+
+
                                 # resources_details_name = frappe.db.sql("select name from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,item[0]))
 
                                 # for resource in resources_details_name:
@@ -519,6 +529,7 @@ class ProjectBillingControl(Document):
                                 dnote.append("items", {
                                     "item_code": item[12],
                                     "description": item[5],
+                                    "project_payment_schedule": item[16],
                                     "qty": flt(flt(item[3])/100),
                                     "rate": item[13]
                                 })
@@ -589,6 +600,7 @@ class ProjectBillingControl(Document):
         # item[13] = billing_value
         # item[14] = total_billing_value
         # item[15] = remaining_billing_value
+        # item[16] = project_schedule_name
 
         arr=[]
         for row in self.project_payment_schedule_control:
@@ -652,6 +664,7 @@ class ProjectBillingControl(Document):
                             dnote.append("items", {
                                 "item_code": item[12],
                                 "description": item[5],
+                                "project_payment_schedule": item[16],
                                 "qty": flt(flt(item[3])/100),
                                 "rate": item[13]
                             })
@@ -702,6 +715,7 @@ class ProjectBillingControl(Document):
                                 dnote.append("items", {
                                     "item_code": doc.items,
                                     "description": description,
+                                    "project_payment_schedule": item[16],
                                     "qty": flt(required_qty),
                                     "rate": rate
                                 })

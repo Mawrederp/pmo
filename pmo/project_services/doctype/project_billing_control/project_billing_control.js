@@ -326,6 +326,16 @@ frappe.ui.form.on('Project Billing Control', {
                     arr1.push(remaining_billing_value)
 
 
+
+                    var project_schedule_name = cur_frm.doc.project_payment_schedule_control[row].name
+                    if(project_schedule_name){
+                        project_schedule_name=project_schedule_name
+                    }else{
+                        remaining_billing_value=''
+                    }
+                    arr1.push(project_schedule_name)
+
+
                 }
             }
 
@@ -539,6 +549,24 @@ frappe.ui.form.on('Project Billing Control', {
                     }
                     arr1.push(remaining_billing_value)
 
+
+                    var project_schedule_name = cur_frm.doc.project_payment_schedule_control[row].name
+                    if(project_schedule_name){
+                        project_schedule_name=project_schedule_name
+                    }else{
+                        remaining_billing_value=''
+                    }
+                    arr1.push(project_schedule_name)
+
+
+                    var advance_project_items = cur_frm.doc.project_payment_schedule_control[row].advance_project_items
+                    if(advance_project_items){
+                        advance_project_items=advance_project_items
+                    }else{
+                        advance_project_items=''
+                    }
+                    arr1.push(advance_project_items)
+
                 }
             }
 
@@ -750,6 +778,15 @@ frappe.ui.form.on('Project Billing Control', {
                         remaining_billing_value=0
                     }
                     arr1.push(remaining_billing_value)
+
+
+                    var project_schedule_name = cur_frm.doc.project_payment_schedule_control[row].name
+                    if(project_schedule_name){
+                        project_schedule_name=project_schedule_name
+                    }else{
+                        remaining_billing_value=''
+                    }
+                    arr1.push(project_schedule_name)
 
                 }
             }
@@ -1004,6 +1041,7 @@ frappe.ui.form.on('Project Billing Control', {
                     d.billing_status = row.billing_status;
                     d.is_advance = row.is_advance;
                     d.advanced_item = row.advanced_item;
+                    d.advance_project_items = row.advance_project_items;
                     d.delivery_note = row.delivery_note;
                     d.sales_invoice = row.sales_invoice;
                     d.old_name = row.name;
