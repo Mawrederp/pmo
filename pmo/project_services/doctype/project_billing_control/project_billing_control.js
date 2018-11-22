@@ -1042,6 +1042,8 @@ frappe.ui.form.on('Project Billing Control', {
                     d.is_advance = row.is_advance;
                     d.advanced_item = row.advanced_item;
                     d.advance_project_items = row.advance_project_items;
+                    d.project_item_price = row.project_item_price;
+                    d.advance_percent = row.advance_percent;
                     d.delivery_note = row.delivery_note;
                     d.sales_invoice = row.sales_invoice;
                     d.old_name = row.name;
