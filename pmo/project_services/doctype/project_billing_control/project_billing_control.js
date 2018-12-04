@@ -4,6 +4,38 @@ cur_frm.add_fetch('Project Initiation','sales_order','sales_order');
 
 var calculate_total_and_save = true;
 frappe.ui.form.on('Project Billing Control', {
+    validate: function(frm){
+        cur_frm.doc.project_payment_schedule_bundle_qty = []
+        $.each(frm.doc.project_payment_schedule_control || [], function(i, v) {
+            if(v.invoice==1){
+                // cur_frm.doc.project_payment_schedule_bundle_qty = []
+                frappe.model.with_doc("Project Initiation", frm.doc.project_name, function() {
+                    var tabletransfer= frappe.model.get_doc("Project Initiation", frm.doc.project_name)
+                    // frm.doc.project_payment_schedule_bundle_qty = []
+                    // frm.refresh_field("project_payment_schedule_bundle_qty");
+                    $.each(tabletransfer.project_payment_schedule_bundle_qty, function(index, row){
+                        if(v.old_name==row.parent_name){
+                            d = frm.add_child("project_payment_schedule_bundle_qty");
+                            d.scope_item = row.scope_item;
+                            d.qty = row.qty;
+                            d.item = row.item;
+                            d.item_name = row.item_name;
+                            d.parent_qty = row.parent_qty;
+                            d.parent_name = row.parent_name;
+                            // frm.refresh_field("project_payment_schedule_bundle_qty");
+                        }
+                    });
+                })
+            }
+        
+
+        });
+            
+
+    frm.refresh_field("project_payment_schedule_bundle_qty");
+
+
+    },
     after_save: function(frm) {
 
         frappe.call({
@@ -1056,22 +1088,22 @@ frappe.ui.form.on('Project Billing Control', {
 
 
 
-            cur_frm.doc.project_payment_schedule_bundle_qty = []
-            frappe.model.with_doc("Project Initiation", frm.doc.project_name, function() {
-                var tabletransfer= frappe.model.get_doc("Project Initiation", frm.doc.project_name)
-                frm.doc.project_payment_schedule_bundle_qty = []
-                frm.refresh_field("project_payment_schedule_bundle_qty");
-                $.each(tabletransfer.project_payment_schedule_bundle_qty, function(index, row){
-                    d = frm.add_child("project_payment_schedule_bundle_qty");
-                    d.scope_item = row.scope_item;
-                    d.qty = row.qty;
-                    d.item = row.item;
-                    d.item_name = row.item_name;
-                    d.parent_qty = row.parent_qty;
-                    d.parent_name = row.parent_name;
-                    frm.refresh_field("project_payment_schedule_bundle_qty");
-                });
-            })
+            // cur_frm.doc.project_payment_schedule_bundle_qty = []
+            // frappe.model.with_doc("Project Initiation", frm.doc.project_name, function() {
+            //     var tabletransfer= frappe.model.get_doc("Project Initiation", frm.doc.project_name)
+            //     frm.doc.project_payment_schedule_bundle_qty = []
+            //     frm.refresh_field("project_payment_schedule_bundle_qty");
+            //     $.each(tabletransfer.project_payment_schedule_bundle_qty, function(index, row){
+            //         d = frm.add_child("project_payment_schedule_bundle_qty");
+            //         d.scope_item = row.scope_item;
+            //         d.qty = row.qty;
+            //         d.item = row.item;
+            //         d.item_name = row.item_name;
+            //         d.parent_qty = row.parent_qty;
+            //         d.parent_name = row.parent_name;
+            //         frm.refresh_field("project_payment_schedule_bundle_qty");
+            //     });
+            // })
 
 
         }
