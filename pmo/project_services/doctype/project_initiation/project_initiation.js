@@ -1795,9 +1795,13 @@ frappe.ui.form.on('Project Initiation', {
 
         var billing_total_vat = 0;
         $.each(frm.doc.project_payment_schedule || [], function (i, d) {
-            billing_total_vat += flt(d.total_billing_value);
+            if(d.is_advance && d.advance_project_items){
+
+            }else{
+                billing_total_vat += flt(d.total_billing_value);
+            }
         });
-        set_value(frm, "total_billing_vat", billing_total_vat);
+        set_value(frm, "total_billing_vat", Math.round(billing_total_vat));
 
         var total = 0;
         $.each(frm.doc.project_financial_detail || [], function (i, d) {
@@ -1952,9 +1956,12 @@ frappe.ui.form.on("Project Payment Schedule", "total_billing_value", function (f
     // code for calculate total and set on parent field.
     var billing_total_vat = 0;
     $.each(frm.doc.project_payment_schedule || [], function (i, d) {
-        billing_total_vat += flt(d.total_billing_value);
+        if(d.is_advance && d.advance_project_items){
+        }else{
+            billing_total_vat += flt(d.total_billing_value);
+        }
     });
-    set_value(frm, "total_billing_vat", billing_total_vat);
+    set_value(frm, "total_billing_vat", Math.round(billing_total_vat));
 });
 
 
