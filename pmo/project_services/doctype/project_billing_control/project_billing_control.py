@@ -385,6 +385,8 @@ class ProjectBillingControl(Document):
                                     rate = doc.final_selling_price
 
                                     required_qty = frappe.db.sql("select qty from `tabProject Payment Schedule Bundle QTY` where parenttype='Project Billing Control' and parent='{0}' and parent_name='{1}' and item='{2}'".format(self.name,item[9],doc.items))[0][0]
+                                    if flt(required_qty) == 0:
+                                        required_qty = 1
 
                                     rate = doc.final_selling_price/flt(doc.quantity)
 
@@ -709,6 +711,8 @@ class ProjectBillingControl(Document):
                                 rate = doc.final_selling_price
 
                                 required_qty = frappe.db.sql("select qty from `tabProject Payment Schedule Bundle QTY` where parenttype='Project Billing Control' and parent='{0}' and parent_name='{1}' and item='{2}'".format(self.name,item[9],doc.items))[0][0]
+                                if flt(required_qty) == 0:
+                                    required_qty = 1
 
                                 rate = doc.final_selling_price/flt(doc.quantity)
 

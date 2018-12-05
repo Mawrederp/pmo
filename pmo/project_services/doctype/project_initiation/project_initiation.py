@@ -404,8 +404,8 @@ class ProjectInitiation(Document):
 
 
             for resource in resources_details_name:
-                doc = frappe.get_doc("Items Details",resource[0])
 
+                doc = frappe.get_doc("Items Details",resource[0])
                 if flt(row.billing_percentage)==100:
 	                self.append("project_payment_schedule_bundle_qty", {
 	                    "scope_item": row.scope_item,
@@ -422,6 +422,7 @@ class ProjectInitiation(Document):
 	                    "item": doc.items,
 	                    "item_name": doc.item_name,
 	                    "parent_qty": doc.quantity,
+	                    "qty": (flt(row.billing_percentage)/100.0)*flt(doc.quantity),
 	                    "parent_name": row.name
 	                })
 
