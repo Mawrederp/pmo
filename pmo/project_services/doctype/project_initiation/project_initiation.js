@@ -1795,11 +1795,11 @@ frappe.ui.form.on('Project Initiation', {
 
         var billing_total_vat = 0;
         $.each(frm.doc.project_payment_schedule || [], function (i, d) {
-            if(d.is_advance && d.advance_project_items){
+            // if(d.is_advance && d.advance_project_items){
 
-            }else{
+            // }else{
                 billing_total_vat += flt(d.total_billing_value);
-            }
+            // }
         });
         set_value(frm, "total_billing_vat", Math.round(billing_total_vat));
 
@@ -2156,15 +2156,15 @@ frappe.ui.form.on('Project Payment Schedule', {
         }
 
         if (row.is_advance) {
-            frm.fields_dict["project_payment_schedule"].grid.set_column_disp("billing_percentage", false);
-            frm.fields_dict["project_payment_schedule"].grid.set_column_disp("number_of_invoices", false);
+            // frm.fields_dict["project_payment_schedule"].grid.set_column_disp("billing_percentage", false);
+            // frm.fields_dict["project_payment_schedule"].grid.set_column_disp("number_of_invoices", false);
             set_value_model(cdt, cdn, "billing_percentage", 100 );
             set_value_model(cdt, cdn, "number_of_invoices", 1 );
             set_value_model(cdt, cdn, "remaining_billing_value", 0 );
             set_value_model(cdt, cdn, "remaining_billing_percent", 0 );
         }else{
-            frm.fields_dict["project_payment_schedule"].grid.set_column_disp("billing_percentage", true);
-            frm.fields_dict["project_payment_schedule"].grid.set_column_disp("number_of_invoices", true);
+            // frm.fields_dict["project_payment_schedule"].grid.set_column_disp("billing_percentage", true);
+            // frm.fields_dict["project_payment_schedule"].grid.set_column_disp("number_of_invoices", true);
             set_value_model(cdt, cdn, "billing_percentage", );
             set_value_model(cdt, cdn, "number_of_invoices", );
             set_value_model(cdt, cdn, "remaining_billing_value", );
@@ -2211,18 +2211,24 @@ frappe.ui.form.on('Project Payment Schedule', {
     },
     billing_percentage: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
-        if (!row || row === undefined) {
-            return
-        }
+        // if (!row || row === undefined) {
+        //     return
+        // }
         set_value_model(cdt, cdn, "billing_value", 0);
 
-        if (row.billing_percentage <= row.remaining_billing_percent && row.billing_percentage >= 0) {
+        if (row.billing_percentage <= row.remaining_billing_percent && row.billing_percentage >= 0 && row.is_advance!=1) {
             if (row.items_value && row.billing_percentage) {
                 set_value_model(cdt, cdn, "billing_value", row.billing_percentage / 100 * row.items_value);
             }
         }
 
-        if (row.billing_percentage > row.remaining_billing_percent && row.billing_percentage >= 0) {
+        if (row.is_advance==1) {
+            if (row.items_value && row.billing_percentage) {
+                set_value_model(cdt, cdn, "billing_value", row.billing_percentage / 100 * row.items_value);
+            }
+        }
+
+        if (row.billing_percentage > row.remaining_billing_percent && row.billing_percentage >= 0 && row.is_advance!=1) {
             set_value_model(cdt, cdn, "billing_percentage", );
             frappe.call({
                 "method": "remaining_billing_percent_msg",
@@ -2298,9 +2304,8 @@ frappe.ui.form.on('Project Payment Schedule', {
         cost = []
         for (var i = 0; i < item_length; i++) {
             item.push(cur_frm.doc.project_financial_detail[i].scope_item)
-            cost.push(cur_frm.doc.project_financial_detail[i].selling_price)
+            cost.push(cur_frm.doc.project_financial_detail[i].final_selling_price)
         }
-
         set_value_model(cdt, cdn, "project_item_price", cost[item.indexOf(row.advance_project_items)]);
 
     },
@@ -2324,15 +2329,15 @@ frappe.ui.form.on('Project Payment Schedule', {
         }
 
         if (row.is_advance) {
-            frm.fields_dict["project_payment_schedule"].grid.set_column_disp("billing_percentage", false);
-            frm.fields_dict["project_payment_schedule"].grid.set_column_disp("number_of_invoices", false);
+            // frm.fields_dict["project_payment_schedule"].grid.set_column_disp("billing_percentage", false);
+            // frm.fields_dict["project_payment_schedule"].grid.set_column_disp("number_of_invoices", false);
             set_value_model(cdt, cdn, "billing_percentage", 100 );
             set_value_model(cdt, cdn, "number_of_invoices", 1 );
             set_value_model(cdt, cdn, "remaining_billing_value", 0 );
             set_value_model(cdt, cdn, "remaining_billing_percent", 0 );
         }else{
-            frm.fields_dict["project_payment_schedule"].grid.set_column_disp("billing_percentage", true);
-            frm.fields_dict["project_payment_schedule"].grid.set_column_disp("number_of_invoices", true);
+            // frm.fields_dict["project_payment_schedule"].grid.set_column_disp("billing_percentage", true);
+            // frm.fields_dict["project_payment_schedule"].grid.set_column_disp("number_of_invoices", true);
             set_value_model(cdt, cdn, "billing_percentage", );
             set_value_model(cdt, cdn, "number_of_invoices", );
             set_value_model(cdt, cdn, "remaining_billing_value", );
