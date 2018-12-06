@@ -2329,6 +2329,7 @@ frappe.ui.form.on('Project Payment Schedule', {
         }
 
         if (row.is_advance) {
+            frm.fields_dict["project_payment_schedule"].grid.toggle_reqd("advanced_item", true);
             // frm.fields_dict["project_payment_schedule"].grid.set_column_disp("billing_percentage", false);
             // frm.fields_dict["project_payment_schedule"].grid.set_column_disp("number_of_invoices", false);
             set_value_model(cdt, cdn, "billing_percentage", 100 );
@@ -2336,6 +2337,7 @@ frappe.ui.form.on('Project Payment Schedule', {
             set_value_model(cdt, cdn, "remaining_billing_value", 0 );
             set_value_model(cdt, cdn, "remaining_billing_percent", 0 );
         }else{
+            frm.fields_dict["project_payment_schedule"].grid.toggle_reqd("advanced_item", false);
             // frm.fields_dict["project_payment_schedule"].grid.set_column_disp("billing_percentage", true);
             // frm.fields_dict["project_payment_schedule"].grid.set_column_disp("number_of_invoices", true);
             set_value_model(cdt, cdn, "billing_percentage", );
