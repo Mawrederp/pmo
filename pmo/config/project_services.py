@@ -13,12 +13,12 @@ def get_data():
                     "name": "Projects List",
                     "description": _("Projects List."),
                 },
-                {
-                    "type": "doctype",
-                    "name": "Projects List",
-                    "label": _("Project Details"),
-                    "description": _("Projects List."),
-                },
+                # {
+                #     "type": "doctype",
+                #     "name": "Projects List",
+                #     "label": _("Project Details"),
+                #     "description": _("Projects List."),
+                # },
                 {
                     "type": "doctype",
                     "name": "Project Gantt",
@@ -91,22 +91,22 @@ def get_data():
                     "description": _("Project Management Assignment")
                 }
             ]
-        },
-         {
-            "label": _("Projects Studies"),
-            "items": [
-                {
-                    "type": "doctype",
-                    "name": "Project Quotation",
-                    "label": _("Project Quotation"),
-                    "description": _("Project Quotation."),
-                },
-                {
-                    "type": "doctype",
-                    "name": "General Pricing",
-                    "label": _("General Pricing"),
-                    "description": _("General Pricing."),
-                }
-            ]
         }
+        #  {
+        #     "label": _("Projects Studies"),
+        #     "items": [
+        #         {
+        #             "type": "doctype",
+        #             "name": "Project Quotation",
+        #             "label": _("Project Quotation"),
+        #             "description": _("Project Quotation."),
+        #         },
+        #         {
+        #             "type": "doctype",
+        #             "name": "General Pricing",
+        #             "label": _("General Pricing"),
+        #             "description": _("General Pricing."),
+        #         }
+        #     ]
+        # }
     ]
