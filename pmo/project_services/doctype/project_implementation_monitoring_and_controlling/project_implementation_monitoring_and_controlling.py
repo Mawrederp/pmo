@@ -128,6 +128,9 @@ class ProjectImplementationMonitoringandControlling(Document):
 
     def make_project_closure(self):
         doc_proj = frappe.get_doc("Project",self.project_name)
+
+        doc_proj_initiation = frappe.get_doc("Project Initiation",self.project_name)
+        
         doc_proj.state = "Implementation Monitoring and Controlling"
         doc_proj.save(ignore_permissions = True)
         frappe.db.commit()
@@ -136,7 +139,11 @@ class ProjectImplementationMonitoringandControlling(Document):
             "doctype":"Project Closure",
             "project_name": self.project_name,
             "project": self.project_name,
-            "projects_list": self.projects_list
+            "projects_list": self.projects_list,
+            "purchase_order_number": doc_proj_initiation.po_number,
+            "purchase_order_date": doc_proj_initiation.po_date,
+            "closure_tawari_name": doc_proj_initiation.project_manager_name,
+            "closure_tawari_position": 'Project Manager'
             }).save(ignore_permissions = True)
         frappe.db.commit()
         
