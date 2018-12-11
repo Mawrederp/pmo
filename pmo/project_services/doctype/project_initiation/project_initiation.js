@@ -2346,21 +2346,21 @@ frappe.ui.form.on('Project Payment Schedule', {
             set_value_model(cdt, cdn, "remaining_billing_percent", );
         }
 
-    },
-    date_period: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
+    }
+    // date_period: function (frm, cdt, cdn) {
+    //     var row = locals[cdt][cdn];
         
-        if (row.date_period=='Date') {
-            frm.fields_dict["project_payment_schedule"].grid.toggle_reqd("when", true);
-            frm.fields_dict["project_payment_schedule"].grid.toggle_reqd("from_date", false);
-            frm.fields_dict["project_payment_schedule"].grid.toggle_reqd("to_date", false);
-        }else{
-            frm.fields_dict["project_payment_schedule"].grid.toggle_reqd("when", false);
-            frm.fields_dict["project_payment_schedule"].grid.toggle_reqd("from_date", true);
-            frm.fields_dict["project_payment_schedule"].grid.toggle_reqd("to_date", true);
-        }
+    //     if (row.date_period=='Date') {
+    //         frm.fields_dict["project_payment_schedule"].grid.toggle_reqd("when", true);
+    //         frm.fields_dict["project_payment_schedule"].grid.toggle_reqd("from_date", false);
+    //         frm.fields_dict["project_payment_schedule"].grid.toggle_reqd("to_date", false);
+    //     }else{
+    //         frm.fields_dict["project_payment_schedule"].grid.toggle_reqd("when", false);
+    //         frm.fields_dict["project_payment_schedule"].grid.toggle_reqd("from_date", true);
+    //         frm.fields_dict["project_payment_schedule"].grid.toggle_reqd("to_date", true);
+    //     }
 
-    },
+    // },
 
 
 
