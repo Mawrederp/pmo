@@ -699,6 +699,9 @@ class ProjectBillingControl(Document):
                                     "product_bundle": doc.items
                                 })
                         else:
+
+                            if item[10]!=1 and not item[8]:
+                                frappe.throw("You must make delivery note with item {0} before making hybrid invoice".format(item[0]))
                     
                             for resource in resources_details_name:
                                 
@@ -719,6 +722,7 @@ class ProjectBillingControl(Document):
                                 dnote.append("items", {
                                     "item_code": doc.items,
                                     "description": description,
+                                    "delivery_note": item[8],
                                     "project_payment_schedule": item[16],
                                     "qty": flt(required_qty),
                                     "rate": rate
