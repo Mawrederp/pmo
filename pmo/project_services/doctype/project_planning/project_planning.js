@@ -217,7 +217,19 @@ frappe.ui.form.on("Roles And Responsibilities", {
 		if(row.other_name && row.party!='Tawari'){
 			frappe.model.set_value(cdt, cdn, 'name1', row.other_name);
 		}
-	}
-	
+	},
+	setup_queries: function(frm, cdt, cdn) {
+        var me = this;
+        me.frm.set_query("tawari_name", "roles_and_responsibilities", function (doc, cdt, cdn) {
+            return {
+                query: "pmo.project_services.doctype.pmo_resources.pmo_resources.get_employee",
+                filters: {
+                    employee: frm.doc.employee
+                }
+            };
+        });
+
+    }
+
 
 });
