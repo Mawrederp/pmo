@@ -428,6 +428,36 @@ class ProjectBillingControl(Document):
                             else:
                                 frappe.throw("This is Advance Payment, Please click Make Sales invoice instead")
 
+                        for schedule_control in self.project_payment_schedule_control:
+                            if schedule_control.invoice == 1:
+                                dnote.append("project_payment_schedule_delivery", {
+                                    "scope_item": schedule_control.scope_item,
+                                    "items_value": schedule_control.items_value,
+                                    "billing_percentage": schedule_control.billing_percentage,
+                                    "number_of_invoices": schedule_control.number_of_invoices,
+                                    "vat": schedule_control.vat,
+                                    "vat_value": schedule_control.vat_value,
+                                    "total_billing_value": schedule_control.total_billing_value,
+                                    "remaining_billing_value": schedule_control.remaining_billing_value,
+                                    "remaining_billing_percent": schedule_control.remaining_billing_percent,
+                                    "delivery_note": schedule_control.delivery_note,
+                                    "sales_invoice": schedule_control.sales_invoice,
+                                    "is_advance": schedule_control.is_advance,
+                                    "advanced_item": schedule_control.advanced_item,
+                                    "advance_project_items": schedule_control.advance_project_items,
+                                    "project_item_price": schedule_control.project_item_price,
+                                    "advance_percent": schedule_control.advance_percent,
+                                    "billing_status": schedule_control.billing_status,
+                                    "invoice": schedule_control.invoice,
+                                    "date_period": schedule_control.date_period,
+                                    "when": schedule_control.when,
+                                    "from_date": schedule_control.from_date,
+                                    "to_date": schedule_control.to_date,
+                                    "billing_value": schedule_control.billing_value,
+                                    "description_when": schedule_control.description_when,
+                                    "created_done": schedule_control.created_done,
+                                    "old_name": schedule_control.old_name
+                                })
 
                         dnote.flags.ignore_mandatory = True
                         dnote.insert(ignore_permissions=True)
@@ -566,6 +596,37 @@ class ProjectBillingControl(Document):
 
                             else:
                                 frappe.throw("This is Not an Advance Payment, Please click Make Delivery Note instead")
+
+                        for schedule_control in self.project_payment_schedule_control:
+                            if schedule_control.invoice == 1:
+                                dnote.append("project_payment_schedule_invoice", {
+                                    "scope_item": schedule_control.scope_item,
+                                    "items_value": schedule_control.items_value,
+                                    "billing_percentage": schedule_control.billing_percentage,
+                                    "number_of_invoices": schedule_control.number_of_invoices,
+                                    "vat": schedule_control.vat,
+                                    "vat_value": schedule_control.vat_value,
+                                    "total_billing_value": schedule_control.total_billing_value,
+                                    "remaining_billing_value": schedule_control.remaining_billing_value,
+                                    "remaining_billing_percent": schedule_control.remaining_billing_percent,
+                                    "delivery_note": schedule_control.delivery_note,
+                                    "sales_invoice": schedule_control.sales_invoice,
+                                    "is_advance": schedule_control.is_advance,
+                                    "advanced_item": schedule_control.advanced_item,
+                                    "advance_project_items": schedule_control.advance_project_items,
+                                    "project_item_price": schedule_control.project_item_price,
+                                    "advance_percent": schedule_control.advance_percent,
+                                    "billing_status": schedule_control.billing_status,
+                                    "invoice": schedule_control.invoice,
+                                    "date_period": schedule_control.date_period,
+                                    "when": schedule_control.when,
+                                    "from_date": schedule_control.from_date,
+                                    "to_date": schedule_control.to_date,
+                                    "billing_value": schedule_control.billing_value,
+                                    "description_when": schedule_control.description_when,
+                                    "created_done": schedule_control.created_done,
+                                    "old_name": schedule_control.old_name
+                                })
 
                         dnote.flags.ignore_mandatory = True
                         dnote.insert(ignore_permissions=True)
@@ -755,6 +816,37 @@ class ProjectBillingControl(Document):
                                         "is_product_bundle_item": 1 ,
                                         "product_bundle": doc.items
                                     })
+
+                    for schedule_control in self.project_payment_schedule_control:
+                        if schedule_control.invoice == 1:
+                            dnote.append("project_payment_schedule_invoice", {
+                                "scope_item": schedule_control.scope_item,
+                                "items_value": schedule_control.items_value,
+                                "billing_percentage": schedule_control.billing_percentage,
+                                "number_of_invoices": schedule_control.number_of_invoices,
+                                "vat": schedule_control.vat,
+                                "vat_value": schedule_control.vat_value,
+                                "total_billing_value": schedule_control.total_billing_value,
+                                "remaining_billing_value": schedule_control.remaining_billing_value,
+                                "remaining_billing_percent": schedule_control.remaining_billing_percent,
+                                "delivery_note": schedule_control.delivery_note,
+                                "sales_invoice": schedule_control.sales_invoice,
+                                "is_advance": schedule_control.is_advance,
+                                "advanced_item": schedule_control.advanced_item,
+                                "advance_project_items": schedule_control.advance_project_items,
+                                "project_item_price": schedule_control.project_item_price,
+                                "advance_percent": schedule_control.advance_percent,
+                                "billing_status": schedule_control.billing_status,
+                                "invoice": schedule_control.invoice,
+                                "date_period": schedule_control.date_period,
+                                "when": schedule_control.when,
+                                "from_date": schedule_control.from_date,
+                                "to_date": schedule_control.to_date,
+                                "billing_value": schedule_control.billing_value,
+                                "description_when": schedule_control.description_when,
+                                "created_done": schedule_control.created_done,
+                                "old_name": schedule_control.old_name
+                            })
 
                     dnote.flags.ignore_mandatory = True
                     dnote.insert(ignore_permissions=True)
