@@ -54,7 +54,9 @@ frappe.ui.form.on('Project Planning', {
 
 
 frappe.ui.form.on("Roles And Responsibilities", {
-	party: function(frm, doctype, name) {
+	party: function(frm, cdt, cdn) {
+		var row = locals[cdt][cdn];
+		frappe.model.set_value(cdt, cdn, 'name1', );
 
 		frm.set_value("client_steering_name", );
 		frm.set_value("client_ownership_name", );
@@ -209,6 +211,13 @@ frappe.ui.form.on("Roles And Responsibilities", {
 	        }
 	    }
 
+	},
+	other_name: function(frm, cdt, cdn) {
+		var row = locals[cdt][cdn];
+		if(row.other_name && row.party!='Tawari'){
+			frappe.model.set_value(cdt, cdn, 'name1', row.other_name);
+		}
 	}
 	
+
 });
