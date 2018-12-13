@@ -1795,11 +1795,11 @@ frappe.ui.form.on('Project Initiation', {
 
         var billing_total_vat = 0;
         $.each(frm.doc.project_payment_schedule || [], function (i, d) {
-            // if(d.is_advance && d.advance_project_items){
+            if(d.is_advance && d.advance_project_items){
 
-            // }else{
+            }else{
                 billing_total_vat += flt(d.total_billing_value);
-            // }
+            }
         });
         set_value(frm, "total_billing_vat", Math.round(billing_total_vat));
 
