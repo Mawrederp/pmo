@@ -46,7 +46,6 @@ class ProjectsProcurementControl(Document):
                     if i.select==0:
                         unspecified_item.append(i.item)
 
-
                 item_name = frappe.get_value("Item", filters = {"item_name": scope_item}, fieldname = "name")    
 
                 resources_details_name = frappe.db.sql("select name from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,scope_item))
@@ -86,8 +85,8 @@ class ProjectsProcurementControl(Document):
                     if flt(doc.quantity)>0:
                         qty = doc.quantity
 
-
                     if doc.items not in unspecified_item:
+
                         mreq.append("items", {
                             "item_code": doc.items,
                             "warehouse": item.default_warehouse,
@@ -125,6 +124,10 @@ class ProjectsProcurementControl(Document):
                 mreq.flags.ignore_mandatory = True
                 mreq.insert(ignore_permissions=True)
                 mreq.save()
+
+                for selected_item in self.specified_item:
+                    if selected_item.select==1:
+                        selected_item.material_request = mreq.name
 
                 frappe.msgprint("Material Request is created")
                 
