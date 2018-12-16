@@ -380,7 +380,12 @@ class ProjectBillingControl(Document):
 
                                     item_name = frappe.get_doc("Item", doc.items)
 
-                                    description=item_name.description
+                                    if description_when:
+                                        description=description_when
+                                    elif item_name.description:
+                                        description=item_name.description
+                                    else:
+                                        description=doc.items
 
                                     rate = doc.final_selling_price
 
@@ -770,7 +775,12 @@ class ProjectBillingControl(Document):
 
                                 item_name = frappe.get_doc("Item", doc.items)
 
-                                description=item_name.description
+                                if description_when:
+                                    description=description_when
+                                elif item_name.description:
+                                    description=item_name.description
+                                else:
+                                    description=doc.items
 
                                 rate = doc.final_selling_price
 

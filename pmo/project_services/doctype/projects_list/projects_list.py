@@ -24,6 +24,7 @@ class ProjectsList(Document):
         frappe.get_doc({
             "doctype": "Project Initiation",
             "project_name": self.project_name,
+            "project_name_arabic": self.project_name_arabic,
             "project": self.project_name,
             "projects_list": self.name
             # "project_sponsor": ,

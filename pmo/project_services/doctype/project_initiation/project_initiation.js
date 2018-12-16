@@ -927,6 +927,16 @@ frappe.ui.form.on('Items Details', {
         }
 
     },
+    adjustment: function (frm, cdt, cdn) {
+        var d = locals[cdt][cdn];
+
+        set_value_model(cdt, cdn, "final_selling_price", 0);
+
+        if (d.selling_price || d.contingency || d.adjustment) {
+            set_value_model(cdt, cdn, "final_selling_price", d.selling_price + d.contingency + d.adjustment);
+        }
+
+    }
 
 });
 
