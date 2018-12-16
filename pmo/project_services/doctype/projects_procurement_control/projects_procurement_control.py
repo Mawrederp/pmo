@@ -79,8 +79,13 @@ class ProjectsProcurementControl(Document):
                     # proj_item = frappe.get_doc("Project Items", doc.items)
                     item = frappe.get_doc("Item", doc.items)
 
-                    description=item.description
-
+                    if description_comments:
+                    	description=description_comments
+                    elif item.description:
+                    	description=item.description
+                    else:
+                    	description=doc.items
+                    	
                     qty = 1
                     if flt(doc.quantity)>0:
                         qty = doc.quantity
