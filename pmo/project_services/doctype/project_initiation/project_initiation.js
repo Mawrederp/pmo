@@ -24,18 +24,18 @@ function set_value(frm, field, value) {
 }
 
 function refresh_general_pricing(frm) {
-    var adj = []
-    for (let i = 0; i < cur_frm.doc.project_financial_detail.length; i++) {
-        adj.push(cur_frm.doc.project_financial_detail[i].adjustment)
-    }
+    // var adj = []
+    // for (let i = 0; i < cur_frm.doc.project_financial_detail.length; i++) {
+    //     adj.push(cur_frm.doc.project_financial_detail[i].adjustment)
+    // }
 
     frm.clear_table("project_financial_detail");
-    var indexing = []
+    // var indexing = []
     for (let i = 0; i <= 15; i++) {
         if ((frm.doc["section_name_" + i] != undefined || "" || frm.doc["cost_" + i] != 0 ||
                 frm.doc["selling_price_" + i] != 0 || frm.doc["risk_contingency_" + i] != 0)) {
 
-            indexing.push(i)
+            // indexing.push(i)
             var d = frm.add_child("project_financial_detail");
 
             d.scope_item = frm.doc["section_name_" + i];
@@ -44,17 +44,16 @@ function refresh_general_pricing(frm) {
             d.selling_price = frm.doc["selling_price_" + i];
             d.additions_value = frm.doc["risk_contingency_" + i];
             d.final_selling_price = frm.doc["total_selling_price_" + i];
-            d.profit = frm.doc["profit_" + i];
+            d.profit = frm.doc["selling_price_" + i]-frm.doc["cost_" + i] ;
             d.markup = Math.round(frm.doc["markup_" + i]);
-            d.margin = Math.round(frm.doc["margin_" + i]);
-            d.adjustment = adj[indexing.indexOf(i)];
-
+            d.margin = (d.profit/d.final_selling_price)*100 ;
+            // d.adjustment = adj[indexing.indexOf(i)];
 
             // console.log(frm.doc["markup_" + i])
             // console.log(frm.doc["markup_" + i])
             // console.log(adj[indexing.indexOf(i)])
             // console.log("---------------------------")
-            frm.script_manager.trigger("adjustment", d.doctype, d.name);
+            // frm.script_manager.trigger("adjustment", d.doctype, d.name);
             frm.script_manager.trigger("total_cost", d.doctype, d.name);
             frm.script_manager.trigger("final_selling_price", d.doctype, d.name);
 
@@ -987,10 +986,14 @@ frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cd
     // code for calculate total and set on parent field.
     for (let index = 0; index <= 15; index++) {
         var grand_total = 0;
+        var margin = 0
         $.each(frm.doc["items_details_" + index] || [], function (i, d) {
             grand_total += flt(d.final_selling_price);
         });
         set_value(frm, "total_selling_price_" + index, grand_total);
+
+        margin = frm.doc["profit_" + index]/frm.doc["total_selling_price_" + index]
+        set_value(frm, "margin_" + index, Math.round(margin * 100));
     }
     refresh_general_pricing(frm);
 
@@ -2075,14 +2078,14 @@ frappe.ui.form.on('Project Financial Details', {
         if (row.final_selling_price != 0) {
             set_value_model(cdt, cdn, "margin", (row.profit / row.final_selling_price) * 100);
         }
-    },
-    adjustment: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
-        if (!row || row === undefined) {
-            return
-        }
-        set_value_model(cdt, cdn, "final_selling_price", row.selling_price + row.additions_value + row.adjustment);
     }
+    // adjustment: function (frm, cdt, cdn) {
+    //     var row = locals[cdt][cdn];
+    //     if (!row || row === undefined) {
+    //         return
+    //     }
+    //     set_value_model(cdt, cdn, "final_selling_price", row.selling_price + row.additions_value + row.adjustment);
+    // }
 
 
 })
