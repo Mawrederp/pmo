@@ -945,46 +945,58 @@ frappe.ui.form.on('Items Details', {
 
 frappe.ui.form.on("Items Details", "total_cost", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
-    for (let index = 0; index <= 15; index++) {
+    var current_table = locals[cdt][cdn];
+    var index = current_table.parentfield[current_table.parentfield.length-1];
+
+    // for (let index = 0; index <= 15; index++) {
         var grand_total = 0;
         $.each(frm.doc["items_details_" + index] || [], function (i, d) {
             grand_total += flt(d.total_cost);
         });
         set_value(frm, "cost_" + index, grand_total);
-    }
+    // }
 
 
 });
 
 frappe.ui.form.on("Items Details", "selling_price", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
-    for (let index = 0; index <= 15; index++) {
+    var current_table = locals[cdt][cdn];
+    var index = current_table.parentfield[current_table.parentfield.length-1];
+
+    // for (let index = 0; index <= 15; index++) {
         var grand_total = 0;
         $.each(frm.doc["items_details_" + index] || [], function (i, d) {
             grand_total += flt(d.selling_price);
         });
         set_value(frm, "selling_price_" + index, grand_total);
-    }
+    // }
 
 });
 
 
 frappe.ui.form.on("Items Details", "contingency", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
-    for (let index = 0; index <= 15; index++) {
+    var current_table = locals[cdt][cdn];
+    var index = current_table.parentfield[current_table.parentfield.length-1];
+
+    // for (let index = 0; index <= 15; index++) {
         var grand_total = 0;
         $.each(frm.doc["items_details_" + index] || [], function (i, d) {
             grand_total += flt(d.contingency);
         });
         set_value(frm, "risk_contingency_" + index, grand_total);
-    }
+    // }
 
 });
 
 
 frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
-    for (let index = 0; index <= 15; index++) {
+    var current_table = locals[cdt][cdn];
+    var index = current_table.parentfield[current_table.parentfield.length-1];
+    
+    // for (let index = 0; index <= 15; index++) {
         var grand_total = 0;
         var margin = 0
         $.each(frm.doc["items_details_" + index] || [], function (i, d) {
@@ -994,7 +1006,7 @@ frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cd
 
         margin = frm.doc["profit_" + index]/frm.doc["total_selling_price_" + index]
         set_value(frm, "margin_" + index, Math.round(margin * 100));
-    }
+    // }
     refresh_general_pricing(frm);
 
 });
@@ -1003,13 +1015,16 @@ frappe.ui.form.on("Items Details", "final_selling_price", function (frm, cdt, cd
 
 frappe.ui.form.on("Items Details", "profit", function (frm, cdt, cdn) {
     // code for calculate total and set on parent field.
-    for (let index = 0; index <= 15; index++) {
+    var current_table = locals[cdt][cdn];
+    var index = current_table.parentfield[current_table.parentfield.length-1];
+
+    // for (let index = 0; index <= 15; index++) {
         var grand_total = 0;
         $.each(frm.doc["items_details_" + index] || [], function (i, d) {
             grand_total += flt(d.profit);
         });
         set_value(frm, "profit_" + index, grand_total);
-    }
+    // }
 
 });
 
