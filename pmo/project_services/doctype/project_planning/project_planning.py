@@ -234,3 +234,26 @@ def get_project_detail_planning(project, company=None):
 
     return details,risk_register,roles_and_responsibilities
 
+
+
+
+@frappe.whitelist()
+def get_employee(doctype, txt, searchfield, start, page_len, filters):
+    return frappe.db.sql("""select name, employee_name from `tabEmployee`
+        where status = 'Active'
+            and docstatus < 2
+            and ({key} like %(txt)s
+                or employee_name like %(txt)s)
+        order by
+            if(locate(%(_txt)s, name), locate(%(_txt)s, name), 99999),
+            if(locate(%(_txt)s, employee_name), locate(%(_txt)s, employee_name), 99999),
+            idx desc,
+            name, employee_name
+        limit %(start)s, %(page_len)s""".format(**{
+            'key': searchfield
+        }), {
+            'txt': "%s%%" % txt,
+            '_txt': txt.replace("%", ""),
+            'start': start,
+            'page_len': page_len
+        })
