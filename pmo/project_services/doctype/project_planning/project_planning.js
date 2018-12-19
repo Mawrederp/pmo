@@ -57,6 +57,8 @@ frappe.ui.form.on("Roles And Responsibilities", {
 	party: function(frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
 		frappe.model.set_value(cdt, cdn, 'name1', );
+		frappe.model.set_value(cdt, cdn, 'other_name', );
+		frappe.model.set_value(cdt, cdn, 'tawari_name', );
 
 		frm.set_value("client_steering_name", );
 		frm.set_value("client_ownership_name", );
@@ -217,19 +219,21 @@ frappe.ui.form.on("Roles And Responsibilities", {
 		if(row.other_name && row.party!='Tawari'){
 			frappe.model.set_value(cdt, cdn, 'name1', row.other_name);
 		}
-	},
-	setup_queries: function(frm, cdt, cdn) {
-        var me = this;
-        me.frm.set_query("tawari_name", "roles_and_responsibilities", function (doc, cdt, cdn) {
-            return {
-                query: "pmo.project_services.doctype.pmo_resources.pmo_resources.get_employee",
-                filters: {
-                    employee: frm.doc.employee
-                }
-            };
-        });
-
-    }
-
+	}
 
 });
+
+
+
+frappe.ui.form.on("Project Planning", {
+	refresh : function(frm, cdt, cdn) {
+
+		frm.set_query("tawari_name", "roles_and_responsibilities", function(doc) {
+			return {
+				query: "pmo.project_services.doctype.pmo_resources.pmo_resources.get_employee",
+			}
+		});
+		
+    }
+});
+
