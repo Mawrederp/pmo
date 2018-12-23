@@ -437,6 +437,7 @@ class ProjectBillingControl(Document):
                             if schedule_control.invoice == 1:
                                 dnote.append("project_payment_schedule_delivery", {
                                     "scope_item": schedule_control.scope_item,
+                                    "project_item_arabic": schedule_control.project_item_arabic,
                                     "items_value": schedule_control.items_value,
                                     "billing_percentage": schedule_control.billing_percentage,
                                     "number_of_invoices": schedule_control.number_of_invoices,
@@ -606,6 +607,7 @@ class ProjectBillingControl(Document):
                             if schedule_control.invoice == 1:
                                 dnote.append("project_payment_schedule_invoice", {
                                     "scope_item": schedule_control.scope_item,
+                                    "project_item_arabic": schedule_control.project_item_arabic,
                                     "items_value": schedule_control.items_value,
                                     "billing_percentage": schedule_control.billing_percentage,
                                     "number_of_invoices": schedule_control.number_of_invoices,
@@ -831,6 +833,7 @@ class ProjectBillingControl(Document):
                         if schedule_control.invoice == 1:
                             dnote.append("project_payment_schedule_invoice", {
                                 "scope_item": schedule_control.scope_item,
+                                "project_item_arabic": schedule_control.project_item_arabic,
                                 "items_value": schedule_control.items_value,
                                 "billing_percentage": schedule_control.billing_percentage,
                                 "number_of_invoices": schedule_control.number_of_invoices,

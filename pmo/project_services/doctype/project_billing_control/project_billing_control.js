@@ -1078,6 +1078,7 @@ frappe.ui.form.on('Project Billing Control', {
                     d.advance_percent = row.advance_percent;
                     d.delivery_note = row.delivery_note;
                     d.sales_invoice = row.sales_invoice;
+                    d.project_item_arabic = row.project_item_arabic;
                     d.old_name = row.name;
                     frm.refresh_field("project_payment_schedule_control");
                 });
