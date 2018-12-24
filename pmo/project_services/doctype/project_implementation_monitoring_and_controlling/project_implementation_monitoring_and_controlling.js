@@ -49,7 +49,34 @@ frappe.ui.form.on('Project Implementation Monitoring and Controlling', {
         $('.layout-main-section-wrapper .layout-main-section .form-inner-toolbar').after('<style>.layout-main-section-wrapper .layout-main-section .form-inner-toolbar button:nth-child(n+1){float: left !important;}.layout-main-section-wrapper .layout-main-section .form-inner-toolbar button{font-weight: bold!important;}</style>');
         
         
-	}
+	},
+	previous_project_customer_details: function(frm) {
+        if(cur_frm.doc.previous_project_customer_details){
+            cur_frm.set_value("customer", )
+            cur_frm.set_value("account", )
+            cur_frm.set_value("customer_department", )
+            cur_frm.set_value("employee", )
+            cur_frm.set_value("end_users", )
+            cur_frm.set_value("concerned_department", )
+            cur_frm.set_value("customer_project_manager", )
+            cur_frm.set_value("customer_project_sponsor", )
+            cur_frm.set_value("customer_project_owner", )
+            cur_frm.set_value("po_number", )
+            cur_frm.set_value("po_date", )
+
+
+            frappe.call({
+                "method": "get_previous_customer_changes",
+                doc: cur_frm.doc,
+                callback: function(r) {
+                	cur_frm.refresh()
+                }
+            });
+
+            document.querySelectorAll("[data-fieldname='po_number']")[1].style.backgroundColor="chartreuse";
+
+        }
+    }
 
 });
 
@@ -92,9 +119,7 @@ frappe.ui.form.on('Control Change Request', {
         
         d.show();
 
-
-
     }
 
-
 });
+

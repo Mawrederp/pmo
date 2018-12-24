@@ -9,7 +9,7 @@
  "custom": 0, 
  "docstatus": 0, 
  "doctype": "DocType", 
- "document_type": "", 
+ "document_type": "Document", 
  "editable_grid": 1, 
  "engine": "InnoDB", 
  "fields": [
@@ -1652,7 +1652,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2018-09-09 13:59:38.859242", 
+ "modified": "2018-12-24 11:21:38.745217", 
  "modified_by": "Administrator", 
  "module": "Project Services", 
  "name": "Project Planning", 

@@ -9,7 +9,7 @@
  "custom": 0, 
  "docstatus": 0, 
  "doctype": "DocType", 
- "document_type": "", 
+ "document_type": "Document", 
  "editable_grid": 1, 
  "engine": "InnoDB", 
  "fields": [
@@ -10236,7 +10236,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2018-12-05 15:32:43.736058", 
+ "modified": "2018-12-24 11:17:39.202055", 
  "modified_by": "Administrator", 
  "module": "Project Services", 
  "name": "Project Initiation", 
@@ -10470,6 +10470,7 @@
  "show_name_in_global_search": 0, 
  "sort_field": "modified", 
  "sort_order": "DESC", 
+ "timeline_field": "", 
  "title_field": "project_name", 
  "track_changes": 1, 
  "track_seen": 0

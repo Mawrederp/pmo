@@ -9,7 +9,7 @@
  "custom": 0, 
  "docstatus": 0, 
  "doctype": "DocType", 
- "document_type": "", 
+ "document_type": "Document", 
  "editable_grid": 1, 
  "engine": "InnoDB", 
  "fields": [
@@ -1274,7 +1274,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2018-12-11 14:34:42.567495", 
+ "modified": "2018-12-24 11:15:03.466716", 
  "modified_by": "Administrator", 
  "module": "Project Services", 
  "name": "Project Closure", 

@@ -10,6 +10,8 @@ import json
 
 class ProjectImplementationMonitoringandControlling(Document):
     def validate(self):
+    	self.add_change_action()
+
         if self.workflow_state == 'Approved by PMO Director':
             if not frappe.db.exists("Project Closure", {"project_name": self.project_name}):
                 self.make_project_closure()
@@ -19,6 +21,9 @@ class ProjectImplementationMonitoringandControlling(Document):
             if "Rejected" in self.workflow_state:
                 self.docstatus = 1
                 self.docstatus = 2
+
+
+        
 
         # doc = frappe.db.sql("select data from `tabVersion` where ref_doctype='Project Implementation Monitoring and Controlling' and docname='{0}' order by creation desc limit 1".format(self.name))
         # if doc:
@@ -152,6 +157,36 @@ class ProjectImplementationMonitoringandControlling(Document):
         frappe.msgprint(msg)
         
 
+    def add_change_action(self):
+    	for change in self.change_request:
+    		if change.change_type=="Project Customer Details":
+
+    			if not frappe.db.exists("Project Customer Details Changes", {"change_request_number": change.change_request_number}) :
+    				
+    				doc_initiation = frappe.get_doc("Project Initiation",self.project_name)
+
+			    	doc = frappe.get_doc({
+			            "doctype":"Project Customer Details Changes",
+			            "change_request_number": change.change_request_number,
+			            "customer": doc_initiation.customer,
+			            "account": doc_initiation.account,
+			            "customer_department": doc_initiation.customer_department,
+			            "employee": doc_initiation.employee,
+			            "end_users": doc_initiation.end_users,
+			            "concerned_department": doc_initiation.concerned_department,
+			            "customer_project_manager": doc_initiation.customer_project_manager,
+			            "customer_project_sponsor": doc_initiation.customer_project_sponsor,
+			            "customer_project_owner": doc_initiation.customer_project_owner,
+			            "po_number": doc_initiation.po_number,
+			            "po_date": doc_initiation.po_date
+			            }).save(ignore_permissions = True)
+			        frappe.db.commit()
+
+			        msg = """Project Customer Details Changes has been created"""
+			        frappe.msgprint(msg)
+
+    	
+
     def existing_project_initiation(self):
         project_name = frappe.get_value("Project Initiation", filters = {"project_name": self.project_name}, fieldname = "name")
         if project_name:
@@ -174,6 +209,22 @@ class ProjectImplementationMonitoringandControlling(Document):
             return project_name
         else:
             frappe.throw("Project Closure not exist for this project")
+
+
+    def get_previous_customer_changes(self):
+    	doc = frappe.get_doc("Project Customer Details Changes", self.previous_project_customer_details)
+
+    	self.customer = doc.customer
+    	self.account = doc.account
+    	self.customer_department = doc.customer_department
+    	self.employee = doc.employee
+    	self.end_users = doc.end_users
+    	self.concerned_department = doc.concerned_department
+    	self.customer_project_manager = doc.customer_project_manager
+    	self.customer_project_sponsor = doc.customer_project_sponsor
+    	self.customer_project_owner = doc.customer_project_owner
+    	self.po_number = doc.po_number
+    	self.po_date = doc.po_date
 
 
 @frappe.whitelist()
