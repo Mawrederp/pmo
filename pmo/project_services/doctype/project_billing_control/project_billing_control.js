@@ -368,6 +368,16 @@ frappe.ui.form.on('Project Billing Control', {
                     arr1.push(project_schedule_name)
 
 
+
+                    var old_name = cur_frm.doc.project_payment_schedule_control[row].old_name
+                    if(old_name){
+                        old_name=old_name
+                    }else{
+                        old_name=''
+                    }
+                    arr1.push(old_name)
+
+
                 }
             }
 
@@ -599,6 +609,24 @@ frappe.ui.form.on('Project Billing Control', {
                     }
                     arr1.push(advance_project_items)
 
+
+                    var remaining_billing_percent = cur_frm.doc.project_payment_schedule_control[row].remaining_billing_percent
+                    if(remaining_billing_percent){
+                        remaining_billing_percent=remaining_billing_percent
+                    }else{
+                        advance_project_items=0
+                    }
+                    arr1.push(remaining_billing_percent)
+
+
+                    var old_name = cur_frm.doc.project_payment_schedule_control[row].old_name
+                    if(old_name){
+                        old_name=old_name
+                    }else{
+                        old_name=''
+                    }
+                    arr1.push(old_name)
+
                 }
             }
 
@@ -819,6 +847,34 @@ frappe.ui.form.on('Project Billing Control', {
                         remaining_billing_value=''
                     }
                     arr1.push(project_schedule_name)
+
+
+                    var advance_project_items = cur_frm.doc.project_payment_schedule_control[row].advance_project_items
+                    if(advance_project_items){
+                        advance_project_items=advance_project_items
+                    }else{
+                        advance_project_items=''
+                    }
+                    arr1.push(advance_project_items)
+
+
+                    var remaining_billing_percent = cur_frm.doc.project_payment_schedule_control[row].remaining_billing_percent
+                    if(remaining_billing_percent){
+                        remaining_billing_percent=remaining_billing_percent
+                    }else{
+                        advance_project_items=0
+                    }
+                    arr1.push(remaining_billing_percent)
+
+
+                    var old_name = cur_frm.doc.project_payment_schedule_control[row].old_name
+                    if(old_name){
+                        old_name=old_name
+                    }else{
+                        old_name=''
+                    }
+                    arr1.push(old_name)
+                    
 
                 }
             }

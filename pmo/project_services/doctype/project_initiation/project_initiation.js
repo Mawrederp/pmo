@@ -1811,24 +1811,30 @@ frappe.ui.form.on('Project Initiation', {
 
         var billing_total = 0;
         $.each(frm.doc.project_payment_schedule || [], function (i, d) {
-            billing_total += flt(d.billing_value);
+            if(d.is_advance){
+            }else{
+                billing_total += flt(d.billing_value);
+            }
         });
         set_value(frm, "total_billing", billing_total);
 
         var vat_value_total = 0;
         $.each(frm.doc.project_payment_schedule || [], function (i, d) {
-            vat_value_total += flt(d.vat_value);
+            if(d.is_advance){
+            }else{
+                vat_value_total += flt(d.vat_value);
+            }
         });
         set_value(frm, "total_project_vat_value", vat_value_total);
 
         var billing_total_vat = 0;
         $.each(frm.doc.project_payment_schedule || [], function (i, d) {
-            if(d.is_advance && d.advance_project_items){
-
+            if(d.is_advance){
             }else{
                 billing_total_vat += flt(d.total_billing_value);
             }
         });
+        console.log(billing_total_vat)
         set_value(frm, "total_billing_vat", Math.round(billing_total_vat));
 
         var total = 0;
@@ -1966,7 +1972,10 @@ frappe.ui.form.on("Project Payment Schedule", "billing_value", function (frm, cd
     // code for calculate total and set on parent field.
     var billing_total = 0;
     $.each(frm.doc.project_payment_schedule || [], function (i, d) {
-        billing_total += flt(d.billing_value);
+        if(d.is_advance){
+        }else{
+            billing_total += flt(d.billing_value);
+        }
     });
     set_value(frm, "total_billing", billing_total);
 });
@@ -1975,7 +1984,10 @@ frappe.ui.form.on("Project Payment Schedule", "vat_value", function (frm, cdt, c
     // code for calculate total and set on parent field.
     var vat_value_total = 0;
     $.each(frm.doc.project_payment_schedule || [], function (i, d) {
-        vat_value_total += flt(d.vat_value);
+        if(d.is_advance){
+        }else{
+            vat_value_total += flt(d.vat_value);
+        }
     });
     set_value(frm, "total_project_vat_value", vat_value_total);
 });
@@ -1984,7 +1996,7 @@ frappe.ui.form.on("Project Payment Schedule", "total_billing_value", function (f
     // code for calculate total and set on parent field.
     var billing_total_vat = 0;
     $.each(frm.doc.project_payment_schedule || [], function (i, d) {
-        if(d.is_advance && d.advance_project_items){
+        if(d.is_advance){
         }else{
             billing_total_vat += flt(d.total_billing_value);
         }

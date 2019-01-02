@@ -333,6 +333,8 @@ class ProjectBillingControl(Document):
         # item[11] = total_billing_value
         # item[12] = remaining_billing_value
         # item[13] = project_payment_schedule
+        # item[14] = old_name
+
 
         arr=[]
         for row in self.project_payment_schedule_control:
@@ -498,6 +500,8 @@ class ProjectBillingControl(Document):
         # item[15] = remaining_billing_value
         # item[16] = project_schedule_name
         # item[17] = advance_project_items
+        # item[18] = remaining_billing_percent
+        # item[19] = old_name
 
         arr=[]
         for row in self.project_payment_schedule_control:
@@ -671,6 +675,9 @@ class ProjectBillingControl(Document):
         # item[14] = total_billing_value
         # item[15] = remaining_billing_value
         # item[16] = project_schedule_name
+        # item[17] = advance_project_items
+        # item[18] = remaining_billing_percent
+        # item[19] = old_name
 
         arr=[]
         for row in self.project_payment_schedule_control:
@@ -1034,29 +1041,23 @@ class ProjectBillingControl(Document):
 
     def updat_init_payment_table_delivery_note(self,items,delivery_note,scope_item,billing_percentage,total_billing_value,remaining_billing_value):
         for item in items:
-            init_payment_name = ''
-            init_payment_name = frappe.db.sql("""
-            select payment.name from `tabProject Payment Schedule` payment join `tabProject Initiation` init on payment.parent=init.name
-            where payment.parenttype='Project Initiation' and init.name='{0}' and payment.scope_item='{1}'
-            and payment.billing_percentage='{2}' and payment.total_billing_value='{3}' and payment.remaining_billing_value='{4}'
-            """.format(self.project_name,item[0],item[3],item[11],item[12])) 
-            if init_payment_name:
-                init_payment_name=init_payment_name[0][0]
+            # init_payment_name = ''
+            # init_payment_name = frappe.db.sql("""
+            # select payment.name from `tabProject Payment Schedule` payment join `tabProject Initiation` init on payment.parent=init.name
+            # where payment.parenttype='Project Initiation' and init.name='{0}' and payment.scope_item='{1}'
+            # and payment.billing_percentage='{2}' and payment.total_billing_value='{3}' and payment.remaining_billing_value='{4}'
+            # """.format(self.project_name,item[0],item[3],item[11],item[12])) 
+            # if init_payment_name:
+            #     init_payment_name=init_payment_name[0][0]
 
+            doc_del = frappe.get_doc("Project Payment Schedule",str(item[14]))
+            if doc_del:
+                doc_del.delivery_note = delivery_note
+                doc_del.billing_status = 1
+                doc_del.flags.ignore_mandatory = True
+                doc_del.save(ignore_permissions=True)
 
-            print '***********************************'
-            print item
-            print init_payment_name
-            print '***********************************'
-
-            doc = frappe.get_doc("Project Payment Schedule",init_payment_name)
-            if doc.scope_item==item[0] and doc.billing_percentage==item[3] and doc.total_billing_value==item[11] and doc.remaining_billing_value==item[12]:
-                doc.delivery_note = delivery_note
-                doc.billing_status = 1
-                doc.flags.ignore_mandatory = True
-                doc.save(ignore_permissions=True)
-
-        return init_payment_name
+        # return init_payment_name
 
 
 
@@ -1065,23 +1066,23 @@ class ProjectBillingControl(Document):
 
     def updat_init_payment_table_sales_invoice(self,items,sales_invoice,scope_item,billing_percentage,total_billing_value,remaining_billing_value):
         for item in items:
-            init_payment_name = ''
-            init_payment_name = frappe.db.sql("""
-            select payment.name from `tabProject Payment Schedule` payment join `tabProject Initiation` init on payment.parent=init.name
-            where payment.parenttype='Project Initiation' and init.name='{0}' and payment.scope_item='{1}'
-            and payment.billing_percentage='{2}' and payment.total_billing_value='{3}' and payment.remaining_billing_value='{4}'
-            """.format(self.project_name,item[0],item[3],item[14],item[15])) 
-            if init_payment_name:
-                init_payment_name=init_payment_name[0][0]
+        #     init_payment_name = ''
+        #     init_payment_name = frappe.db.sql("""
+        #     select payment.name from `tabProject Payment Schedule` payment join `tabProject Initiation` init on payment.parent=init.name
+        #     where payment.parenttype='Project Initiation' and init.name='{0}' and payment.scope_item='{1}'
+        #     and payment.name='{2}'
+        #     """.format(self.project_name,item[0],item[17])) 
+        #     if init_payment_name:
+        #         init_payment_name=init_payment_name[0][0]
 
-            doc = frappe.get_doc("Project Payment Schedule",init_payment_name)
-            if doc.scope_item==item[0] and doc.billing_percentage==item[3] and doc.total_billing_value==item[14] and doc.remaining_billing_value==item[15]:
-                doc.sales_invoice = sales_invoice
-                doc.billing_status = 1
-                doc.flags.ignore_mandatory = True
-                doc.save(ignore_permissions=True)
+            docinv = frappe.get_doc("Project Payment Schedule",str(item[19]))
+            if docinv:
+                docinv.sales_invoice = sales_invoice
+                docinv.billing_status = 1
+                docinv.flags.ignore_mandatory = True
+                docinv.save(ignore_permissions=True)
 
-        return init_payment_name
+        # return init_payment_name
 
 
 
@@ -1112,23 +1113,23 @@ class ProjectBillingControl(Document):
 
     def updat_init_payment_table_hybrid_invoice(self,items,sales_invoice,scope_item,billing_percentage,total_billing_value,remaining_billing_value):
         for item in items:
-            init_payment_name = ''
-            init_payment_name = frappe.db.sql("""
-            select payment.name from `tabProject Payment Schedule` payment join `tabProject Initiation` init on payment.parent=init.name
-            where payment.parenttype='Project Initiation' and init.name='{0}' and payment.scope_item='{1}'
-            and payment.billing_percentage='{2}' and payment.total_billing_value='{3}' and payment.remaining_billing_value='{4}'
-            """.format(self.project_name,item[0],item[3],item[14],item[15])) 
-            if init_payment_name:
-                init_payment_name=init_payment_name[0][0]
+            # init_payment_name = ''
+            # init_payment_name = frappe.db.sql("""
+            # select payment.name from `tabProject Payment Schedule` payment join `tabProject Initiation` init on payment.parent=init.name
+            # where payment.parenttype='Project Initiation' and init.name='{0}' and payment.scope_item='{1}'
+            # and payment.billing_percentage='{2}' and payment.total_billing_value='{3}' and payment.remaining_billing_value='{4}'
+            # """.format(self.project_name,item[0],item[3],item[14],item[15])) 
+            # if init_payment_name:
+            #     init_payment_name=init_payment_name[0][0]
 
-            doc = frappe.get_doc("Project Payment Schedule",init_payment_name)
-            if doc.scope_item==item[0] and doc.billing_percentage==item[3] and doc.total_billing_value==item[14] and doc.remaining_billing_value==item[15]:
-                doc.sales_invoice = sales_invoice
-                doc.billing_status = 1
-                doc.flags.ignore_mandatory = True
-                doc.save(ignore_permissions=True)
+            doc_hy = frappe.get_doc("Project Payment Schedule",str(item[19]))
+            if doc_hy:
+                doc_hy.sales_invoice = sales_invoice
+                doc_hy.billing_status = 1
+                doc_hy.flags.ignore_mandatory = True
+                doc_hy.save(ignore_permissions=True)
 
-        return init_payment_name
+        # return init_payment_name
 
 
 
