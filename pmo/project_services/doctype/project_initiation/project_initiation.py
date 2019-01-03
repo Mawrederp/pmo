@@ -32,6 +32,8 @@ class ProjectInitiation(Document):
                 self.docstatus = 1
                 self.docstatus = 2
 
+        self.validate_total_billing_percentage()
+
             
         # field_array = ["cost","selling_price","risk_contingency", "total_selling_price","profit","markup","margin"]
         # final_totals_list = [0] * 7
@@ -247,6 +249,14 @@ class ProjectInitiation(Document):
 
     #     frappe.msgprint(_("""Project Planning have been created: <b><a href="#Form/Project Planning/{pp}">{pp}</a></b>""".format(pp = pp)))
 
+
+    def validate_total_billing_percentage(self):
+        project_payment_items = frappe.db.sql("select scope_item,sum(billing_percentage) from `tabProject Payment Schedule` where parent='{0}' and is_advance!=1 group by scope_item ".format(self.project_name))
+        for item in project_payment_items:
+            if item[1]!=100:
+                frappe.msgprint("Total Billing Percentage is {0} in payment schedule {1}, it should equal 100%".format(item[1],item[0]))
+ 
+
     def check_project_itemlink(self):
         for i in range(16):
             for row in getattr(self, 'resources_details_' +str(i)):
@@ -407,24 +417,24 @@ class ProjectInitiation(Document):
 
                 doc = frappe.get_doc("Items Details",resource[0])
                 if flt(row.billing_percentage)==100:
-	                self.append("project_payment_schedule_bundle_qty", {
-	                    "scope_item": row.scope_item,
-	                    "item": doc.items,
-	                    "item_name": doc.item_name,
-	                    "parent_qty": doc.quantity,
-	                    "qty": doc.quantity,
-	                    "parent_name": row.name
-	                })
+                    self.append("project_payment_schedule_bundle_qty", {
+                        "scope_item": row.scope_item,
+                        "item": doc.items,
+                        "item_name": doc.item_name,
+                        "parent_qty": doc.quantity,
+                        "qty": doc.quantity,
+                        "parent_name": row.name
+                    })
 
                 else:
-	                self.append("project_payment_schedule_bundle_qty", {
-	                    "scope_item": row.scope_item,
-	                    "item": doc.items,
-	                    "item_name": doc.item_name,
-	                    "parent_qty": doc.quantity,
-	                    "qty": (flt(row.billing_percentage)/100.0)*flt(doc.quantity),
-	                    "parent_name": row.name
-	                })
+                    self.append("project_payment_schedule_bundle_qty", {
+                        "scope_item": row.scope_item,
+                        "item": doc.items,
+                        "item_name": doc.item_name,
+                        "parent_qty": doc.quantity,
+                        "qty": (flt(row.billing_percentage)/100.0)*flt(doc.quantity),
+                        "parent_name": row.name
+                    })
 
 
 
