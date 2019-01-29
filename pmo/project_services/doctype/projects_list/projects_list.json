@@ -362,7 +362,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2018-12-16 11:30:41.570155", 
+ "modified": "2019-01-29 10:23:50.344294", 
  "modified_by": "Administrator", 
  "module": "Project Services", 
  "name": "Projects List", 
@@ -426,7 +426,7 @@
    "role": "Program Manager", 
    "set_user_permissions": 0, 
    "share": 1, 
-   "submit": 0, 
+   "submit": 1, 
    "write": 1
   }, 
   {
@@ -446,7 +446,7 @@
    "role": "Project Manager", 
    "set_user_permissions": 0, 
    "share": 1, 
-   "submit": 0, 
+   "submit": 1, 
    "write": 1
   }, 
   {
@@ -466,7 +466,7 @@
    "role": "Senior Project Manager", 
    "set_user_permissions": 0, 
    "share": 1, 
-   "submit": 0, 
+   "submit": 1, 
    "write": 1
   }, 
   {
@@ -486,7 +486,7 @@
    "role": "Project Coordinator", 
    "set_user_permissions": 0, 
    "share": 1, 
-   "submit": 0, 
+   "submit": 1, 
    "write": 1
   }, 
   {
