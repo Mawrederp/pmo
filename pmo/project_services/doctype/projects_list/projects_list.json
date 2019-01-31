@@ -362,7 +362,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2019-01-29 10:23:50.344294", 
+ "modified": "2019-01-30 11:13:51.951566", 
  "modified_by": "Administrator", 
  "module": "Project Services", 
  "name": "Projects List", 
@@ -492,7 +492,7 @@
   {
    "amend": 0, 
    "apply_user_permissions": 0, 
-   "cancel": 1, 
+   "cancel": 0, 
    "create": 1, 
    "delete": 1, 
    "email": 1, 
