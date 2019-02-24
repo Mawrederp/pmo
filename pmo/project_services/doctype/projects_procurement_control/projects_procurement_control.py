@@ -48,7 +48,7 @@ class ProjectsProcurementControl(Document):
 
                 item_name = frappe.get_value("Item", filters = {"item_name": scope_item}, fieldname = "name")    
 
-                resources_details_name = frappe.db.sql("select name from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,scope_item))
+                resources_details_name = frappe.db.sql("select name from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' order by idx ".format(self.project_name,scope_item))
 
                 mreq=frappe.get_doc({
                     "doctype":"Material Request",

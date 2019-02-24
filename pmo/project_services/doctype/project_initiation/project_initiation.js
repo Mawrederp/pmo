@@ -2548,6 +2548,7 @@ frappe.ui.form.on('Project Costing Schedule', {
             },
             callback: function (r) {
                 if (r.message) {
+                	console.log(r.message)
                     set_value_model(cdt, cdn, "scope_item_cost_value", r.message);
 
 

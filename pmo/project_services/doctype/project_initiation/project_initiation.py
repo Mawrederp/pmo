@@ -341,8 +341,9 @@ class ProjectInitiation(Document):
 
     def get_project_cost_value_item(self,type_of_cost,section_number,section_name):
         total_cost=0
-        total_cost = frappe.db.sql("select sum(total_cost_price) from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.name,section_name))
-
+        sql_q=str("""select sum(total_cost_price) from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' """.format(self.name,section_name))
+        total_cost = frappe.db.sql(sql_q)
+        frappe.msgprint(str(total_cost))
         if total_cost:
             return total_cost[0][0]
 
