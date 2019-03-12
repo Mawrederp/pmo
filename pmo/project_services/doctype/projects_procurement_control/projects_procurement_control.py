@@ -46,7 +46,8 @@ class ProjectsProcurementControl(Document):
                     if i.select==0:
                         unspecified_item.append(i.item)
 
-                item_name = frappe.get_value("Item", filters = {"item_name": scope_item}, fieldname = "name")    
+                item_name = frappe.get_value("Item", filters = {"item_name": scope_item}, fieldname = "name")
+                requester = frappe.get_value("Employee", filters = {"user_id": frappe.session.user}, fieldname = "name")
 
                 resources_details_name = frappe.db.sql("select name from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' order by idx ".format(self.project_name,scope_item))
 
@@ -60,7 +61,7 @@ class ProjectsProcurementControl(Document):
                     "description": self.description,
                     # "suggested_grand_total": scope_item_cost_value,
                     "suggested_grand_total": self.po_contract_extimated_cost,
-                    "material_requester": "EMP/1005"
+                    "material_requester": requester
                     
                     # "items": [
                     #     {
