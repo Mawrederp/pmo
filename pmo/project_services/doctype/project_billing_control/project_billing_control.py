@@ -351,7 +351,7 @@ class ProjectBillingControl(Document):
 
                     customer = frappe.db.sql("select customer from `tabProject Initiation` where name='{0}' ".format(self.project_name))
 
-                    vat_account_field = frappe.db.sql("select account_head from `tabSales Taxes and Charges` where parent='VAT'")
+                    vat_account_field = frappe.db.sql("select account_head from `tabSales Taxes and Charges` where parent='Sales VAT'")
                     if vat_account_field:
                         vat_account = vat_account_field[0][0]
 
@@ -369,7 +369,7 @@ class ProjectBillingControl(Document):
                             # "project_items": scope_item,
                             "naming_series": 'DN-',
                             "posting_date": due_date,
-                            "taxes_and_charges": "VAT"
+                            "taxes_and_charges": "Sales VAT"
                         })
 
                         for item in items:
@@ -689,7 +689,7 @@ class ProjectBillingControl(Document):
 
                 customer = frappe.db.sql("select customer from `tabProject Initiation` where name='{0}' ".format(self.project_name))
 
-                vat_account_field = frappe.db.sql("select account_head from `tabSales Taxes and Charges` where parent='VAT'")
+                vat_account_field = frappe.db.sql("select account_head from `tabSales Taxes and Charges` where parent='Sales VAT'")
                 if vat_account_field:
                     vat_account = vat_account_field[0][0]
 
@@ -710,7 +710,7 @@ class ProjectBillingControl(Document):
                         "posting_date": due_date,
                         "delivery_date": due_date,
                         "is_advance": is_advance,
-                        "taxes_and_charges": "VAT"
+                        "taxes_and_charges": "Sales VAT"
                     })
 
                     for item in items:
@@ -915,7 +915,7 @@ class ProjectBillingControl(Document):
 
                 customer = frappe.db.sql("select customer from `tabProject Initiation` where name='{0}' ".format(self.project_name))
 
-                vat_account_field = frappe.db.sql("select account_head from `tabSales Taxes and Charges` where parent='VAT'")
+                vat_account_field = frappe.db.sql("select account_head from `tabSales Taxes and Charges` where parent='Sales VAT'")
                 if vat_account_field:
                     vat_account = vat_account_field[0][0]
 
@@ -936,7 +936,7 @@ class ProjectBillingControl(Document):
                         "posting_date": due_date,
                         "delivery_date": due_date,
                         "is_advance": is_advance,
-                        "taxes_and_charges": "VAT"
+                        "taxes_and_charges": "Sales VAT"
                     })
 
                     for item in items:

@@ -55,6 +55,9 @@ frappe.ui.form.on('Project Billing Control', {
 
     },
     refresh: function(frm,cdt,cdn) {
+
+    	cur_frm.set_df_property("project_name", "read_only", !frm.doc.__islocal );
+
         var df = frappe.meta.get_docfield("Project Payment Schedule Bundle QTY","qty", cur_frm.doc.name);
         df.read_only = 1;
 
