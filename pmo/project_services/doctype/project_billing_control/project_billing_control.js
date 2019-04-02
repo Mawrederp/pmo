@@ -56,7 +56,7 @@ frappe.ui.form.on('Project Billing Control', {
     },
     refresh: function(frm,cdt,cdn) {
 
-    	cur_frm.set_df_property("project_name", "read_only", !frm.doc.__islocal );
+    	// cur_frm.set_df_property("project_name", "read_only", !frm.doc.__islocal );
 
         var df = frappe.meta.get_docfield("Project Payment Schedule Bundle QTY","qty", cur_frm.doc.name);
         df.read_only = 1;
@@ -433,7 +433,8 @@ frappe.ui.form.on('Project Billing Control', {
 
 
         frm.add_custom_button(__("Make Sales Invoice"), function () {
-                
+            
+
             var items=[]
 
             for(var row= 0;row<cur_frm.doc.project_payment_schedule_control.length;row++){
@@ -630,6 +631,15 @@ frappe.ui.form.on('Project Billing Control', {
                     }
                     arr1.push(old_name)
 
+                    advance_amount=0
+                    $.each(frm.doc.project_payment_schedule_control || [], function(i, v) {
+                        if(v.is_advance && v.advance_project_items == cur_frm.doc.project_payment_schedule_control[row].scope_item ){
+                            advance_amount=advance_amount+(v.total_billing_value*(cur_frm.doc.project_payment_schedule_control[row].billing_percentage/100))
+                        }
+                    })
+
+                    arr1.push(advance_amount)
+
                 }
             }
 
@@ -641,7 +651,8 @@ frappe.ui.form.on('Project Billing Control', {
                                 "items_value": items_value,"billing_percentage": billing_percentage,
                                 "due_date": due_date,"description_when":description_when,"vat_value":vat_value,
                                 "billing_state":billing_status,"delivery_note":delivery_note,"schedule_bundle_qty_name":schedule_bundle_qty_name,
-                                "is_advance":is_advance,"sales_invoice":sales_invoice,"advanced_item":advanced_item,"billing_value":billing_value,"items":items
+                                "is_advance":is_advance,"sales_invoice":sales_invoice,"advanced_item":advanced_item,"billing_value":billing_value,"items":items,
+                                "advance_amount":advance_amount
                             },
                         callback: function (r) {
                             sales_invoice_name = r.message

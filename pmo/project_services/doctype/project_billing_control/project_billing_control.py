@@ -653,7 +653,7 @@ class ProjectBillingControl(Document):
 
 
 
-    def make_sales_invoice(self,items,project_name,scope_item,items_value,billing_percentage,sales_invoice,due_date,description_when,vat_value,billing_state,delivery_note,schedule_bundle_qty_name,is_advance,advanced_item,billing_value):
+    def make_sales_invoice(self,items,project_name,scope_item,items_value,billing_percentage,sales_invoice,due_date,description_when,vat_value,billing_state,delivery_note,schedule_bundle_qty_name,is_advance,advanced_item,billing_value,advance_amount):
         # item[0] = scope_item
         # item[1] = project_name
         # item[2] = items_value
@@ -674,6 +674,7 @@ class ProjectBillingControl(Document):
         # item[17] = advance_project_items
         # item[18] = remaining_billing_percent
         # item[19] = old_name
+        # item[20] = advance_amount
 
         arr=[]
         for row in self.project_payment_schedule_control:
@@ -710,7 +711,8 @@ class ProjectBillingControl(Document):
                         "posting_date": due_date,
                         "delivery_date": due_date,
                         "is_advance": is_advance,
-                        "taxes_and_charges": "Sales VAT"
+                        "taxes_and_charges": "Sales VAT",
+                        "item_advance_amount": advance_amount
                     })
 
                     for item in items:
