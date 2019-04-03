@@ -12,6 +12,11 @@ from frappe import utils
 
 
 class ProjectBillingControl(Document):
+    # def validate(self):
+    #     for row in self.project_payment_schedule_control:
+    #         frappe.db.sql("update `tabProject Payment Schedule` set name='{0}' where name='{1}'".format(row.old_reference_name,row.name))
+
+
     def before_save(self):
         for row in self.project_payment_schedule_control:
             if row.date_period=='Date' and not row.when:

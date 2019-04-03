@@ -4,6 +4,11 @@ cur_frm.add_fetch('Project Initiation','sales_order','sales_order');
 
 var calculate_total_and_save = true;
 frappe.ui.form.on('Project Billing Control', {
+    // before_save: function(frm){
+    //     $.each(frm.doc.project_payment_schedule_control || [], function(i, v) {
+    //         frappe.model.set_value(v.doctype, v.name, "old_reference_name", v.name)
+    //     });
+    // },
     validate: function(frm){
         cur_frm.doc.project_payment_schedule_bundle_qty = []
         $.each(frm.doc.project_payment_schedule_control || [], function(i, v) {
@@ -56,7 +61,7 @@ frappe.ui.form.on('Project Billing Control', {
     },
     refresh: function(frm,cdt,cdn) {
 
-    	// cur_frm.set_df_property("project_name", "read_only", !frm.doc.__islocal );
+    	cur_frm.set_df_property("project_name", "read_only", !frm.doc.__islocal );
 
         var df = frappe.meta.get_docfield("Project Payment Schedule Bundle QTY","qty", cur_frm.doc.name);
         df.read_only = 1;
@@ -1179,6 +1184,56 @@ frappe.ui.form.on('Project Billing Control', {
 
         }
     }
+    // refresh_table: function(frm) {
+    //     item_names = []
+    //     $.each(cur_frm.doc.project_payment_schedule_control, function(index, row){
+    //         item_names.push(row.name)
+    //     });
+
+
+    //     if(cur_frm.doc.project_name){
+    //         cur_frm.doc.project_payment_schedule_control = []
+    //         frappe.model.with_doc("Project Initiation", frm.doc.project_name, function() {
+    //             var tabletransfer= frappe.model.get_doc("Project Initiation", frm.doc.project_name)
+    //             frm.doc.project_payment_schedule_control = []
+    //             frm.refresh_field("project_payment_schedule_control");
+    //             $.each(tabletransfer.project_payment_schedule, function(index, row){
+    //                 d = frm.add_child("project_payment_schedule_control");
+    //                 d.scope_item = row.scope_item;
+    //                 d.from_date = row.from_date;
+    //                 d.items_value = row.items_value;
+    //                 d.billing_percentage = row.billing_percentage;
+    //                 d.qty = row.qty;
+    //                 d.number_of_invoices = row.number_of_invoices;
+    //                 d.vat = row.vat;
+    //                 d.vat_value = row.vat_value;
+    //                 d.total_billing_value = row.total_billing_value;
+    //                 d.remaining_billing_value = row.remaining_billing_value;
+    //                 d.remaining_billing_percent = row.remaining_billing_percent;
+    //                 d.date_period = row.date_period;
+    //                 d.to_date = row.to_date;
+    //                 d.billing_value = row.billing_value;
+    //                 d.when = row.when;
+    //                 d.description_when = row.description_when;
+    //                 d.billing_status = row.billing_status;
+    //                 d.is_advance = row.is_advance;
+    //                 d.advanced_item = row.advanced_item;
+    //                 d.advance_project_items = row.advance_project_items;
+    //                 d.project_item_price = row.project_item_price;
+    //                 d.advance_percent = row.advance_percent;
+    //                 d.delivery_note = row.delivery_note;
+    //                 d.sales_invoice = row.sales_invoice;
+    //                 d.project_item_arabic = row.project_item_arabic;
+    //                 d.old_name = row.name;
+    //                 d.name = item_names[index];
+    //                 frm.refresh_field("project_payment_schedule_control");
+    //             });
+    //             cur_frm.set_value("sales_order", tabletransfer.sales_order)
+    //         })
+    //     }
+
+
+    // }
 });
 
 
