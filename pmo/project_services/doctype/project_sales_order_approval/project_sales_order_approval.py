@@ -102,6 +102,13 @@ class ProjectSalesOrderApproval(Document):
                     doc.flags.ignore_mandatory = True
                     doc.save(ignore_permissions=True)
 
+                doc_billing_name = frappe.get_value("Project Billing Control", filters = {"project_name": self.project_name}, fieldname = "name")
+                doc_billing = frappe.get_doc("Project Billing Control", doc_billing_name)
+                if doc_billing:
+                    doc_billing.sales_order = sinv.name
+                    doc_billing.flags.ignore_mandatory = True
+                    doc_billing.save(ignore_permissions=True)
+
 
                 frappe.msgprint("Sales Order is created")
             else:
