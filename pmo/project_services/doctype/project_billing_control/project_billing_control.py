@@ -1396,3 +1396,84 @@ class ProjectBillingControl(Document):
         return total_project,total_item,total_project_count
 
 
+
+
+    def get_latest_item_update(self):
+        cur_items = []
+        new_items = []
+        new_items_state= 0
+        initiation_count = frappe.db.count("Project Payment Schedule", filters={'parent': self.project_name})
+        billing_count = frappe.db.count("Project Payment Schedule", filters={'parent': self.name})
+
+        for row in self.project_payment_schedule_control:
+            cur_items.append(row.old_name)
+            doc = frappe.get_doc("Project Payment Schedule",row.old_name)
+
+            row.scope_item = doc.scope_item;
+            row.from_date = doc.from_date;
+            row.items_value = doc.items_value;
+            row.billing_percentage = doc.billing_percentage;
+            row.qty = doc.qty;
+            row.number_of_invoices = doc.number_of_invoices;
+            row.vat = doc.vat;
+            row.vat_value = doc.vat_value;
+            row.total_billing_value = doc.total_billing_value;
+            row.remaining_billing_value = doc.remaining_billing_value;
+            row.remaining_billing_percent = doc.remaining_billing_percent;
+            row.date_period = doc.date_period;
+            row.to_date = doc.to_date;
+            row.billing_value = doc.billing_value;
+            row.when = doc.when;
+            row.description_when = doc.description_when;
+            row.billing_status = doc.billing_status;
+            row.is_advance = doc.is_advance;
+            row.advanced_item = doc.advanced_item;
+            row.advance_project_items = doc.advance_project_items;
+            row.project_item_price = doc.project_item_price;
+            row.advance_percent = doc.advance_percent;
+            row.delivery_note = doc.delivery_note;
+            row.sales_invoice = doc.sales_invoice;
+            row.project_item_arabic = doc.project_item_arabic;
+            row.old_name = doc.name;
+
+
+        if initiation_count>billing_count:
+            new_items_state= 1
+            doc_init = frappe.get_doc("Project Initiation", self.project_name)
+            for row_init in doc_init.project_payment_schedule:
+                if row_init.name not in cur_items:
+                    new_items.append(row_init.name)
+
+            for new_item in new_items:
+                doc = frappe.get_doc("Project Payment Schedule",new_item)
+                self.append("project_payment_schedule_control", {
+                      "scope_item": doc.scope_item,
+                      "from_date": doc.from_date,
+                      "items_value": doc.items_value,
+                      "billing_percentage": doc.billing_percentage,
+                      "qty": doc.qty,
+                      "number_of_invoices": doc.number_of_invoices,
+                      "vat": doc.vat,
+                      "vat_value": doc.vat_value,
+                      "total_billing_value": doc.total_billing_value,
+                      "remaining_billing_value": doc.remaining_billing_value,
+                      "remaining_billing_percent": doc.remaining_billing_percent,
+                      "date_period": doc.date_period,
+                      "to_date": doc.to_date,
+                      "billing_value": doc.billing_value,
+                      "when": doc.when,
+                      "description_when": doc.description_when,
+                      "billing_status": doc.billing_status,
+                      "is_advance": doc.is_advance,
+                      "advanced_item": doc.advanced_item,
+                      "advance_project_items": doc.advance_project_items,
+                      "project_item_price": doc.project_item_price,
+                      "advance_percent": doc.advance_percent,
+                      "delivery_note": doc.delivery_note,
+                      "sales_invoice": doc.sales_invoice,
+                      "project_item_arabic": doc.project_item_arabic,
+                      "old_name": doc.name
+                })
+
+        return new_items_state,new_items
+

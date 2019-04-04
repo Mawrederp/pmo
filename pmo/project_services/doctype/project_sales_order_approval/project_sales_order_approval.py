@@ -27,7 +27,7 @@ class ProjectSalesOrderApproval(Document):
         else:
             doc = frappe.get_doc("Project Initiation", self.project_name)
             vat_account=''
-            vat_account_field = frappe.db.sql("select account_head from `tabSales Taxes and Charges` where parent='VAT'")
+            vat_account_field = frappe.db.sql("select account_head from `tabSales Taxes and Charges` where parent='Sales VAT'")
             if vat_account_field:
                 vat_account = vat_account_field[0][0]
  
@@ -59,7 +59,7 @@ class ProjectSalesOrderApproval(Document):
                     #         "tax_amount": self.vat_value
                     #       }
                     #     ],
-                    "taxes_and_charges": "VAT"
+                    "taxes_and_charges": "Sales VAT"
                 })
 
                 for row in self.project_payment_schedule_control:
