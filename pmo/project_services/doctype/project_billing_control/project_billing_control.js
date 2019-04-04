@@ -637,7 +637,7 @@ frappe.ui.form.on('Project Billing Control', {
                     }
                     arr1.push(old_name)
 
-                    advance_amount=0
+                    var advance_amount=0
                     $.each(frm.doc.project_payment_schedule_control || [], function(i, v) {
                         if(v.is_advance && v.advance_project_items == cur_frm.doc.project_payment_schedule_control[row].scope_item ){
                             advance_amount=advance_amount+(v.total_billing_value*(cur_frm.doc.project_payment_schedule_control[row].billing_percentage/100))

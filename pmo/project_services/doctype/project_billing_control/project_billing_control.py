@@ -323,7 +323,7 @@ class ProjectBillingControl(Document):
 
 
 
-    def make_delivery_note(self,items,scope_item,project_name,items_value,billing_percentage,due_date,description_when,vat_value,billing_state,delivery_note,schedule_bundle_qty_name,is_advance):
+    def make_delivery_note(self,items='',scope_item='',project_name='',items_value=0,billing_percentage=0,due_date='',description_when='',vat_value=0,billing_state=0,delivery_note='',schedule_bundle_qty_name='',is_advance=0):
         # item[0] = scope_item
         # item[1] = project_name
         # item[2] = items_value
@@ -345,6 +345,9 @@ class ProjectBillingControl(Document):
             for row in self.project_payment_schedule_control:
                 if row.invoice==1:
                     arr.append(row.name)
+
+            if len(arr)==0:
+                frappe.throw("Please check an item/s first")
 
             if delivery_note and billing_state==1:
                 frappe.throw("You made Delivery Note for this item before")
@@ -661,7 +664,7 @@ class ProjectBillingControl(Document):
 
 
 
-    def make_sales_invoice(self,items,project_name,scope_item,items_value,billing_percentage,sales_invoice,due_date,description_when,vat_value,billing_state,delivery_note,schedule_bundle_qty_name,is_advance,advanced_item,billing_value,advance_amount):
+    def make_sales_invoice(self,items='',project_name='',scope_item='',items_value=0,billing_percentage=0,sales_invoice='',due_date='',description_when='',vat_value=0,billing_state=0,delivery_note='',schedule_bundle_qty_name='',is_advance=0,advanced_item='',billing_value=0,advance_amount=0):
         # item[0] = scope_item
         # item[1] = project_name
         # item[2] = items_value
@@ -689,6 +692,9 @@ class ProjectBillingControl(Document):
             for row in self.project_payment_schedule_control:
                 if row.invoice==1:
                     arr.append(row.name)
+
+            if len(arr)==0:
+                frappe.throw("Please check an item/s first")
 
             if sales_invoice and billing_state==1:
                 frappe.throw("You made Sales Invoice for this item before")
@@ -895,7 +901,7 @@ class ProjectBillingControl(Document):
 
 
 
-    def make_hybrid_invoice(self,items,project_name,scope_item,items_value,billing_percentage,sales_invoice,due_date,description_when,vat_value,billing_state,delivery_note,schedule_bundle_qty_name,is_advance,advanced_item,billing_value):
+    def make_hybrid_invoice(self,items='',project_name='',scope_item='',items_value=0,billing_percentage=0,sales_invoice='',due_date='',description_when='',vat_value=0,billing_state=0,delivery_note='',schedule_bundle_qty_name='',is_advance=0,advanced_item='',billing_value=0):
         # item[0] = scope_item
         # item[1] = project_name
         # item[2] = items_value
@@ -922,6 +928,9 @@ class ProjectBillingControl(Document):
             for row in self.project_payment_schedule_control:
                 if row.invoice==1:
                     arr.append(row.name)
+
+            if len(arr)==0:
+                frappe.throw("Please check an item/s first")
 
             if sales_invoice and billing_state==1:
                 frappe.throw("You made Sales Invoice for this item before")
