@@ -735,6 +735,8 @@ class ProjectBillingControl(Document):
                             resources_details_name = frappe.db.sql("select name from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,item[0]))
 
                             if item[10]==1:
+                                if item[11]:
+                                    frappe.throw("Sales invoice is already created")
 
                                 # for resource in resources_details_name:
                                     
@@ -970,7 +972,9 @@ class ProjectBillingControl(Document):
                             resources_details_name = frappe.db.sql("select name from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,item[0]))
 
                             if item[10]==1:
-
+                                if item[11]:
+                                    frappe.throw("Sales invoice is already created")
+                                    
                                 # for resource in resources_details_name:
                                     
                                 #     doc = frappe.get_doc("Items Details",resource[0])
