@@ -4,6 +4,12 @@ cur_frm.add_fetch('Project Initiation','sales_order','sales_order');
 
 var calculate_total_and_save = true;
 frappe.ui.form.on('Project Billing Control', {
+    onload: function(frm) {
+        $(".grid-add-row").hide();
+        $(".grid-buttons").hide();
+        $(".grid-footer").hide();
+        // $(".row-index").hide();
+    },
     validate: function(frm){
         cur_frm.doc.project_payment_schedule_bundle_qty = []
         $.each(frm.doc.project_payment_schedule_control || [], function(i, v) {
@@ -55,6 +61,9 @@ frappe.ui.form.on('Project Billing Control', {
 
     },
     refresh: function(frm,cdt,cdn) {
+
+    	cur_frm.set_df_property("project_name", "read_only", !frm.doc.__islocal );
+
         var df = frappe.meta.get_docfield("Project Payment Schedule Bundle QTY","qty", cur_frm.doc.name);
         df.read_only = 1;
 
@@ -430,7 +439,8 @@ frappe.ui.form.on('Project Billing Control', {
 
 
         frm.add_custom_button(__("Make Sales Invoice"), function () {
-                
+            
+
             var items=[]
 
             for(var row= 0;row<cur_frm.doc.project_payment_schedule_control.length;row++){
@@ -627,6 +637,15 @@ frappe.ui.form.on('Project Billing Control', {
                     }
                     arr1.push(old_name)
 
+                    var advance_amount=0
+                    $.each(frm.doc.project_payment_schedule_control || [], function(i, v) {
+                        if(v.is_advance && v.advance_project_items == cur_frm.doc.project_payment_schedule_control[row].scope_item ){
+                            advance_amount=advance_amount+(v.total_billing_value*(cur_frm.doc.project_payment_schedule_control[row].billing_percentage/100))
+                        }
+                    })
+
+                    arr1.push(advance_amount)
+
                 }
             }
 
@@ -638,7 +657,8 @@ frappe.ui.form.on('Project Billing Control', {
                                 "items_value": items_value,"billing_percentage": billing_percentage,
                                 "due_date": due_date,"description_when":description_when,"vat_value":vat_value,
                                 "billing_state":billing_status,"delivery_note":delivery_note,"schedule_bundle_qty_name":schedule_bundle_qty_name,
-                                "is_advance":is_advance,"sales_invoice":sales_invoice,"advanced_item":advanced_item,"billing_value":billing_value,"items":items
+                                "is_advance":is_advance,"sales_invoice":sales_invoice,"advanced_item":advanced_item,"billing_value":billing_value,"items":items,
+                                "advance_amount":advance_amount
                             },
                         callback: function (r) {
                             sales_invoice_name = r.message
@@ -1164,6 +1184,24 @@ frappe.ui.form.on('Project Billing Control', {
 
 
         }
+    },
+    refresh_table: function(frm) {
+        item_names = []
+        $.each(cur_frm.doc.project_payment_schedule_control, function(index, row){
+            item_names.push(row.name)
+        });
+
+        frappe.call({
+            "method": "get_latest_item_update",
+            doc: cur_frm.doc,
+            callback: function (r) {
+                if(r.message){
+                    // console.log(r.message)
+                }
+                frm.refresh_field("project_payment_schedule_control");
+            }
+        });
+
     }
 });
 

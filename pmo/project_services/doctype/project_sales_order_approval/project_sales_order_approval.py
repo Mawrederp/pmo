@@ -27,7 +27,7 @@ class ProjectSalesOrderApproval(Document):
         else:
             doc = frappe.get_doc("Project Initiation", self.project_name)
             vat_account=''
-            vat_account_field = frappe.db.sql("select account_head from `tabSales Taxes and Charges` where parent='VAT'")
+            vat_account_field = frappe.db.sql("select account_head from `tabSales Taxes and Charges` where parent='Sales VAT'")
             if vat_account_field:
                 vat_account = vat_account_field[0][0]
  
@@ -59,7 +59,7 @@ class ProjectSalesOrderApproval(Document):
                     #         "tax_amount": self.vat_value
                     #       }
                     #     ],
-                    "taxes_and_charges": "VAT"
+                    "taxes_and_charges": "Sales VAT"
                 })
 
                 for row in self.project_payment_schedule_control:
@@ -101,6 +101,13 @@ class ProjectSalesOrderApproval(Document):
                     doc.sales_order = sinv.name
                     doc.flags.ignore_mandatory = True
                     doc.save(ignore_permissions=True)
+
+                doc_billing_name = frappe.get_value("Project Billing Control", filters = {"project_name": self.project_name}, fieldname = "name")
+                doc_billing = frappe.get_doc("Project Billing Control", doc_billing_name)
+                if doc_billing:
+                    doc_billing.sales_order = sinv.name
+                    doc_billing.flags.ignore_mandatory = True
+                    doc_billing.save(ignore_permissions=True)
 
 
                 frappe.msgprint("Sales Order is created")
