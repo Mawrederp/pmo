@@ -15,7 +15,17 @@ app_license = "MIT"
 # ------------------
 
 # include js, css files in header of desk.html
-app_include_css = "/assets/pmo/css/dhtmlxgantt.css?v=20180322"
+# app_include_js = [
+# 		'/assets/pmo/assets/plugins/morris/raphael.min.js',
+# 		'/assets/pmo/assets/plugins/morris/morris.min.js',
+# 		'/assets/pmo/assets/plugins/morris/morris-data.js',
+# 		]
+
+app_include_css = [
+		"/assets/pmo/css/dhtmlxgantt.css?v=20180322",
+		# '/assets/pmo/assets/plugins/morris/morris.css',
+		# '/assets/pmo/css/component_ui.css',
+]
 # app_include_js = "/assets/pmo/js/pmo.js"
 
 # include js, css files in header of web template
