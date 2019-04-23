@@ -69,7 +69,10 @@ class ProjectSalesOrderApproval(Document):
                         doc = frappe.get_doc("Items Details",resource[0])
                         # proj_item = frappe.get_doc("Project Items", doc.items)
                         item = frappe.get_doc("Item", doc.items)
-                        description = item.description
+                        if item.description:
+                            description = item.description
+                        else:
+                            description = item.item_name
 
                         rate = doc.final_selling_price
                         qty = 1
