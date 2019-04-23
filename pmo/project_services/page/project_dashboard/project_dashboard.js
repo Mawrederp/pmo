@@ -6,21 +6,21 @@ frappe.pages['project-dashboard'].on_page_load = function(wrapper) {
 	});
 
 
-		page.main.html(frappe.render_template("project_dashboard", {}));
-	var employee_filter = frappe.ui.form.make_control({
-		parent: page.main.find(".employee-filter"),
+	page.main.html(frappe.render_template("project_dashboard", {}));
+
+	get_pmo_resources();
+
+	var project_filter = frappe.ui.form.make_control({
+		parent: page.main.find(".project-filter"),
 		df: {
 			fieldtype: "Link",
-			options: "Employee",
-			fieldname: "employee",
-			placeholder: __("Employee"),
+			options: "Projects List",
+			fieldname: "project",
+			placeholder: __("Project"),
 			change: function(){
-				console.log(employee_filter)
-				if (employee_filter.get_value() != ""){
+				if (project_filter.get_value() != ""){
 					let filters = {
-						"employee":employee_filter.get_value(),
-						"department":department_filter.get_value(),
-						"leave_type":leave_type_filter.get_value(),	
+						"project":project_filter.get_value(),
 					}
 					get_init_data(filters);
 					event.stopImmediatePropagation();
@@ -33,76 +33,11 @@ frappe.pages['project-dashboard'].on_page_load = function(wrapper) {
 		},
 		only_input: true,
 	});
-	var department_filter = frappe.ui.form.make_control({
-		parent: page.main.find(".department-filter"),
-		df: {
-			fieldtype: "Link",
-			options: "Department",
-			fieldname: "department",
-			placeholder: __("Department"),
-			change: function(){
-				console.log(department_filter)
-				if (department_filter.get_value() != ""){
-					let filters = {
-						"employee":employee_filter.get_value(),
-						"department":department_filter.get_value(),
-						"leave_type":leave_type_filter.get_value(),	
-					}
-					get_init_data(filters);
-					event.stopImmediatePropagation();
-				}
-				else {
-					get_init_data({});
 
-				}
-			}
-		},
-		only_input: true,
-	});
-	var leave_type_filter = frappe.ui.form.make_control({
-		parent: page.main.find(".leave-type-filter"),
-		df: {
-			fieldtype: "Link",
-			options: "Leave Type",
-			fieldname: "leave_type",
-			placeholder: __("Leave Type"),
-			change: function(){
-				console.log(leave_type_filter)
-				if (leave_type_filter.get_value() != ""){
-					let filters = {
-						"employee":employee_filter.get_value(),
-						"department":department_filter.get_value(),
-						"leave_type":leave_type_filter.get_value(),	
-					}
-					get_init_data(filters);
-					event.stopImmediatePropagation();
-				}
-				else {	
-					get_init_data({});
-				}
-			}
-		},
-		only_input: true,
-	});
-	
-	var reset_filter = frappe.ui.form.make_control({
-		parent: page.main.find(".reset-filter"),
-		df: {
-			fieldtype: "Button",
-			fieldname: "reset_button",
-			placeholder: __("Reset"),
-			label: __("Reset"),
-			change: function(){
-				get_init_data({});
-			}
-		},
-		only_input: true,
-	});
 
-	employee_filter.refresh();
-	department_filter.refresh();
-	leave_type_filter.refresh();
-	reset_filter.refresh();
+
+	project_filter.refresh();
+
 	
 	get_init_data({});
 
@@ -111,65 +46,191 @@ frappe.pages['project-dashboard'].on_page_load = function(wrapper) {
 
 
 
+
+
+
+
+
 	
 get_init_data = function (filters){
 	setTimeout(function () {
+		
+		get_project_managment_assignment(filters);
+		get_project_info(filters);
+		get_project_finance(filters);
 
-		//Labels 
-		get_all_employee();
-		get_latest_leaves(filters);
-		// Donut
-		chart_donut_get_data("attendance",filters);
-		chart_donut_get_data("grade",filters);
-		chart_donut_get_data("nationality",filters);
-		chart_donut_get_data("gender",filters);
-		chart_line_get_data("leaves",filters);
-	   
+		chart_donut_get_data("total_cost",filters);
+		chart_donut_get_data("selling_price",filters);
+		chart_donut_get_data("contingency",filters);
+		chart_donut_get_data("final_selling_price",filters);
+		// chart_line_get_data("billing",filters);
+		chart_stacked_get_data("billing",filters);
+
 	  }, 400);
 }
-get_all_employee = function (){
-	frappe.call({
-			method: "pmo.project_services.page.project_dashboard.project_dashboard.get_employee",
-			args: {
-				nationality: "All"
-			},
-			callback: function(r) {
-				if(r.message) {
-					$("#all_employee").text(r.message[0])
-					$("#saudi_employee").text(r.message[1])
-					$("#none_saudi_employee").text(r.message[2])
-				}
-			}
-	})
-}
 
-get_latest_leaves = function (filters){
+
+get_pmo_resources = function (){
 	data = "No Data"
-	 $("#latest-leaves").text("");
+	$("#pmo-resources").text("");
 	frappe.call({
-			method: "pmo.project_services.page.project_dashboard.project_dashboard.get_latest_leaves",
-			args: {
-				nationality: "All",
-				args:filters
-			},
+			method: "pmo.project_services.page.project_dashboard.project_dashboard.get_pmo_resources",
 			callback: function(r) {
 				if(r.message) {
-					console.log(r.message)
+					$("#pmo-resources").text("");
 					for (let elem in r.message) {  
-					  var markup = "<tr> <td>"+r.message[elem][0]+
+					  var markup = 
+					  "<tr> <td>"+r.message[elem][0]+
 					  "</td><td>"+r.message[elem][1]+
 					  "</td> <td>"+r.message[elem][2]+
-					  "</td> <td>"+r.message[elem][3]+
-					  "</td> <td>"+r.message[elem][4]+
-					  "</td> <td>"+r.message[elem][5]+
 					  "</td> </tr>";	
-					  $("#latest-leaves").append(markup);
+					  $("#pmo-resources").append(markup);
 					}
 				}
 			}
 	})
 	
 }
+
+
+get_project_managment_assignment = function (filters){
+	frappe.call({
+			method: "pmo.project_services.page.project_dashboard.project_dashboard.get_project_managment_assignment",
+			args: {
+				args:filters
+			},
+			callback: function(r) {
+				if(r.message) {
+					$(".assignments_disapear").removeClass("hide_assignments");
+					if(r.message[0]){
+						$("#program_manager").text(r.message[0])
+					}else{
+						$("#program_manager").text('--')
+					}
+					if(r.message[1]){
+						$("#senior_project_manager").text(r.message[1])
+					}else{
+						$("#senior_project_manager").text('--')
+					}
+					if(r.message[2]){
+						$("#project_manager").text(r.message[2])
+					}else{
+						$("#project_manager").text('--')
+					}
+					if(r.message[3]){
+						$("#project_coordinator").text(r.message[3])
+					}else{
+						$("#project_coordinator").text('--')
+					}
+					
+				}else{
+					$(".assignments_disapear").addClass('hide_assignments');
+					$("#program_manager").text('--')
+					$("#senior_project_manager").text('--')
+					$("#project_manager").text('--')
+					$("#project_coordinator").text('--')
+				}
+			}
+	})
+}
+
+
+get_project_info = function (filters){
+	data = "No Data"
+	$("#project-info").text("");
+	frappe.call({
+			method: "pmo.project_services.page.project_dashboard.project_dashboard.get_project_info",
+			args: {
+				args:filters
+			},
+			callback: function(r) {
+				if(r.message) {
+					$("#project-info").text("");
+					for (let elem in r.message) {
+					  var markup = 
+					  "<tr> <td>"+r.message[elem][0]+
+					  "</td><td>"+r.message[elem][1]+
+					  "</td> <td>"+r.message[elem][2]+
+					  "</td> <td>"+r.message[elem][3]+
+					  "</td> <td>"+r.message[elem][4]+
+					  "</td> </tr>";	
+					  $("#project-info").append(markup);
+					}
+				}
+			}
+	})
+	
+}
+
+
+
+
+
+get_project_finance = function (filters){
+	$(".project-finance").text("");
+	frappe.call({
+			method: "pmo.project_services.page.project_dashboard.project_dashboard.get_project_finance",
+			args: {
+				args:filters
+			},
+			callback: function(r) {
+				if(r.message) {
+					var markup = ''
+					$(".project-finance").text("");
+					$(".finance_disapear").removeClass("hide_finance");
+					for (let elem in r.message[0]) {
+						markup += 
+						"<div class='panel panel-default'>"+
+						"<div class='panel-heading' role='tab' id='heading"+elem+"'>"+
+						"<h4 class='panel-title'> <a data-toggle='collapse' data-parent='#accordion' href='#collapse"+elem+"' aria-expanded='true' aria-controls='collapse"+elem+"'>"+r.message[0][elem]+"</a> </h4></div>"+
+						"<div id='collapse"+elem+"' class='panel-collapse collapse' role='tabpanel' aria-labelledby='heading"+elem+"'>"+
+						"<div class='table-responsive'>"+
+						"<table class='table table-bordered table-hover' style='text-align: right;margin:0;'>"+
+						"<thead><tr><th>item_name</th><th>total_cost</th><th>selling_price</th><th>profit</th><th>contingency</th><th>final_selling_price</th></tr></thead><tbody>"
+
+
+						for(let item=0;item<r.message[1][elem].length;item++) {
+							markup+=
+							"<tr>"+
+							"<td>"+r.message[1][elem][item][0]+"</td>"+
+							"<td>"+r.message[1][elem][item][1]+"</td>"+
+							"<td>"+r.message[1][elem][item][2]+"</td>"+
+							"<td>"+r.message[1][elem][item][3]+"</td>"+
+							"<td>"+r.message[1][elem][item][4]+"</td>"+
+							"<td>"+r.message[1][elem][item][5]+"</td>"+
+							"</tr>"
+
+						}
+
+						markup+=
+						"<tr style='background-color:#cad1d7!important;'>"+
+						"<td>Total</td>"+
+						"<td>"+r.message[2][elem]+"</td>"+
+						"<td>"+r.message[3][elem]+"</td>"+
+						"<td>"+r.message[4][elem]+"</td>"+
+						"<td>"+r.message[5][elem]+"</td>"+
+						"<td>"+r.message[6][elem]+"</td>"+
+						"</tr>"
+
+
+						markup+=
+						"</tbody></table></div></div></div>"
+
+					}
+					
+					$(".project-finance").append(markup);
+					console.log(markup)
+				}else{
+					$(".finance_disapear").addClass('hide_finance');
+					
+				}
+			}
+	})
+}
+
+
+
+
 
 
 chart_donut_get_data = function(label,filters){
@@ -203,6 +264,9 @@ chart_donut_get_data = function(label,filters){
 	return data
 
 }
+
+
+
 chart_line_get_data = function(label,filters){
 	let data =[]
 	frappe.call({
@@ -239,3 +303,84 @@ chart_line_get_data = function(label,filters){
 	return data
 
 }
+
+
+
+
+
+
+
+chart_stacked_get_data = function(label,filters){
+
+
+// 	var data = [
+//       { y: '2014', a: 50, b: 90},
+//       { y: '2015', a: 65,  b: 75},
+//       { y: '2016', a: 50,  b: 50},
+//       { y: '2017', a: 75,  b: 60},
+//       { y: '2018', a: 80,  b: 65},
+//       { y: '2019', a: 90,  b: 70},
+//       { y: '2020', a: 100, b: 75},
+//       { y: '2021', a: 115, b: 75},
+//       { y: '2022', a: 120, b: 85},
+//       { y: '2023', a: 145, b: 85},
+//       { y: '2024', a: 160, b: 95}
+//     ],
+//     config = {
+//       data: data,
+//       xkey: 'y',
+//       ykeys: ['a', 'b'],
+//       labels: ['Total Billed', 'Total Remaining'],
+//       fillOpacity: 0.6,
+//       hideHover: 'auto',
+//       behaveLikeLine: true,
+//       resize: true,
+//       pointFillColors:['#ffffff'],
+//       pointStrokeColors: ['black'],
+//       lineColors:['gray','red']
+//   };
+
+// config.element = 'stacked';
+// config.stacked = true;
+// Morris.Bar(config);
+
+
+
+
+	let data =[]
+	frappe.call({
+			method: "pmo.project_services.page.project_dashboard.project_dashboard.get_"+label,
+			args: {
+				args:filters
+			},
+			callback: function(r) {
+				$("#morris-stacked-chart-"+label).empty();
+				if(r.message) {
+    config = {
+      data: r.message,
+      xkey: 'y',
+      ykeys: ['a', 'b'],
+      xLabelAngle: 270,
+      labels: ['Total Billed', 'Total Remaining'],
+      fillOpacity: 0.6,
+      hideHover: 'auto',
+      behaveLikeLine: true,
+      resize: true,
+      pointFillColors:['#ffffff'],
+      pointStrokeColors: ['black'],
+      lineColors:['gray','red']
+  };
+
+}
+
+config.element = 'morris-stacked-chart-'+label;
+config.stacked = true;
+Morris.Bar(config);
+
+
+			}
+	})
+	return data
+
+}
+
