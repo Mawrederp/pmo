@@ -21,7 +21,7 @@ class ProjectsList(Document):
         }).save(ignore_permissions = True)
         frappe.db.commit()
 
-        frappe.get_doc({
+        initiation = frappe.get_doc({
             "doctype": "Project Initiation",
             "project_name": self.project_name,
             "project_name_arabic": self.project_name_arabic,
@@ -42,7 +42,9 @@ class ProjectsList(Document):
             # "project_owner_name_ch": ,
             # "project_manager_name_ch": ,
             # "employee_ch": 
-        }).save(ignore_permissions = True)
+        })
+        initiation.flags.ignore_mandatory = True
+        initiation.save(ignore_permissions = True)
         frappe.db.commit()
         self.project_initiation = self.project_name
 
