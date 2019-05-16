@@ -154,6 +154,8 @@ class ProjectBillingControl(Document):
                                         if required_qty:
                                             if flt(required_qty[0][0]) == 0:
                                                 required_qty = 1
+                                            else:
+                                                required_qty = required_qty[0][0]
                                         else:
                                             frappe.throw("Please click on <b>Refresh Table</b> button from <b><a href='#Form/Project Initiation/{0}'>{0}</a></b> under Project Payment Schedule to refresh items quantity".format(self.project_name))
 
