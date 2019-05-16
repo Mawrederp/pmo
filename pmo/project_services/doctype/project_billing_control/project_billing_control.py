@@ -27,109 +27,11 @@ class ProjectBillingControl(Document):
                 frappe.throw("Mandatory field: To Date in table row {0}".format(row.idx))
 
 
-    # def make_sales_order(self,project_name,scope_item,items_value,billing_percentage,due_date,description_when,vat_value,billing_state,sales_order):
-    #   arr=[]
-    #   for row in self.project_payment_schedule_control:
-    #       if row.invoice==1:
-    #           arr.append(row.name)
-
-    #   if sales_order and billing_state==1:
-    #       frappe.throw("You make Sales Order for this item before")
-    #   else:
-    #       if arr and len(arr)==1:
-    #           # if not frappe.db.exists("Item", {"item_name": scope_item }):
-    #           #   doc = frappe.new_doc("Item")
-    #           #   doc.item_group = 'Project'
-    #           #   doc.item_code = scope_item
-    #           #   doc.item_name = scope_item
-    #           #   doc.is_stock_item = 0
-    #           #   doc.flags.ignore_mandatory = True
-    #           #   doc.insert(ignore_permissions=True)
-
-
-    #           item_name = frappe.get_value("Item", filters = {"item_name": scope_item}, fieldname = "name")    
-
-    #           customer = frappe.db.sql("select customer from `tabProject Initiation` where name='{0}' ".format(self.project_name))
-
-    #           resources_details_name = frappe.db.sql("select name from `tabResources Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,scope_item))
-    
-    #           if customer:
-    #               sinv=frappe.get_doc({
-    #                   "doctype":"Sales Order",
-    #                   "customer": customer[0][0],
-    #                   "project": project_name,
-    #                   "naming_series": 'SO-',
-    #                   "delivery_date": due_date,
-    #                   "items": [
-    #                         {
-    #                           "doctype": "Sales Order Item",
-    #                           "item_code": item_name,
-    #                           "description": description_when,
-    #                           "qty": flt(flt(billing_percentage)/100),
-    #                           "rate": items_value
-    #                         }
-    #                       ],
-    #                   "taxes": [
-    #                         {
-    #                           "doctype": "Sales Taxes and Charges",
-    #                           "charge_type": 'Actual',
-    #                           "description": description_when,
-    #                           "tax_amount": vat_value
-    #                         }
-    #                       ],
-    #                   "taxes_and_charges": "VAT"
-    #               })
-
-                    # for resource in resources_details_name:
-                    #   doc = frappe.get_doc("Resources Details",resource[0])
-
-                    #   sinv.append("items", {
-                    #       "item_code": doc.resources,
-                    #       "description": description_when,
-                    #       "qty": flt(flt(billing_percentage)/100),
-                    #       "rate": items_value
-                    #   })
-
-                    #   sinv.append("taxes", {
-                    #       "charge_type": 'Actual',
-                    #       "description": description_when,
-                    #       "tax_amount": vat_value
-                    #   })
-
-                    # sinv.flags.ignore_validate = True
-        #           sinv.flags.ignore_mandatory = True
-        #           sinv.insert(ignore_permissions=True)
-
-
-        #           frappe.msgprint("Sales Order is created")
-        #       else:
-        #           frappe.throw('You sould select customer for this project before issue invoice')
-        #   else:
-        #       frappe.throw("You should check one invoice")
-
-        # return sinv.name
-        
-
-
-
 
 
     def make_project_sales_order_approval(self):
         sales_approval = frappe.db.sql("select name from `tabProject Sales Order Approval` where project_name='{0}' and docstatus=0".format(self.project_name))
 
-        # status = 1
-        # for row in self.project_payment_schedule_control:
-        #     resources_details_name = frappe.db.sql("select name from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' ".format(self.project_name,row.scope_item))
-        #     for resource in resources_details_name:
-        #         item_row = frappe.get_doc("Items Details",resource[0])
-        #         doc = frappe.get_doc("Project Items", item_row.items)
-                
-        #         if doc.status != 'Active':
-        #             frappe.msgprint("Project Item {0} under section {1} in row {2} doesnt link to Items,please check: <b><a href='#Form/Project Items/{0}'>{0}</a></b>".format(item_row.items,row.scope_item,row.idx))
-        #             status = 0
-
-
-        # if status==1:
         if not sales_approval:
             psoa=frappe.get_doc({
                 "doctype":"Project Sales Order Approval",
@@ -489,12 +391,9 @@ class ProjectBillingControl(Document):
 
                                     rate = doc.final_selling_price
 
-                                    required_qty = frappe.db.sql("select qty from `tabProject Payment Schedule Bundle QTY` where parenttype='Project Billing Control' and parent='{0}' and parent_name='{1}' and item='{2}'".format(self.name,item[9],doc.items))
-                                    if flt(required_qty[0][0]) == 0:
+                                    required_qty = frappe.db.sql("select qty from `tabProject Payment Schedule Bundle QTY` where parenttype='Project Billing Control' and parent='{0}' and parent_name='{1}' and item='{2}'".format(self.name,item[9],doc.items))[0][0]
+                                    if flt(required_qty) == 0:
                                         required_qty = 1
-                                    else:
-                                        frappe.throw("Please click on <b>Refresh Table</b> button from <b><a href='#Form/Project Initiation/{0}'>{0}</a></b> under Project Payment Schedule to refresh items quantity".format(self.project_name))
-
 
                                     rate = doc.final_selling_price/flt(doc.quantity)
 
@@ -657,18 +556,6 @@ class ProjectBillingControl(Document):
                                 if item[11]:
                                     frappe.throw("Sales invoice is already created")
                                     
-                                # for resource in resources_details_name:
-                                    
-                                #     doc = frappe.get_doc("Items Details",resource[0])
-                                #     item_name = frappe.get_doc("Item", doc.items)
-
-                                #     description=item_name.description
-
-                                #     rate = doc.final_selling_price
-
-                                #     required_qty = frappe.db.sql("select qty from `tabProject Payment Schedule Bundle QTY` where parenttype='Project Billing Control' and parent='{0}' and parent_name='{1}' and item='{2}'".format(self.name,item[9],doc.items))[0][0]
-
-                                #     rate = doc.final_selling_price/flt(doc.quantity)
 
                                 required_qty = 1
 
@@ -729,11 +616,9 @@ class ProjectBillingControl(Document):
 
                                     rate = doc.final_selling_price
 
-                                    required_qty = frappe.db.sql("select qty from `tabProject Payment Schedule Bundle QTY` where parenttype='Project Billing Control' and parent='{0}' and parent_name='{1}' and item='{2}'".format(self.name,item[9],doc.items))
-                                    if flt(required_qty[0][0]) == 0:
+                                    required_qty = frappe.db.sql("select qty from `tabProject Payment Schedule Bundle QTY` where parenttype='Project Billing Control' and parent='{0}' and parent_name='{1}' and item='{2}'".format(self.name,item[9],doc.items))[0][0]
+                                    if flt(required_qty) == 0:
                                         required_qty = 1
-                                    else:
-                                        frappe.throw("Please click on <b>Refresh Table</b> button from <b><a href='#Form/Project Initiation/{0}'>{0}</a></b> under Project Payment Schedule to refresh items quantity".format(self.project_name))
 
                                     rate = doc.final_selling_price/flt(doc.quantity)
 
