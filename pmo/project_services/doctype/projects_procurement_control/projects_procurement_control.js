@@ -183,10 +183,7 @@ frappe.ui.form.on('Projects Procurement Control', {
 
 						                }
 							        });
-									
-
-
-								
+							        
 								}		
 							})
 
