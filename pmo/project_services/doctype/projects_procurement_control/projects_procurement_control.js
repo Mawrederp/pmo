@@ -3,6 +3,35 @@
 
 frappe.ui.form.on('Projects Procurement Control', {
 	validate: function(frm){
+
+		// if(cur_frm.doc.multiple_scope_item){
+		// 	cur_frm.set_value("specified_item", )
+		// 	cur_frm.set_value("po_contract_extimated_cost", 0)
+
+		// 	for(row= 0;row<cur_frm.doc.project_costing_schedule_control.length;row++){
+		// 		if(cur_frm.doc.project_costing_schedule_control[row].pr == 1){
+		// 			console.log(cur_frm.doc.project_costing_schedule_control[row].scope_item)
+
+		// 	        frappe.call({
+		// 	            "method": "get_po_specified_items",
+		// 	            doc: cur_frm.doc,
+		// 	            args: {
+		// 	                'section_name': cur_frm.doc.project_costing_schedule_control[row].scope_item
+		// 	            },
+		// 	            callback: function (r) {
+		// 	                if (r.message) {
+		// 	                	frm.refresh_field("specified_item");
+		// 	            	}
+		// 	            }
+			        	
+		// 	    	});
+
+		// 		}
+		// 	}
+		// 	frm.refresh_field("specified_item");
+		// }
+		
+
 		var total = 0;
         $.each(frm.doc.specified_item || [], function (i, d) {
         	if(d.select==1){
@@ -246,10 +275,10 @@ frappe.ui.form.on('Project Costing Schedule', {
         var row = locals[cdt][cdn];
         
         if(row.pr){
-
-        	cur_frm.set_value("specified_item", )
-			cur_frm.set_value("po_contract_extimated_cost", 0)
-
+        	if(!cur_frm.doc.multiple_scope_item){
+        		cur_frm.set_value("specified_item", )
+				cur_frm.set_value("po_contract_extimated_cost", 0)
+        	}
 
 	        frappe.call({
 	            "method": "get_po_specified_items",
