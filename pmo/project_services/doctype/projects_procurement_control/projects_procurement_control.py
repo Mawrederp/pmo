@@ -63,11 +63,12 @@ class ProjectsProcurementControl(Document):
 
                 resources_details_name = frappe.db.sql("select name from `tabItems Details` where parenttype='Project Initiation' and parent='{0}' and section_name='{1}' order by idx ".format(self.project_name,i.scope_item))
 
-
                 for resource in resources_details_name:
-                        
+                    
                     doc = frappe.get_doc("Items Details",resource[0])
                     item = frappe.get_doc("Item", doc.items)
+
+                    description_comments = frappe.get_value("Project Costing Schedule", filters = {"scope_item": i.scope_item}, fieldname = "description_comments")
 
                     if description_comments:
                         description=description_comments
