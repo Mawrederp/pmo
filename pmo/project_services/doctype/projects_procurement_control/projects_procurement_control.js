@@ -258,10 +258,24 @@ frappe.ui.form.on('Projects Procurement Control', {
 
 		}
 
+	},
+	select_all: function(frm) {
+        $.each(frm.doc.specified_item || [], function (i, d) {
+        	d.select = 1
+        });
+        frm.refresh_field("specified_item");
+	},
+	unselect_all: function(frm) {
+        $.each(frm.doc.specified_item || [], function (i, d) {
+        	d.select = 0
+        });
+        frm.refresh_field("specified_item");
 	}
-	
+
+
 
 });
+
 
 
 
