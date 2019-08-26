@@ -25,7 +25,7 @@ frappe.ui.form.on('Project Sales Order Approval', {
 
 
 
-    	if(cur_frm.doc.workflow_state=="Approved By CEO"){
+    	if(cur_frm.doc.workflow_state=="Approved by PMO Director"){
 			frm.add_custom_button(__("Make Sales Order"), function () {
 
 				frappe.call({
@@ -48,7 +48,7 @@ frappe.ui.form.on('Project Sales Order Approval', {
 
 
 
-		// if(cur_frm.doc.workflow_state=="Approved By CEO"){
+		// if(cur_frm.doc.workflow_state=="Approved by PMO Director"){
 		// 	frm.add_custom_button(__("Make Sales Order"), function () {
 
 		// 		var description_when = cur_frm.doc.description_when
@@ -68,7 +68,7 @@ frappe.ui.form.on('Project Sales Order Approval', {
 	 //                    invoice_name = r.message
 	 //                    cur_frm.set_value("sales_order", invoice_name)
 	 //                    cur_frm.save()
-	 						
+
 		// 				frappe.call({
 		// 		            "method": "updat_init_payment_table_invoice",
 		// 		            doc: cur_frm.doc,
@@ -86,7 +86,7 @@ frappe.ui.form.on('Project Sales Order Approval', {
 	 //    	});
 		// }
 
-    	
+
 
 	}
 });
