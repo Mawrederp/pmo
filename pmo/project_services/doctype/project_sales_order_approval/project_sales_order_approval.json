@@ -207,7 +207,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2018-11-11 16:11:36.994684", 
+ "modified": "2019-08-27 13:46:43.551228", 
  "modified_by": "Administrator", 
  "module": "Project Services", 
  "name": "Project Sales Order Approval", 
@@ -342,6 +342,6 @@
  "sort_field": "modified", 
  "sort_order": "DESC", 
  "title_field": "project_name", 
- "track_changes": 1, 
+ "track_changes": 0, 
  "track_seen": 0
 }
