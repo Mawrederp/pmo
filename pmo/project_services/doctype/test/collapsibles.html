@@ -1,0 +1,90 @@
+<style >
+  /* @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700); */
+
+  /* main body {
+    font-family: "Open Sans", Arial;
+    background: #CCC;
+  } */
+  /* main {
+    background: #EEE;
+    width: 600px;
+    margin: 20px auto;
+    padding: 10px 0;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.3);
+  } */
+  /* main h2 {
+    text-align: center;
+  } */
+  main p {
+    font-size: 13px;
+  }
+  main input {
+    display: none;
+    visibility: hidden;
+  }
+  main label {
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: #8D99A6;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  main label:hover {
+    color: #000;
+  }
+  main span::before {
+    /* font-family: Consolas, monaco, monospace; */
+    /* font-weight: bold; */
+    /* font-size: 15px; */
+    content: "+";
+    /* vertical-align: text-top; */
+    /* display: inline-block; */
+    /* width: 20px; */
+    /* height: 20px; */
+    margin-right: 3px;
+    /* background: radial-gradient(ellipse at center, #CCC 50%, transparent 50%); */
+  }
+
+  main section {
+    padding: 0 20px;
+  }
+  #toggle:checked ~ #expand {
+    /* height: 250px; */
+  }
+  #toggle:checked ~ span::before {
+    content: "-";
+  }
+</style>
+
+<!-- <script>
+(function() {
+  const headings = document.querySelectorAll('h2');
+
+  Array.prototype.forEach.call(headings, h => {
+    let btn = h.querySelector('button');
+    let target = h.nextElementSibling;
+
+    btn.onclick = () => {
+      let expanded = btn.getAttribute('aria-expanded') === 'true';
+
+      btn.setAttribute('aria-expanded', !expanded);
+      target.hidden = expanded;
+    }
+  });
+})()
+</script> -->
+
+<main>
+  <!-- <h2>CSS Expand/Collapse Section</h2> -->
+  <input id="toggle" type="checkbox" checked>
+  <label for="toggle">Hidden Kitten</label>
+  <p for="toggle">test</p>
+  <span class="octicon collapse-indicator octicon-chevron-up"></span>
+  <!-- <div id="expand">
+    <section>
+      <p>mew</p>
+    </section>
+  </div> -->
+</main>
