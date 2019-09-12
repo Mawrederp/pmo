@@ -2185,7 +2185,7 @@ frappe.ui.form.on('Project Payment Schedule', {
         set_value_model(cdt, cdn, "remaining_billing_value", row.items_value - (billing_total));
 
         if (row.items_value && row.items_value != 0) {
-            set_value_model(cdt, cdn, "remaining_billing_percent", (row.remaining_billing_value / row.items_value) * 100);
+            set_value_model(cdt, cdn, "remaining_billing_percent", (row.remaining_billing_value / row.items_value) * 100.0);
         }
 
     },
@@ -2245,7 +2245,7 @@ frappe.ui.form.on('Project Payment Schedule', {
         set_value_model(cdt, cdn, "remaining_billing_value", row.items_value - (billing_total));
 
         if (row.items_value && row.items_value != 0) {
-            set_value_model(cdt, cdn, "remaining_billing_percent", (row.remaining_billing_value / row.items_value) * 100);
+            set_value_model(cdt, cdn, "remaining_billing_percent", (row.remaining_billing_value / row.items_value) * 100.0);
         }
 
     },
@@ -2339,7 +2339,7 @@ frappe.ui.form.on('Project Payment Schedule', {
             return
         }
         if (row.items_value && row.items_value != 0) {
-            set_value_model(cdt, cdn, "remaining_billing_percent", Math.round((row.remaining_billing_value / row.items_value) * 100));
+            set_value_model(cdt, cdn, "remaining_billing_percent", (row.remaining_billing_value / row.items_value) * 100);
         }
     },
     advance_project_items: function (frm, cdt, cdn) {
