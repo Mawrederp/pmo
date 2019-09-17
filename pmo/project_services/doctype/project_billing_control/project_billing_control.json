@@ -359,7 +359,11 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
+<<<<<<< HEAD
  "modified": "2019-09-16 14:19:56.287954", 
+=======
+ "modified": "2019-09-16 14:03:22.661279", 
+>>>>>>> 1b2044e9f719f307f491f40852bfdf7c17c39a40
  "modified_by": "Administrator", 
  "module": "Project Services", 
  "name": "Project Billing Control", 

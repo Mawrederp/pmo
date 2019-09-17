@@ -236,7 +236,11 @@
  "issingle": 0, 
  "istable": 1, 
  "max_attachments": 0, 
+<<<<<<< HEAD
  "modified": "2019-09-15 11:26:18.199268", 
+=======
+ "modified": "2019-09-15 11:41:35.884450", 
+>>>>>>> 1b2044e9f719f307f491f40852bfdf7c17c39a40
  "modified_by": "Administrator", 
  "module": "Project Services", 
  "name": "Project Payment Schedule Bundle QTY", 
