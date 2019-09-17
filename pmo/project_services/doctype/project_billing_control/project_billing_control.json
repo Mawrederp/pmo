@@ -359,7 +359,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2019-04-04 09:40:53.893975", 
+ "modified": "2019-09-16 14:19:56.287954", 
  "modified_by": "Administrator", 
  "module": "Project Services", 
  "name": "Project Billing Control", 
@@ -524,7 +524,7 @@
    "set_user_permissions": 0, 
    "share": 1, 
    "submit": 0, 
-   "write": 0
+   "write": 1
   }, 
   {
    "amend": 0, 
